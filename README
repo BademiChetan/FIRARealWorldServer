@@ -1,0 +1,4 @@
+Use "make" command to compile the code.
+Use "make clean" to delete all the compilation and executable files.
+
+Type "./main" from terminal to run the code.
