@@ -47,27 +47,27 @@ CvFont Font = cvFont( 1, 1 );
 
 Rect select_rect( CvCapture* cap )
 {	
-        char c;
-        do{
-            imagen = cvQueryFrame( cap );
-            screenBuffer = cvCloneImage( imagen );
-            while( 1 ){
-                cvSetMouseCallback( "SAHAS", on_mouse, NULL );
-                cvPutText( screenBuffer, "Select the goal post ends:", cvPoint( 100, 50 ), &Font, cvScalar( 255, 255, 255, 0 ) );
-                cvPutText( screenBuffer, "Refresh frame - r", cvPoint( 200, 80 ), &Font, cvScalar( 255, 255, 255, 0 ) );
-                cvPutText( screenBuffer, "Done selection - s", cvPoint( 200, 100 ), &Font, cvScalar( 255, 255, 255, 0 ) );
-                cvPutText( screenBuffer, "SHAHS - IITM", cvPoint( 260, 30 ), &Font, cvScalar( 0, 0, 255, 0 ) );
-                cvShowImage( "SAHAS", screenBuffer );
-                c = cvWaitKey( 10 );
-                if( c == 27 )
-                    break;
-                else if( c =='r' )
-                    break;
-                else if( c=='s' ){
-                    return rect;
-                }
+    char c;
+    do{
+        imagen = cvQueryFrame( cap );
+        screenBuffer = cvCloneImage( imagen );
+        while( 1 ){
+            cvSetMouseCallback( "SAHAS", on_mouse, NULL );
+            cvPutText( screenBuffer, "Select the goal post ends:", cvPoint( 100, 50 ), &Font, cvScalar( 255, 255, 255, 0 ) );
+            cvPutText( screenBuffer, "Refresh frame - r", cvPoint( 200, 80 ), &Font, cvScalar( 255, 255, 255, 0 ) );
+            cvPutText( screenBuffer, "Done selection - s", cvPoint( 200, 100 ), &Font, cvScalar( 255, 255, 255, 0 ) );
+            cvPutText( screenBuffer, "SHAHS - IITM", cvPoint( 260, 30 ), &Font, cvScalar( 0, 0, 255, 0 ) );
+            cvShowImage( "SAHAS", screenBuffer );
+            c = cvWaitKey( 10 );
+            if( c == 27 )
+                break;
+            else if( c =='r' )
+                break;
+            else if( c=='s' ){
+                return rect;
             }
-        }while( c == 'r' );
+        }
+    }while( c == 'r' );
     cvReleaseImage( &imagen );
     cvReleaseImage( &screenBuffer );
 }

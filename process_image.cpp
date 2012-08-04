@@ -23,7 +23,7 @@ int angl( CvPoint dst, CvPoint cen, CvPoint front ){
 
     if( b != 0 ){
         result = asin( a / b );
-        
+
         if(distanc( cen, dst ) > distanc( front, dst ) ){
             angle = ( ( result * 90 / 1.57 ) );
         }
@@ -40,7 +40,7 @@ int angl( CvPoint dst, CvPoint cen, CvPoint front ){
         else if( cen.y > front.y )
             angle = 0;
         else
-            printf( "angl(): The three points are not unique\n" );
+            printf( "angl(): The three input points are not unique\n" );
     }
     return angle;
 }

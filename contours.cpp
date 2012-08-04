@@ -26,17 +26,17 @@ CvMemStorage* boxfromseq_str = cvCreateMemStorage(0);
 CvMemStorage* ballbox_str = cvCreateMemStorage(0);
 
 CvPoint ClosestFrontCenter( IplImage* frame, CvPoint closest_to ){
-	int a = 0, b = 0;
-	int j = 0;
+    int a = 0, b = 0;
+    int j = 0;
     int min_dis = 10000;
     int dis = 0;
     CvPoint center = cvPoint( 0, 0 ), final_cen = cvPoint( 0, 0 );
     CvBox2D contour_box;
 
-	//Finds all the external contours in the mask given by <frame>
+    //Finds all the external contours in the mask given by <frame>
     cvFindContours( frame, storage, &contours, sizeof( CvContour ), CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, cvPoint( 0, 0 ) );
     //cvDrawContours( img, contours, cvScalar( 255, 255, 255, 0 ), cvScalar( 255, 255, 255, 0 ) , 1, 5, 8, cvPoint( 0, 0 ) );
-     
+
     for( CvSeq* con = contours; con != NULL; con = con->h_next ){
         if( cvContourArea( con, CV_WHOLE_SEQ ) > THRESH_AREA ){
             int b = con->total - 1;
@@ -54,19 +54,19 @@ CvPoint ClosestFrontCenter( IplImage* frame, CvPoint closest_to ){
             }
         }
     }
-    
+
     return final_cen;
 }
 
 
 vector <CvPoint> FindAllCenter( IplImage* frame ){
 
-	int a = 0, b = 0;
-	int j = 0;
-	int area = 0;
+    int a = 0, b = 0;
+    int j = 0;
+    int area = 0;
     vector <CvPoint> center;
-	CvBox2D contour_box;
-	
+    CvBox2D contour_box;
+
     cvFindContours( frame, finalcon_str, &contours, sizeof(CvContour), CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, cvPoint( 0, 0 ) );
 
     for( CvSeq* con = contours; con != NULL; con = con->h_next ){
@@ -77,20 +77,20 @@ vector <CvPoint> FindAllCenter( IplImage* frame ){
             BackContour = cvSeqSlice( con, cvSlice( 0, b ), str, 0 );
 
             //cvDrawContours( img, BackContour, cvScalar( 255, 255, 0, 0 ), cvScalar( 255, 255, 255, 0 ), 1, 5, 8, cvPoint( 0, 0 ) );
-            
+
             if( BackContour ){
-        		contour_box = cvMinAreaRect2( BackContour, boxfromseq_str );
-        		center.push_back( cvPoint( ( int ) contour_box.center.x, ( int ) contour_box.center.y ) );
-    		}
+                contour_box = cvMinAreaRect2( BackContour, boxfromseq_str );
+                center.push_back( cvPoint( ( int ) contour_box.center.x, ( int ) contour_box.center.y ) );
+            }
         }
     }
 
     return center;
-    
+
 }
 
 CvPoint LargestContourCenter( IplImage* frame ){
-  CvSeq *ballcontours = 0, *ballfinalcon = 0;
+    CvSeq *ballcontours = 0, *ballfinalcon = 0;
     conarea = 0;
     int area = 0;
     CvPoint center = cvPoint( 0, 0);
