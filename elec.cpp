@@ -34,7 +34,7 @@ int ENSURE_TIMEOUT=20;                                          // No. of tries 
 #include "cstring"
 #include "math.h"
 #include "sys/time.h"
-//#include "cv.h"
+#include "cv.h"
 
 using namespace std;
 using namespace LibSerial;
@@ -1131,7 +1131,7 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             while(sendenccmd(botID,action,value,speed));
         }
     }
-    else if(((enforce_cmd)&&(!check_bot_free(botID)))&&(res==2))                //No ack
+    else if((((enforce_cmd)||(!check_bot_free(botID))))&&(res==2))                //No ack
     {
         if(STR_DEBUG)
             cout<<"Trying again as the ack failed in last attempt..."<<endl;
@@ -1249,19 +1249,12 @@ void wait_4_bot(int botID)
         elecsleep(SLEEP_TIME);
 }
 
-int main()
+/*int main()
 {	
 	Uinit();
     int botID=3;
-    e_sendenccmd(3,'t',150);
-    ensure_bot_free(3);
-    for(int i=0;i<40;++i)
-    {
-        e_sendenccmd(3,'F',40,190);
-        wait_4_bot(3);
-        e_sendenccmd(3,'r',90);
-        wait_4_bot(3);
-    }
+    e_sendenccmd(3,'F',40,190);
+    wait_4_bot(3);
 /*    e_sendenccmd(3,'t',250);
     e_sendenccmd(2,'t',250);
     e_sendenccmd(4,'t',250);
@@ -1334,7 +1327,7 @@ int main()
     e_sendenccmd(3,'P',68);
     ensure_bot_free(botID);
     e_sendenccmd(3,'E');
-    ensure_bot_free(botID);*/
+    ensure_bot_free(botID);
     Uend();
 }
-
+*/
