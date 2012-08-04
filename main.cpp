@@ -16,6 +16,7 @@ using namespace std;
 #include "ball.h"
 #include "update_frame.h"
 #include "global_var.h"
+#include "kick_off_calibration.h"
 
 
 CvCapture *capture = cvCreateCameraCapture(1);
@@ -31,24 +32,17 @@ CvPoint arena_center;
 int main( int argc, char** argv ){
     //Setup libserial stuff
 
-    send.Open( "/dev/ttyACM0" );
-    send.SetBaudRate( SerialStreamBuf::BAUD_9600 );          //configure the device
-    send.SetCharSize( SerialStreamBuf::CHAR_SIZE_8 );
-    send.SetNumOfStopBits( 1 );
-    send.SetParity( SerialStreamBuf::PARITY_NONE );
-    send.SetFlowControl( SerialStreamBuf::FLOW_CONTROL_NONE );
-
-    //send << 's';
-
+	//Uinit();
 	int i = 0;	
 		
-    bot[0].color = BOT1_COLOR;
-    bot[1].color = BOT2_COLOR;
-    bot[2].color = BOT3_COLOR;
-    bot[3].color = BOT4_COLOR;
-    bot[4].color = BOT5_COLOR;
+    bot[0].color = BOT0_COLOR;
+    bot[1].color = BOT1_COLOR;
+    bot[2].color = BOT2_COLOR;
+    bot[3].color = BOT3_COLOR;
+    bot[4].color = BOT4_COLOR;
 	
     img = cvQueryFrame( capture );
+    //This is selecting the arena part.
     goal_rect = select_rect( capture );
     //Propotionately calculating the total play area.
     pitch = cvRect( goal_rect.x, goal_rect.y - goal_rect.width * 7 / 25, goal_rect.width,goal_rect.width * 18 / 25 );
@@ -61,10 +55,14 @@ int main( int argc, char** argv ){
 		o_bot[i].location = pitch;
 		
 	 Ball.location = pitch;
-
+	
     while( c != 27 ){
+    	
+    
         updateframe();
-		
+		//kick_off_calibrate(0);
+	    //exit(0);
+
 		FrameCount++;
 		
 		//cout<<FrameCount<<endl;
@@ -76,4 +74,6 @@ int main( int argc, char** argv ){
 			c = 0;
 		}
     }
+    
+	Uend();
 }

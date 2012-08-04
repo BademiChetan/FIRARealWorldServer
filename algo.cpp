@@ -37,7 +37,7 @@ double distance(double x1,double y1,double x2,double y2){
 }
 
 void goal(){
-    // Assume we're shooting to the centre of the goal to maximize probability. 
+   /* // Assume we're shooting to the centre of the goal to maximize probability. 
     // Are we in contact with the ball? 
     double bx,by;
 	
@@ -94,5 +94,5 @@ void goal(){
         move_forward(1, (int)(normal_velocity / frame_rate ) ); 
 
     }
-
+*/
 }

@@ -50,7 +50,7 @@ void updateframe(){
     for( int i = 0; i < NUM_OF_OPP_BOTS; i++ )
 		o_bot[i].update();
     
-     Ball.update();
+     //Ball.update();
       
     //Not rendering all the frames to decrease the code execution time.
     //if( FrameCount % 5 == 0 )

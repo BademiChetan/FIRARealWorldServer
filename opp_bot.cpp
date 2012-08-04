@@ -20,6 +20,8 @@ opp_bot::opp_bot(){
 	color = OPP_JERSEY_COLOR;
 	center = cvPoint( 0, 0 );
     location = cvRect( 0, 0, 0, 0 );
+    img = cvQueryFrame(capture);
+    cvShowImage("test",img);
     mask = cvCreateImage( cvGetSize( img ), IPL_DEPTH_8U, 1 );
 }
 

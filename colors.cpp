@@ -16,7 +16,7 @@ using namespace std;
 // calibration conditions - if ( ( Hue range ) && ( Saturation range ) && ( Value range ) )
 
 inline bool check_orange( uchar *ptr, int x ){
-	if( ( ptr[3*x] >= 7 && ptr[3*x] < 25 ) && ( ptr[3*x+1] >= 240 && ptr[3*x+1] <= 255 ) && ( ptr[3*x+2] > 90 && ptr[3*x+2] <= 145 ) )
+	if( ( ptr[3*x] >= 7 && ptr[3*x] < 25 ) && ( ptr[3*x+1] >= 240 && ptr[3*x+1] <= 255 ) && ( ptr[3*x+2] > 180 && ptr[3*x+2] <= 255 ) )
 		return true;
 	else
 		return false;
@@ -24,7 +24,7 @@ inline bool check_orange( uchar *ptr, int x ){
 
 
 inline bool check_yellow( uchar *ptr, int x ){
-    if( (ptr[3*x] > 25 && ptr[3*x] < 35 ) && ( ptr[3*x+1] > 220 && ptr[3*x+1] <= 255 ) && ( ptr[3*x+2] > 180 && ptr[3*x+2] < 225 ) )
+    if( (ptr[3*x] > 20 && ptr[3*x] < 35 ) && ( ptr[3*x+1] > 220 && ptr[3*x+1] <= 255 ) && ( ptr[3*x+2] > 190 && ptr[3*x+2] < 230 ) )
         return true;
     else
         return false;
@@ -32,42 +32,41 @@ inline bool check_yellow( uchar *ptr, int x ){
 
 
 inline bool check_blue( uchar *ptr, int x ){	
-    if( ( ptr[3*x] > 65 && ptr[3*x] < 90 ) && ( ptr[3*x+1] > 50 && ptr[3*x+1] <= 125 ) && ( ptr[3*x+2] > 120 && ptr[3*x+2] <= 200 ) )
+    if( ( ptr[3*x] > 90 && ptr[3*x] < 110 ) && ( ptr[3*x+1] > 170 && ptr[3*x+1] <= 220 ) && ( ptr[3*x+2] > 140 && ptr[3*x+2] <= 170 ) )
         return true;
     else
         return false;
 }
 
 inline bool check_red( uchar *ptr, int x ){
-    if( ( ptr[3*x] >= 0 && ptr[3*x] <= 7 ) && ( ptr[3*x+1] > 240 && ptr[3*x+1] <= 255 ) && ( ptr[3*x+2] > 170 && ptr[3*x+2] <= 230 ) )
+    if( ( ptr[3*x] >= 0 && ptr[3*x] <= 14 ) && ( ptr[3*x+1] > 180 && ptr[3*x+1] <= 230 ) && ( ptr[3*x+2] > 140 && ptr[3*x+2] <= 210 ) )
         return true;
     else
         return false;
 }
 
 inline bool check_lgreen( uchar *ptr, int x ){
-    if( ( ptr[3*x] > 50 && ptr[3*x] < 80 ) && ( ptr[3*x+1] > 245 && ptr[3*x+1] <= 255 ) && ( ptr[3*x+2] > 240 && ptr[3*x+2] <= 255 ) )
+    if( ( ptr[3*x] > 35 && ptr[3*x] < 80 ) && ( ptr[3*x+1] > 135 && ptr[3*x+1] <= 225 ) && ( ptr[3*x+2] > 100 && ptr[3*x+2] <= 240 ) )
         return true;
     else
         return false;
 }
-
 inline bool check_violet( uchar *ptr, int x ){
-    if( ( ptr[3*x] > 125 && ptr[3*x] < 140 ) && ( ptr[3*x+1] > 220 && ptr[3*x+1] < 240 ) && ( ptr[3*x+2] > 230 && ptr[3*x+2] <= 250 ) )
+    if( ( ptr[3*x] > 125 && ptr[3*x] < 150 ) && ( ptr[3*x+1] > 10 && ptr[3*x+1] <= 80 ) && ( ptr[3*x+2] > 120 && ptr[3*x+2] <= 160 ) )
         return true;
     else
         return false;
 }
 
 inline bool check_pink( uchar *ptr, int x ){
-    if( ( ptr[3*x] > 150 && ptr[3*x] < 165 ) && ( ptr[3*x+1] > 225 && ptr[3*x+1] < 245 ) && ( ptr[3*x+2] > 225 && ptr[3*x+2] < 245 ) )
+    if( ( ptr[3*x] > 160 && ptr[3*x] < 180 ) && ( ptr[3*x+1] > 150 && ptr[3*x+1] < 220 ) && ( ptr[3*x+2] > 130 && ptr[3*x+2] < 200 ) )
         return true;
     else
         return false;
 }
 
 inline bool check_dgreen( uchar *ptr, int x ){
-    if( ( ptr[3*x] > 60 && ptr[3*x] < 85 ) && ( ptr[3*x+1] > 235 && ptr[3*x+1] <= 255 ) && ( ptr[3*x+2] > 165 && ptr[3*x+2] < 185 ) )
+    if( ( ptr[3*x] > 40 && ptr[3*x] < 60 ) && ( ptr[3*x+1] > 225 && ptr[3*x+1] <= 255 ) && ( ptr[3*x+2] > 200 && ptr[3*x+2] < 220 ) )
         return true;
     else
         return false;

@@ -16,7 +16,7 @@ all: main
 
 
 # The main program depends on the complex number library, and the main file
-main: main.o select_arena.o colors.o  our_bot.o opp_bot.o ball.o update_frame.o process_image.o elec.o contours.o algo.o
+main: main.o kick_off_calibration.o select_arena.o colors.o our_bot.o opp_bot.o ball.o update_frame.o process_image.o elec.o contours.o algo.o
 	$(CC) -g -o $@ $^ $(CFLAGS)
 
 main.o : main.cpp global_var.h
@@ -34,7 +34,7 @@ elec.o : elec.cpp
 contours.o : contours.cpp process_image.o global_var.h
 	$(CC) -g -c $< $(CFLAGS)
 
-colors.o: colors.cpp process_image.o contours.o colors.o global_var.h
+colors.o: colors.cpp process_image.o contours.o global_var.h
 	$(CC) -g -c $< $(CFLAGS) 			
 
 our_bot.o: our_bot.cpp process_image.o colors.o global_var.h
@@ -52,6 +52,8 @@ update_frame.o: update_frame.cpp process_image.o our_bot.o opp_bot.o ball.o glob
 algo.o: algo.cpp elec.cpp our_bot.cpp ball.cpp opp_bot.cpp global_var.h
 	$(CC) -g -c $< $(CFLAGS)
 
+kick_off_calibration.o: kick_off_calibration.cpp elec.cpp our_bot.cpp process_image.cpp update_frame.cpp global_var.h
+	$(CC) -g -c $< $(CFLAGS)
 
 # .PHONY tells make that 'all' or 'clean' aren't _actually_ files, and always
 # execute the compilation action when 'make all' or 'make clean' are used

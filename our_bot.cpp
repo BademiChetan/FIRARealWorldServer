@@ -79,6 +79,7 @@ void our_bot::update(){
 
     pick_color( mask, location, color );
     
+    //The cvShowImage lines are for debuging.
     //cvShowImage( "back_center", mask[0] );
     //cvShowImage( "front_center", mask[1] );
 
