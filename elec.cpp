@@ -1096,6 +1096,9 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
     struct timeval begin,end;
     double diff=0,diff_s=0,diff_us=0;
     char res=sendenccmd(botID,action,value,speed);
+#ifdef FINAL
+    //Need to check for the bot's current status
+#endif
     if(TIMER)
     {
         gettimeofday(&begin,NULL);
@@ -1111,8 +1114,11 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             while(sendenccmd(botID,action,value,speed));
         }
     }
-    else if((((enforce_cmd)||(!check_bot_free(botID))))&&(res==2))                //No ack
+    else if((enforce_cmd)&&(res==2))                                             //No ack
     {
+#ifdef FINAL
+    //Need to check if the bot did do something. If it did, then put peace
+#endif
         if(STR_DEBUG)
             cout<<"Trying again as the ack failed in last attempt..."<<endl;
         while(sendenccmd(botID,action,value,speed));
