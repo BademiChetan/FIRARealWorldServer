@@ -65,7 +65,7 @@ void updateframe(){
 
 
     //Not rendering all the frames to decrease the code execution time.
-    //if( FrameCount % 5 == 0 )
+    if( FrameCount % 5 == 0 )
     {
         cvCircle( img, Ball.center, Ball.location.width / 5, CV_RGB( 255, 0, 0 ), 1, 8, 0 );
 
