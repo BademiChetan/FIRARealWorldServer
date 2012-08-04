@@ -19,7 +19,7 @@ bool ensure_cmd=1;                                              // In cases of e
 bool auto_correct=1;                                            // Auto correction,i.e, in the event of error. The bot is 
                                                                 // interrupted and the command is forced.
 #define max_enc_value 255                                       // Encoder maximum value
-#define NO_TIMEOUT 2                                            // The amount of tries to read from AP before giving up
+#define NO_TIMEOUT 1                                            // The amount of tries to read from AP before giving up
 #define TIMEOUT_VAL 10000                                       // Timeout value in ms
 #define TIMEOUT_READ 5000                                       // Timeout in read
 int ENSURE_TIMEOUT=20;                                          // No. of tries to ensure
