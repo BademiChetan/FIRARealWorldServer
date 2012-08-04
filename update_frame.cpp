@@ -1,5 +1,5 @@
 #pragma once
-#include <boost/thread.hpp>
+#include <boost/thread/thread.hpp>
 #include <highgui.h>
 #include <cv.h>
 #include <math.h>
@@ -50,15 +50,11 @@ void updateframe(){
 
 
     for( int i = 0; i < NUM_OF_OUR_BOTS; i++ ) {
-        boost::thread *temp = new boost::thread(
-                boost::bind(&our_bot::update, &bot[i])); 
-        our_bot_group.add_thread(temp); 
+        our_bot_group.create_thread(boost::bind(&our_bot::update, &bot[i])); 
     }
 
     for( int i = 0; i < NUM_OF_OPP_BOTS; i++ ) {
-        boost::thread *temp = new boost::thread(
-                boost::bind(&opp_bot::update, &o_bot[i])); 
-        opp_bot_group.add_thread(temp); 
+        opp_bot_group.create_thread(boost::bind(&opp_bot::update, &o_bot[i])); 
     }
     
      Ball.update();
