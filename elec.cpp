@@ -1,3 +1,4 @@
+#define FINAL                                                   // Remove the IP based commands by x corrupting it
 /**************Left to do************************
  * 1. Remove the TXChar(' ',1); and quicken the process
  * 2. Find the time spent in the spat business
@@ -34,7 +35,9 @@ int ENSURE_TIMEOUT=20;                                          // No. of tries 
 #include "cstring"
 #include "math.h"
 #include "sys/time.h"
-#include "cv.h"
+#ifdef FINAL
+    #include "cv.h"
+#endif
 
 using namespace std;
 using namespace LibSerial;
@@ -61,29 +64,31 @@ unsigned long int read_timeout=0;                               // Counter for t
  /************************************************/
 
 /***************Function prototypes****************/
+void elecsleep(unsigned int mseconds);
 int usart_init();
 void bot_status();
+void extract();
+void prelude();
 void Uinit();
 void Uend();
 bool rxstring(char *cstr, unsigned int timeout_val, bool print_str);
-void extract();
-void prelude();
 bool checkbotstat(int botID,char action);
 int is_enc_cmd(char action);
 void conv_value_char(int value);
 int sendenccmd(int botID, char action, int value,unsigned char speed);
 void e_sendenccmd(int botID, char action, int value,unsigned char speed);
 bool check_bot_free(int botID);
+bool make_bot_free(int botID);
 void ensure_bot_free(int botID);
-bool mystrcmp(char *str2bchkdagainst,int len2bchkd,char *serial_buffer, int lenofsb);
+void wait_4_bot(int botID);
  /************************************************/
 
  
 /*************************************************
  * FUNCTION NAME: elecsleep()
- * ARGUMENTS    : 
- * DESCRIPTION  : 
- * RETURN VALUES: 
+ * ARGUMENTS    : unsigned int mseconds => mseconds
+ * DESCRIPTION  : Sleep for some time
+ * RETURN VALUES: None
  ************************************************/
 void elecsleep(unsigned int mseconds)
 {
@@ -98,32 +103,6 @@ void elecsleep(unsigned int mseconds)
         diff_us=difftime(end.tv_usec,begin.tv_usec);
         diff=diff_s*1000000+diff_us;
     }while(diff<useconds);
-}
-/*************************************************
- * FUNCTION NAME: mystrcmp
- * ARGUMENTS    : char *str2bchkdagainst=> The expected string
- *                int len2bchkd         => The length of the expected string
- *                char *serial_buffer   => The buffer string received by the serial communication
- *                int lenofsb           => The length of the buffer in use
- * DESCRIPTION  : An attempt to avoid stack smashing
- * RETURN VALUES: 0. Success
- *                1. Failed
- ************************************************/
-bool mystrcmp(char *str2bchkdagainst,int len2bchkd,char *serial_buffer, int lenofsb)
-{
-    cout<<"You have entered mystrcmp"<<len2bchkd<<lenofsb<<endl;
-    if((len2bchkd>lenofsb)||(!len2bchkd)||(!lenofsb))
-    {
-        cout<<"Impossible strings given to compare"<<endl;
-        return 1;
-    }
-    while(len2bchkd)
-    {
-        if(str2bchkdagainst[len2bchkd]!=serial_buffer[len2bchkd])
-            return 1;
-        len2bchkd--;
-    }
-    return 0;
 }
 
 /*************************************************
@@ -377,6 +356,7 @@ bool rxstring(char *cstr, unsigned int len, bool print_str)
  *                2. char action    => To allow the interrupt action to pass through
  * DESCRIPTION  : 1. Go through the bot_code and determine the status of the bot concerned.
  *                2. Allow the interrupt action to pass through
+ *                3. Used inside the sendenccmd
  * RETURN VALUES: BOOL
  *                0. Success
  *                1. Failed
@@ -1249,13 +1229,14 @@ void wait_4_bot(int botID)
         elecsleep(SLEEP_TIME);
 }
 
-/*int main()
+#ifndef FINAL
+int main()
 {	
 	Uinit();
     int botID=3;
     e_sendenccmd(3,'F',40,190);
     wait_4_bot(3);
-/*    e_sendenccmd(3,'t',250);
+    e_sendenccmd(3,'t',250);
     e_sendenccmd(2,'t',250);
     e_sendenccmd(4,'t',250);
     wait_4_bot(0);
@@ -1330,4 +1311,4 @@ void wait_4_bot(int botID)
     ensure_bot_free(botID);
     Uend();
 }
-*/
+#endif
