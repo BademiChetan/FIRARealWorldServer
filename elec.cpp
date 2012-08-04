@@ -11,17 +11,18 @@
 #define STR_DEBUG 1
 #define TIMER 0
 #define DTIMER 0
-#define SHOW_TIMEOUT 0
+#define SHOW_TIMEOUT 1
 #define xSEC                                                    // Remove 'x' Corruption for mirror based communication
 bool enforce_cmd=1;                                             // Enforces the command in the event of ack fail
+bool ensure_cmd=1;                                              // In cases of error, the bot is made free
 bool auto_correct=1;                                            // Auto correction,i.e, in the event of error. The bot is 
                                                                 // interrupted and the command is forced.
-bool ensure_cmd=1;                                              // In cases of error, the bot is made free
 #define max_enc_value 255                                       // Encoder maximum value
-#define NO_TIMEOUT 10                                           // The amount of tries to read from AP before giving up
-#define TIMEOUT_VAL 10000                                         // Timeout value in ms
-int ENSURE_TIMEOUT=10;                                          // No. of tries to ensure
-#define SLEEP_TIME 10000
+#define NO_TIMEOUT 2                                            // The amount of tries to read from AP before giving up
+#define TIMEOUT_VAL 10000                                       // Timeout value in ms
+#define TIMEOUT_READ 5000                                       // Timeout in read
+int ENSURE_TIMEOUT=20;                                          // No. of tries to ensure
+#define SLEEP_TIME 1000
 //bool update_table=1;                                          // Updates the table with the newly read values of the enc/battery
 
 #include "iostream"
@@ -33,7 +34,7 @@ int ENSURE_TIMEOUT=10;                                          // No. of tries 
 #include "cstring"
 #include "math.h"
 #include "sys/time.h"
-#include "cv.h"
+//#include "cv.h"
 
 using namespace std;
 using namespace LibSerial;
@@ -47,11 +48,12 @@ unsigned char bot_code[5][11];                                            // Mat
 double maxtime=0;                                               // The maximum delay in the current run. Active only if TIMER is 1
 bool bypass_normal_protocol=0;                                  // Flag for generic purposes
 char serial_buffer[10];                                         // Our buffer for serial communication
+unsigned long int read_timeout=0;                               // Counter for timeouts
 /************************************************************************************
  * Bot_code matrix has the following info for each bot and are mapped to their botID:
  * Connection status:   'x' -> Connected
-                         0  -> Not Connected
-                        'i' -> About to be interrupted
+ *                        0  -> Not Connected
+ *                       'i' -> About to be interrupted
  * Bot status:          'b' -> Busy
  *                      'f' -> Free
  * Counters for no. of errors, successes and interruptions
@@ -69,29 +71,33 @@ void prelude();
 bool checkbotstat(int botID,char action);
 int is_enc_cmd(char action);
 void conv_value_char(int value);
-int sendenccmd(int botID, char action, int value, char speed);
-void e_sendenccmd(int botID, char action, int value,char speed);
+int sendenccmd(int botID, char action, int value,unsigned char speed);
+void e_sendenccmd(int botID, char action, int value,unsigned char speed);
 bool check_bot_free(int botID);
 void ensure_bot_free(int botID);
 bool mystrcmp(char *str2bchkdagainst,int len2bchkd,char *serial_buffer, int lenofsb);
  /************************************************/
 
-#include <time.h>
  
 /*************************************************
- * FUNCTION NAME: mystrcmp
- * ARGUMENTS    : char *str2bchkdagainst=> The expected string
- *                int len2bchkd         => The length of the expected string
- *                char *serial_buffer   => The buffer string received by the serial communication
- *                int lenofsb           => The length of the buffer in use
- * DESCRIPTION  : An attempt to avoid stack smashing
- * RETURN VALUES: 0. Success
- *                1. Failed
+ * FUNCTION NAME: elecsleep()
+ * ARGUMENTS    : 
+ * DESCRIPTION  : 
+ * RETURN VALUES: 
  ************************************************/
 void elecsleep(unsigned int mseconds)
 {
-    clock_t goal = mseconds + clock();
-    while (goal > clock());
+    struct timeval begin,end;
+    double diff=0,diff_s=0,diff_us=0;
+    double useconds=mseconds*1000;
+    gettimeofday(&begin,NULL);
+    do
+    {
+        gettimeofday(&end,NULL);
+        diff_s=difftime(end.tv_sec,begin.tv_sec);
+        diff_us=difftime(end.tv_usec,begin.tv_usec);
+        diff=diff_s*1000000+diff_us;
+    }while(diff<useconds);
 }
 /*************************************************
  * FUNCTION NAME: mystrcmp
@@ -209,7 +215,9 @@ void extract()
         cout<<endl;
         do
         {
-            timedout=rxstring(serial_buffer,100,STR_DEBUG);                //Waiting for all connections to be made
+            timedout=rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG);                //Waiting for all connections to be made
+            if(serial_buffer[0]=='L')
+                cout<<'\r';
         }while(!HANDSHAKE_CHK||timedout);
         cout<<"Bot no."<<++index<<" detected"<<endl;
         cout<<"Handshake successful"<<endl;
@@ -325,8 +333,9 @@ bool rxstring(char *cstr, unsigned int len, bool print_str)
         }
         catch(SerialPort::ReadTimeout &e)
         {
+            read_timeout++;
             if(SHOW_TIMEOUT)
-                cout<<"Read Timeout"<<endl;
+                cout<<"Read Timeout "<<read_timeout<<endl;
             return 1;
         }
         if((temp!='\n')&&(temp!=0)&&(temp!=' '))
@@ -478,9 +487,8 @@ void conv_value_char(int value)
  *                5. Wait for 'N' to signal that AP is ready for the next commmand
  * RETURN VALUES: 
  ************************************************/
-int sendenccmd(int botID, char action, int value=0,char speed=0)
+int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
 {
-	elecsleep(SLEEP_TIME);
     int timedout=1,timecount=0;
     char temp=0;
     char done[]="xD";
@@ -510,7 +518,7 @@ int sendenccmd(int botID, char action, int value=0,char speed=0)
             pu->WriteByte(botID+48);
             try
             {
-                temp=pu->ReadByte(1000);
+                temp=pu->ReadByte(TIMEOUT_READ);
                 if(STR_DEBUG)
                     cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
             }
@@ -655,7 +663,7 @@ int sendenccmd(int botID, char action, int value=0,char speed=0)
                 pu->WriteByte(botID+48);
                 try
                 {
-                    temp=pu->ReadByte(1000);
+                    temp=pu->ReadByte(TIMEOUT_READ);
                     if(STR_DEBUG)
                         cout<<"Trying to link to bot "<<botID<<". It spat out the character"<<(int)temp<<endl;
                 }
@@ -756,8 +764,8 @@ int sendenccmd(int botID, char action, int value=0,char speed=0)
             }
             if(timecount==NO_TIMEOUT)
             {
-                if(bot_code[botID][1]=='b')                                  // If the bot is busy, only then show timeout. Else it
-                                                                              // is obviously going to timeout
+                if(bot_code[botID][1]=='b')                                // If the bot is busy, only then show timeout. Else it
+                                                                           // is obviously going to timeout
                 {
                     if(STR_DEBUG)
                     {
@@ -786,7 +794,7 @@ int sendenccmd(int botID, char action, int value=0,char speed=0)
                 pu->WriteByte(botID+48);
                 try
                 {
-                    temp=pu->ReadByte(1000);
+                    temp=pu->ReadByte(TIMEOUT_READ);
                     if(STR_DEBUG)
                         cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
                 }
@@ -910,7 +918,7 @@ int sendenccmd(int botID, char action, int value=0,char speed=0)
             pu->WriteByte(botID+48);
             try
             {
-                temp=pu->ReadByte(1000);
+                temp=pu->ReadByte(TIMEOUT_READ);
                 if(STR_DEBUG)
                     cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
             }
@@ -961,7 +969,7 @@ int sendenccmd(int botID, char action, int value=0,char speed=0)
             pu->WriteByte(botID+48);
             try
             {
-                temp=pu->ReadByte(1000);
+                temp=pu->ReadByte(TIMEOUT_READ);
                 if(STR_DEBUG)
                     cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
             }
@@ -1103,7 +1111,7 @@ int sendenccmd(int botID, char action, int value=0,char speed=0)
  * DESCRIPTION  : Calls sendenccmd and also updates the bot_code matrix based on the return value
  * RETURN VALUES: NONE
  ************************************************/
-void e_sendenccmd(int botID, char action, int value=0, char speed=0)
+void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
 {
     struct timeval begin,end;
     double diff=0,diff_s=0,diff_us=0;
@@ -1123,14 +1131,15 @@ void e_sendenccmd(int botID, char action, int value=0, char speed=0)
             while(sendenccmd(botID,action,value,speed));
         }
     }
+    else if(((enforce_cmd)&&(!check_bot_free(botID)))&&(res==2))                //No ack
+    {
+        if(STR_DEBUG)
+            cout<<"Trying again as the ack failed in last attempt..."<<endl;
+        while(sendenccmd(botID,action,value,speed));
+        //The tally has not been added to success as it is known that eventually it has to succeed
+    }
     else
     {
-        if((enforce_cmd)&&(!check_bot_free(botID)))
-        {
-            if(STR_DEBUG)
-                cout<<"Trying again as the ack failed in last attempt..."<<endl;
-            while(sendenccmd(botID,action,value,speed));
-        }
         ++bot_code[botID][3];
         if(TIMER)
         {
@@ -1204,6 +1213,7 @@ bool make_bot_free(int botID)
  ************************************************/
 void ensure_bot_free(int botID)
 {
+    elecsleep(SLEEP_TIME);
     if(STR_DEBUG)
         cout<<"Trying to ensure bot is free\n";
     int ensure_timeout=0;
@@ -1235,23 +1245,24 @@ void wait_4_bot(int botID)
 {
     if(STR_DEBUG)
         cout<<"\nWaiting for the bot "<<botID<<endl;
-    while(!check_bot_free(botID));
+    while(!check_bot_free(botID))
+        elecsleep(SLEEP_TIME);
 }
 
-/*int main()
+int main()
 {	
 	Uinit();
     int botID=3;
     e_sendenccmd(3,'t',150);
     ensure_bot_free(3);
-    for(int i=0;i<4;++i)
+    for(int i=0;i<40;++i)
     {
-        e_sendenccmd(3,'F',40,90);
+        e_sendenccmd(3,'F',40,190);
         wait_4_bot(3);
         e_sendenccmd(3,'r',90);
         wait_4_bot(3);
     }
-    e_sendenccmd(3,'t',250);
+/*    e_sendenccmd(3,'t',250);
     e_sendenccmd(2,'t',250);
     e_sendenccmd(4,'t',250);
     wait_4_bot(0);
@@ -1323,7 +1334,7 @@ void wait_4_bot(int botID)
     e_sendenccmd(3,'P',68);
     ensure_bot_free(botID);
     e_sendenccmd(3,'E');
-    ensure_bot_free(botID);
+    ensure_bot_free(botID);*/
     Uend();
-}*/
+}
 
