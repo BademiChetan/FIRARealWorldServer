@@ -15,7 +15,7 @@
 #define xSEC                                                    // Remove 'x' Corruption for mirror based communication
 bool enforce_cmd=1;                                             // Enforces the command in the event of ack fail
 bool auto_correct=1;                                            // Auto correction,i.e, in the event of error. The bot is 
-                                                                // interrupted and the command is forced.
+// interrupted and the command is forced.
 bool ensure_cmd=1;                                              // In cases of error, the bot is made free
 #define max_enc_value 255                                       // Encoder maximum value
 #define NO_TIMEOUT 10                                           // The amount of tries to read from AP before giving up
@@ -50,13 +50,13 @@ char serial_buffer[10];                                         // Our buffer fo
 /************************************************************************************
  * Bot_code matrix has the following info for each bot and are mapped to their botID:
  * Connection status:   'x' -> Connected
-                         0  -> Not Connected
-                        'i' -> About to be interrupted
+ 0  -> Not Connected
+ 'i' -> About to be interrupted
  * Bot status:          'b' -> Busy
  *                      'f' -> Free
  * Counters for no. of errors, successes and interruptions
  *************************************************************************************/
- /************************************************/
+/************************************************/
 
 /***************Function prototypes****************/
 int usart_init();
@@ -74,10 +74,10 @@ void e_sendenccmd(int botID, char action, int value,char speed);
 bool check_bot_free(int botID);
 void ensure_bot_free(int botID);
 bool mystrcmp(char *str2bchkdagainst,int len2bchkd,char *serial_buffer, int lenofsb);
- /************************************************/
+/************************************************/
 
 #include <time.h>
- 
+
 /*************************************************
  * FUNCTION NAME: mystrcmp
  * ARGUMENTS    : char *str2bchkdagainst=> The expected string
@@ -144,7 +144,7 @@ int usart_init()
     {
         if(!usart_fl)
             cout<<"Port not open...trying"<<endl;
- 	   	try
+        try
         {
             pu->Open(SerialPort::BAUD_9600,
                     SerialPort::CHAR_SIZE_8,
@@ -179,8 +179,8 @@ void bot_status()
 {
     cout<<"**********************************************************Bots Status*****************************************************************"<<endl;
     /*cout<<"ID  "<<"Conx  "<<"Status  "<<"Errors  "<<"Success "<<"Interrupted "<<"No_ack   "<<"Gen_pwm  "<<"Enc_cnt "<<"Turn_pwm "<<"Enc_cnt_turn "<<"Battery "<<endl;
-    for(int i=0;i<5;++i)
-        cout<<i<<"     "<<bot_code[i][0]<<"      "<<bot_code[i][1]<<"      "<<int(bot_code[i][2])<<"        "<<int(bot_code[i][3])<<"        "<<int(bot_code[i][4])<<"         "<<int(bot_code[i][5])<<"         "<<int(bot_code[i][6])<<"        "<<int(bot_code[i][7])<<"         "<<int(bot_code[i][8])<<"         "<<int(bot_code[i][9])<<"         "<<int(bot_code[i][10])<<endl;*/
+      for(int i=0;i<5;++i)
+      cout<<i<<"     "<<bot_code[i][0]<<"      "<<bot_code[i][1]<<"      "<<int(bot_code[i][2])<<"        "<<int(bot_code[i][3])<<"        "<<int(bot_code[i][4])<<"         "<<int(bot_code[i][5])<<"         "<<int(bot_code[i][6])<<"        "<<int(bot_code[i][7])<<"         "<<int(bot_code[i][8])<<"         "<<int(bot_code[i][9])<<"         "<<int(bot_code[i][10])<<endl;*/
     cout<<"ID  "<<"Conx  "<<"Status  "<<"Errors  "<<"Success "<<"Interrupted "<<"No_ack   "<<"Gen_pwm  "<<"Enc_cnt "<<"Turn_pwm "<<"Enc_cnt_turn "<<"Battery_Voltage"<<endl;
     for(int i=0;i<5;++i)
         cout<<i<<"     "<<bot_code[i][0]<<"      "<<bot_code[i][1]<<"\t    "<<int(bot_code[i][2])<<"\t    "<<int(bot_code[i][3])<<"\t       "<<int(bot_code[i][4])<<"\t"<<int(bot_code[i][5])<<"\t  "<<int(bot_code[i][6])<<"\t   "<<int(bot_code[i][7])<<"\t    "<<int(bot_code[i][8])<<"\t      "<<int(bot_code[i][9])<<"\t\t"<<int(bot_code[i][10])<<endl;
@@ -239,7 +239,7 @@ void extract()
     while(strcmp(C2b,serial_buffer)||timedout)               
     {
         timedout=rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG);                 //Connected to all bots.
-            cout<<strcmp(C2b,serial_buffer)<<endl;
+        cout<<strcmp(C2b,serial_buffer)<<endl;
     }
     cout<<"Connected to the bots"<<endl;
 }
@@ -422,7 +422,7 @@ int is_enc_cmd(char action)
         case 'a':
         case 'd':
         case 's':{
-                    return 0;
+                     return 0;
                  }
         case 'f':
         case 'r':
@@ -480,7 +480,7 @@ void conv_value_char(int value)
  ************************************************/
 int sendenccmd(int botID, char action, int value=0,char speed=0)
 {
-	elecsleep(SLEEP_TIME);
+    elecsleep(SLEEP_TIME);
     int timedout=1,timecount=0;
     char temp=0;
     char done[]="xD";
@@ -493,7 +493,7 @@ int sendenccmd(int botID, char action, int value=0,char speed=0)
         cout<<endl;
         ensure_bot_free(botID);                                              //A second chance
         if(checkbotstat(botID,action))
-          return 1;
+            return 1;
     }
     if(is_enc_cmd(action)==2)                                       
     {
@@ -757,7 +757,7 @@ int sendenccmd(int botID, char action, int value=0,char speed=0)
             if(timecount==NO_TIMEOUT)
             {
                 if(bot_code[botID][1]=='b')                                  // If the bot is busy, only then show timeout. Else it
-                                                                              // is obviously going to timeout
+                    // is obviously going to timeout
                 {
                     if(STR_DEBUG)
                     {
@@ -891,7 +891,7 @@ int sendenccmd(int botID, char action, int value=0,char speed=0)
             if(timecount==NO_TIMEOUT)
             {
                 if(bot_code[botID][1]=='b')                                  // If the bot is busy, only then show timeout. Else it
-                                                                              // is obviously going to timeout
+                    // is obviously going to timeout
                 {
                     if(STR_DEBUG)
                     {
@@ -1239,91 +1239,91 @@ void wait_4_bot(int botID)
 }
 
 /*int main()
-{	
-	Uinit();
-    int botID=3;
-    e_sendenccmd(3,'t',150);
-    ensure_bot_free(3);
-    for(int i=0;i<4;++i)
-    {
-        e_sendenccmd(3,'F',40,90);
-        wait_4_bot(3);
-        e_sendenccmd(3,'r',90);
-        wait_4_bot(3);
-    }
-    e_sendenccmd(3,'t',250);
-    e_sendenccmd(2,'t',250);
-    e_sendenccmd(4,'t',250);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'F',40,90);
-    e_sendenccmd(2,'F',40,90);
-    e_sendenccmd(3,'F',40,90);
-    e_sendenccmd(4,'F',40,90);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'r',180);
-    e_sendenccmd(2,'r',180);
-    e_sendenccmd(3,'r',180);
-    e_sendenccmd(4,'r',180);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'B',40,'a');
-    e_sendenccmd(2,'B',40,'a');
-    e_sendenccmd(3,'B',40,'a');
-    e_sendenccmd(4,'B',40,'a');
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'r',180);
-    e_sendenccmd(2,'r',180);
-    e_sendenccmd(3,'r',180);
-    e_sendenccmd(4,'r',180);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'F',40,90);
-    e_sendenccmd(2,'F',40,90);
-    e_sendenccmd(3,'F',40,90);
-    e_sendenccmd(4,'F',40,90);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'l',180);
-    e_sendenccmd(2,'l',180);
-    e_sendenccmd(3,'l',180);
-    e_sendenccmd(4,'l',180);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'F',40,90);
-    e_sendenccmd(2,'F',40,90);
-    e_sendenccmd(3,'F',40,90);
-    e_sendenccmd(4,'F',40,90);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(3,'t',67);
-    ensure_bot_free(botID);
-    e_sendenccmd(3,'T',65);
-    ensure_bot_free(botID);
-    e_sendenccmd(3,'p',66);
-    ensure_bot_free(botID);
-    e_sendenccmd(3,'P',68);
-    ensure_bot_free(botID);
-    e_sendenccmd(3,'E');
-    ensure_bot_free(botID);
-    Uend();
+  {	
+  Uinit();
+  int botID=3;
+  e_sendenccmd(3,'t',150);
+  ensure_bot_free(3);
+  for(int i=0;i<4;++i)
+  {
+  e_sendenccmd(3,'F',40,90);
+  wait_4_bot(3);
+  e_sendenccmd(3,'r',90);
+  wait_4_bot(3);
+  }
+  e_sendenccmd(3,'t',250);
+  e_sendenccmd(2,'t',250);
+  e_sendenccmd(4,'t',250);
+  wait_4_bot(0);
+  wait_4_bot(2);
+  wait_4_bot(3);
+  wait_4_bot(4);
+  e_sendenccmd(0,'F',40,90);
+  e_sendenccmd(2,'F',40,90);
+  e_sendenccmd(3,'F',40,90);
+  e_sendenccmd(4,'F',40,90);
+  wait_4_bot(0);
+  wait_4_bot(2);
+  wait_4_bot(3);
+  wait_4_bot(4);
+  e_sendenccmd(0,'r',180);
+  e_sendenccmd(2,'r',180);
+  e_sendenccmd(3,'r',180);
+  e_sendenccmd(4,'r',180);
+  wait_4_bot(0);
+  wait_4_bot(2);
+  wait_4_bot(3);
+  wait_4_bot(4);
+  e_sendenccmd(0,'B',40,'a');
+  e_sendenccmd(2,'B',40,'a');
+  e_sendenccmd(3,'B',40,'a');
+  e_sendenccmd(4,'B',40,'a');
+  wait_4_bot(0);
+  wait_4_bot(2);
+  wait_4_bot(3);
+  wait_4_bot(4);
+  e_sendenccmd(0,'r',180);
+  e_sendenccmd(2,'r',180);
+  e_sendenccmd(3,'r',180);
+  e_sendenccmd(4,'r',180);
+  wait_4_bot(0);
+  wait_4_bot(2);
+  wait_4_bot(3);
+  wait_4_bot(4);
+  e_sendenccmd(0,'F',40,90);
+  e_sendenccmd(2,'F',40,90);
+  e_sendenccmd(3,'F',40,90);
+  e_sendenccmd(4,'F',40,90);
+  wait_4_bot(0);
+  wait_4_bot(2);
+  wait_4_bot(3);
+  wait_4_bot(4);
+  e_sendenccmd(0,'l',180);
+  e_sendenccmd(2,'l',180);
+  e_sendenccmd(3,'l',180);
+  e_sendenccmd(4,'l',180);
+  wait_4_bot(0);
+  wait_4_bot(2);
+  wait_4_bot(3);
+  wait_4_bot(4);
+  e_sendenccmd(0,'F',40,90);
+  e_sendenccmd(2,'F',40,90);
+  e_sendenccmd(3,'F',40,90);
+e_sendenccmd(4,'F',40,90);
+wait_4_bot(0);
+wait_4_bot(2);
+wait_4_bot(3);
+wait_4_bot(4);
+e_sendenccmd(3,'t',67);
+ensure_bot_free(botID);
+e_sendenccmd(3,'T',65);
+ensure_bot_free(botID);
+e_sendenccmd(3,'p',66);
+ensure_bot_free(botID);
+e_sendenccmd(3,'P',68);
+ensure_bot_free(botID);
+e_sendenccmd(3,'E');
+ensure_bot_free(botID);
+Uend();
 }*/
 

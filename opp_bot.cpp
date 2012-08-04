@@ -16,9 +16,9 @@ int opp_bot::total_no_of_objects;
 opp_bot o_bot[5];
 
 opp_bot::opp_bot(){
-	OBJECT_NUM = total_no_of_objects++;
-	color = OPP_JERSEY_COLOR;
-	center = cvPoint( 0, 0 );
+    OBJECT_NUM = total_no_of_objects++;
+    color = OPP_JERSEY_COLOR;
+    center = cvPoint( 0, 0 );
     location = cvRect( 0, 0, 0, 0 );
     img = cvQueryFrame(capture);
     cvShowImage("test",img);
@@ -27,43 +27,43 @@ opp_bot::opp_bot(){
 
 
 void opp_bot::FindCenter( CvPoint &cen ){	
-	vector <CvPoint> vector_cen = FindAllCenter( mask );
-	cen = cvPoint ( 0, 0 );
-	int count = 0;
-	
-	for( int i = 0 ; i < vector_cen.size() ; i++ ){
-		count = 0;
-		for( int j = 0 ; j < OBJECT_NUM ; j++ ){
-			if( (vector_cen[i].x + this->location.x != o_bot[j].center.x) || (vector_cen[i].y + this->location.y != o_bot[j].center.y)){
-				count++;
-			}
-		}
-		if( count == OBJECT_NUM ){
-			cen = vector_cen[i];
-			break;
-		}
-	}
-	
+    vector <CvPoint> vector_cen = FindAllCenter( mask );
+    cen = cvPoint ( 0, 0 );
+    int count = 0;
+
+    for( int i = 0 ; i < vector_cen.size() ; i++ ){
+        count = 0;
+        for( int j = 0 ; j < OBJECT_NUM ; j++ ){
+            if( (vector_cen[i].x + this->location.x != o_bot[j].center.x) || (vector_cen[i].y + this->location.y != o_bot[j].center.y)){
+                count++;
+            }
+        }
+        if( count == OBJECT_NUM ){
+            cen = vector_cen[i];
+            break;
+        }
+    }
+
 }
 
 
 void opp_bot::update(){
     CvPoint cen;
-    
+
     cvSetImageROI( mask, location );
     pick_color( &mask, location, color );
-	FindCenter( cen );
+    FindCenter( cen );
     cvResetImageROI( mask );
-	
+
     if( cen.x != 0 ){
-   	    cen = cvPoint( cen.x + location.x, cen.y + location.y );
+        cen = cvPoint( cen.x + location.x, cen.y + location.y );
         center = cen;
         update_location( location, center );
     }
     else{
-    	expand_location( location );
+        expand_location( location );
     }
 
-	limit_location_within_arena( location );
+    limit_location_within_arena( location );
 
 }

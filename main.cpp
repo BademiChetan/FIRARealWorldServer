@@ -32,15 +32,15 @@ CvPoint arena_center;
 int main( int argc, char** argv ){
     //Setup libserial stuff
 
-	//Uinit();
-	int i = 0;	
-		
+    //Uinit();
+    int i = 0;	
+
     bot[0].color = BOT0_COLOR;
     bot[1].color = BOT1_COLOR;
     bot[2].color = BOT2_COLOR;
     bot[3].color = BOT3_COLOR;
     bot[4].color = BOT4_COLOR;
-	
+
     img = cvQueryFrame( capture );
     //This is selecting the arena part.
     goal_rect = select_rect( capture );
@@ -50,30 +50,30 @@ int main( int argc, char** argv ){
 
     for( i = 0; i < NUM_OF_OUR_BOTS; i++ )
         bot[i].location = pitch;
-        
-    for( i = 0; i < NUM_OF_OPP_BOTS; i++ )
-		o_bot[i].location = pitch;
-		
-	 Ball.location = pitch;
-	
-    while( c != 27 ){
-    	
-    
-        updateframe();
-		//kick_off_calibrate(0);
-	    //exit(0);
 
-		FrameCount++;
-		
-		//cout<<FrameCount<<endl;
-		
-		//For debugging - checking frame by frame.
-		//c=' ';
-		if( c == ' ' ){
-			c = cvWaitKey( 0 );
-			c = 0;
-		}
+    for( i = 0; i < NUM_OF_OPP_BOTS; i++ )
+        o_bot[i].location = pitch;
+
+    Ball.location = pitch;
+
+    while( c != 27 ){
+
+
+        updateframe();
+        //kick_off_calibrate(0);
+        //exit(0);
+
+        FrameCount++;
+
+        //cout<<FrameCount<<endl;
+
+        //For debugging - checking frame by frame.
+        //c=' ';
+        if( c == ' ' ){
+            c = cvWaitKey( 0 );
+            c = 0;
+        }
     }
-    
-	Uend();
+
+    Uend();
 }

@@ -2,8 +2,8 @@
 
 class opp_bot{
     public:
-		static int total_no_of_objects;
-		IplImage *mask;
+        static int total_no_of_objects;
+        IplImage *mask;
         CvRect location;
         CvPoint center;
         char color;

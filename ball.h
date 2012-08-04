@@ -2,11 +2,11 @@
 class ball
 {
     public:
-		IplImage *mask;
+        IplImage *mask;
         CvRect location;
         CvPoint center;
         char color;
-    
+
         void update();
         void FindCenter( CvPoint &cen );
         ball();

@@ -23,7 +23,7 @@ int angl( CvPoint dst, CvPoint cen, CvPoint front ){
 
     if( b != 0 ){
         result = asin( a / b );
-        
+
         if(distanc( cen, dst ) > distanc( front, dst ) ){
             angle = ( ( result * 90 / 1.57 ) );
         }
