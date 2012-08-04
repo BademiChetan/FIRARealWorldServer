@@ -23,7 +23,8 @@ void kick_off_calibrate(int botID)
     e_sendenccmd( botID, 'R');	
 
     img = cvQueryFrame(capture);
-
+    e_sendenccmd(botID,'E');
+    old_encoder_value=bot_code[botID][7];    
     float distance=0;
     while((abs(distance-CAL_DIST)>DIST_TOL)&&(new_encoder_value!=old_encoder_value))
     {
@@ -35,21 +36,15 @@ void kick_off_calibrate(int botID)
         }
         updateframe();
         distance = sqrt((bot_pos.x-bot[0].x)*(bot_pos.x-bot[0].x) + (bot_pos.y-bot[0].y)*(bot_pos.y-bot[0].y));
-        //Assuming the encoder mapping to be linear, then slope is 200/CAL_DIST.
-        old_encoder_value=new_encoder_value;
-        new_encoder_value=CAL_DIST*(180/(float)distance);
-        e_sendenccmd(botID,'P',new_encoder_value);
-        e_sendenccmd( botID, 'F', CAL_DIST, 120 );
+        new_encoder_value=CAL_DIST*(old_encoder_value/(float)distance);		//Assuming the encoder mapping to be linear, then slope is 200/CAL_DIST.
         cout<<"The distance"<<distance<<endl;
         cout<<"Existing value:"<<(int)old_encoder_value<<endl;
         cout<<"Proposed value:"<<(int)new_encoder_value<<endl;
+        old_encoder_value=new_encoder_value;
         while(getchar()!='c');	
+	e_sendenccmd(botID,'P',new_encoder_value);
+        e_sendenccmd( botID, 'F', CAL_DIST, 120 );
     }
     bot[0].update();
-
-
-
-
-
     cvWaitKey(0);
 }
