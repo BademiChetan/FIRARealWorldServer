@@ -1,4 +1,5 @@
 #pragma once
+#include <boost/thread.hpp>
 #include <highgui.h>
 #include <cv.h>
 #include <math.h>
@@ -44,13 +45,26 @@ void updateframe(){
 
     cvCvtColor( img, hsv, CV_BGR2HSV );
 
-    for( int i = 0; i < NUM_OF_OUR_BOTS; i++ )
-		bot[i].update();
-      
-    for( int i = 0; i < NUM_OF_OPP_BOTS; i++ )
-		o_bot[i].update();
+    boost::thread_group our_bot_group; 
+    boost::thread_group opp_bot_group; 
+
+
+    for( int i = 0; i < NUM_OF_OUR_BOTS; i++ ) {
+        boost::thread *temp = new boost::thread(bot[i].update); 
+        our_bot_group.add_thread(temp); 
+    }
+
+    for( int i = 0; i < NUM_OF_OPP_BOTS; i++ ) {
+        boost::thread *temp = new boost::thread(o_bot[i].update); 
+        opp_bot_group.add_thread(temp); 
+    }
     
-     //Ball.update();
+     Ball.update();
+     
+     // Join all the threads. 
+     our_bot_group.join_all(); 
+     opp_bot_group.join_all(); 
+
       
     //Not rendering all the frames to decrease the code execution time.
     //if( FrameCount % 5 == 0 )

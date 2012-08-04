@@ -47,7 +47,7 @@ ball.o : ball.cpp process_image.o colors.o contours.o global_var.h
 	$(CC) -g -c $< $(CFLAGS)
 
 update_frame.o: update_frame.cpp process_image.o our_bot.o opp_bot.o ball.o global_var.h
-	$(CC) -g -c $< $(CFLAGS)
+	$(CC) -g -c $< $(CFLAGS) -lboost_thread-mt
 
 algo.o: algo.cpp elec.cpp our_bot.cpp ball.cpp opp_bot.cpp global_var.h
 	$(CC) -g -c $< $(CFLAGS)

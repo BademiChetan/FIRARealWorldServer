@@ -18,7 +18,8 @@ our_bot bot[5];
 our_bot::our_bot(){
     x = 0, y = 0, angle = 0;
     mask = new IplImage* [2];
-    location = cvRect( arena_center.x - BOUND_RECT, arena_center.y - BOUND_RECT, 2 * BOUND_RECT, 2 * BOUND_RECT );
+    location = cvRect(arena_center.x - BOUND_RECT, arena_center.y - BOUND_RECT,
+            2* BOUND_RECT, 2 * BOUND_RECT);
     mask[0] = cvCreateImage( cvGetSize( img ), IPL_DEPTH_8U, 1 );
     mask[1] = cvCreateImage( cvGetSize( img ), IPL_DEPTH_8U, 1 );
 }
