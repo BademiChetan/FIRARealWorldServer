@@ -45,12 +45,6 @@ void update_our_bot()
         bot[i].update();
 }
 
-void update_opp_bot()
-{
-    for(int i=0;i<NUM_OF_OPP_BOTS;i++)
-        o_bot[i].update();
-}
-
 void updateframe(){
 
     img = cvQueryFrame( capture );
@@ -66,12 +60,8 @@ void updateframe(){
         cvResetImageROI(hsv);
     }
 
-   boost::thread_group threadgroup; 
-    threadgroup.create_thread(update_our_bot); 
+   boost::thread our_bot_thread(update_our_bot); 
 
-  //  for(i=0;i<NUM_OF_OUR_BOTS;i++) 
-  //     bot[i].update();
-    
 
     for(i=0;i<NUM_OF_OPP_BOTS;i++) {
         cvSetImageROI(img,o_bot[i].location);
@@ -89,7 +79,9 @@ void updateframe(){
     cvResetImageROI(hsv);
     Ball.update();
 
-    threadgroup.join_all(); 
+    our_bot_thread.join(); 
+
+
     //Not rendering all the frames to decrease the code execution time.
     if( FrameCount % 5 == 0 )
     {
