@@ -22,7 +22,7 @@ opp_bot::opp_bot(){
     location = cvRect( 0, 0, 0, 0 );
     img = cvQueryFrame(capture);
    // cvShowImage("test",img);
-    mask = cvCreateImage( cvGetSize( img ), IPL_DEPTH_8U, 1 );
+    mask = cvCreateImage( cvSize(640,480), IPL_DEPTH_8U, 1 );
 }
 
 

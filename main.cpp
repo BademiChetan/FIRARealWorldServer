@@ -19,8 +19,8 @@ using namespace std;
 #include "global_var.h"
 #include "kick_off_calibration.h"
 
-//CvCapture *capture = cvCreateCameraCapture(0);
-CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
+CvCapture *capture = cvCreateCameraCapture(1);
+//CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
 IplImage *hsv = cvCreateImage( cvGetSize( img ), IPL_DEPTH_8U, 3 );
@@ -59,21 +59,28 @@ int main( int argc, char** argv ){
     Ball.location = pitch;
     int frames=0;
 #ifdef ELEC
-    e_sendenccmd(0,'F',30,120);
-    while(!check_bot_free(botID))
+   /* e_sendenccmd(0,'F',50,80);
+    while(!check_bot_free(0))
     {
         updateframe();
         cout<<++frames<<endl;
     }
+    cout<<"Medium version"<<endl;
+    frames=0;
+    e_sendenccmd(0,'F',50,120);
+    while(!check_bot_free(0))
+    {
+        updateframe();
+        cout<<++frames<<endl;
+    }*/
     cout<<"Faster version"<<endl;
     frames=0;
-    e_sendenccmd(0,'F',30,254);
-    while(!check_bot_free(botID))
+    e_sendenccmd(0,'F',150,254);
+    while(!check_bot_free(0))
     {
         updateframe();
         cout<<++frames<<endl;
     }
-    kick_off_calibrate(0);
     exit(0);
 #endif
 
