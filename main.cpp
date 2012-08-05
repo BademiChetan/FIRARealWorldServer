@@ -1,4 +1,5 @@
 #pragma once
+#define xELEC									//Remove x corruption to remove elec stuff
 #include <cv.h>
 #include <highgui.h>
 
@@ -30,9 +31,11 @@ CvRect pitch;
 CvPoint arena_center;
 
 int main( int argc, char** argv ){
-    //Setup libserial stuff
 
-    //Uinit();
+#ifdef ELEC
+    Uinit();
+#endif
+
     int i = 0;	
 
     bot[0].color = BOT0_COLOR;
@@ -55,13 +58,15 @@ int main( int argc, char** argv ){
         o_bot[i].location = pitch;
 
     Ball.location = pitch;
+#ifdef ELEC
+    kick_off_calibrate(0);
+    exit(0);
+#endif
 
     while( c != 27 ){
 
 
         updateframe();
-        //kick_off_calibrate(0);
-        //exit(0);
 
         FrameCount++;
 
