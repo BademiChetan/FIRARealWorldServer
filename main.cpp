@@ -19,7 +19,7 @@ using namespace std;
 #include "kick_off_calibration.h"
 
 
-//CvCapture *capture = cvCreateCameraCapture(1);
+//CvCapture *capture = cvCreateCameraCapture(0);
 CvCapture *capture = cvCreateFileCapture( "../multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
@@ -32,7 +32,7 @@ CvPoint arena_center;
 int main( int argc, char** argv ){
     //Setup libserial stuff
 
-    //Uinit();
+    Uinit();
     int i = 0;	
 
     bot[0].color = BOT0_COLOR;
@@ -60,10 +60,16 @@ int main( int argc, char** argv ){
 
 
         updateframe();
+          while(1)
+      	{
+          	//e_sendenccmd(3,'l',90);
+          	e_sendenccmd(3,'F',32,140);
+          	while('c'!=getchar());
+      	}
         //kick_off_calibrate(0);
         //exit(0);
 
-        FrameCount++;
+       FrameCount++;
 
         cout<<FrameCount<<endl;
 

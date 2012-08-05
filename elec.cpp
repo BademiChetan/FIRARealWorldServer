@@ -1,4 +1,4 @@
-#define xFINAL                                                   // Remove the IP based commands by x corrupting it
+#define FINAL                                                   // Remove the IP based commands by x corrupting it
 /**************Left to do************************
  * 1. Remove the TXChar(' ',1); and quicken the process
  * 2. Find the time spent in the spat business
@@ -41,6 +41,8 @@ bool auto_correct=1;                                            // Auto correcti
 #include "sys/time.h"
 #ifdef FINAL
     #include "cv.h"
+    #include "update_frame.h"
+    #include "our_bot.h"
 #endif
 
 using namespace std;
@@ -1130,8 +1132,9 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
         {
 #ifdef FINAL
             updateframe();
-            if(((ba-bot[botID].angle)>ANGLE_TOL)||((bx-bot[botID].x)>X_TOL)||((by-bot[botID].y)>Y_TOL))
+            if((abs(ba-bot[botID].angle)>ANGLE_TOL)||(abs(bx-bot[botID].x)>X_TOL)||(abs(by-bot[botID].y)>Y_TOL))
             {
+                cout<<"We have successfully detected a rogue packet!!!"<<endl;
                 break;
             }
 #endif

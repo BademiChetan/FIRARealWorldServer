@@ -39,31 +39,57 @@ void limit_location_within_arena( CvRect &location ){
 
 }
 
+void update_our_bot()
+{
+    for( int i=0;i < NUM_OF_OUR_BOTS;i++)
+        bot[i].update();
+}
+
+void update_opp_bot()
+{
+    for(int i=0;i<NUM_OF_OPP_BOTS;i++)
+        o_bot[i].update();
+}
+
 void updateframe(){
 
     img = cvQueryFrame( capture );
 
+    int i;
+    
+    //  cvCvtColor( img, hsv, CV_BGR2HSV );
+    for(i=0;i<NUM_OF_OUR_BOTS;i++) {
+        cvSetImageROI(img,bot[i].location);
+        cvSetImageROI(hsv,bot[i].location);
+        cvCvtColor( img, hsv, CV_BGR2HSV );
+        cvResetImageROI(img);
+        cvResetImageROI(hsv);
+    }
+
+   boost::thread_group threadgroup; 
+    threadgroup.create_thread(update_our_bot); 
+
+  //  for(i=0;i<NUM_OF_OUR_BOTS;i++) 
+  //     bot[i].update();
+    
+
+    for(i=0;i<NUM_OF_OPP_BOTS;i++) {
+        cvSetImageROI(img,o_bot[i].location);
+        cvSetImageROI(hsv,o_bot[i].location);
+        cvCvtColor( img, hsv, CV_BGR2HSV );
+        cvResetImageROI(img);
+        cvResetImageROI(hsv);
+        o_bot[i].update();
+    }
+
+    cvSetImageROI(img,Ball.location);
+    cvSetImageROI(hsv,Ball.location);
     cvCvtColor( img, hsv, CV_BGR2HSV );
-
-    boost::thread_group our_bot_group; 
-    boost::thread_group opp_bot_group; 
-
-
-    for( int i = 0; i < NUM_OF_OUR_BOTS; i++ ) {
-        our_bot_group.create_thread(boost::bind(&our_bot::update, &bot[i])); 
-    }
-
-    for( int i = 0; i < NUM_OF_OPP_BOTS; i++ ) {
-        opp_bot_group.create_thread(boost::bind(&opp_bot::update, &o_bot[i])); 
-    }
-
+    cvResetImageROI(img);
+    cvResetImageROI(hsv);
     Ball.update();
 
-    // Join all the threads. 
-    our_bot_group.join_all(); 
-    opp_bot_group.join_all(); 
-
-
+    threadgroup.join_all(); 
     //Not rendering all the frames to decrease the code execution time.
     if( FrameCount % 5 == 0 )
     {
