@@ -13,31 +13,35 @@ using namespace std;
 #define DIST_TOL 1
 #define ANGLE_TOL 1
 
+CvPoint bot_pos;
+    
+
 void calb_dist(int botID)
 {
     float distance=0;
+	int i=0,wait_times=30;
     unsigned char old_encoder_value=180,new_encoder_value=0,CAL_DIST=30;
+    bot_pos = cvPoint( bot[botID].x, bot[botID].y );
     old_encoder_value=bot_code[botID][7];    
-    CvPoint bot_pos = cvPoint( bot[0].x, bot[0].y );
     while(abs(distance-CAL_DIST)>DIST_TOL)
     {
         e_sendenccmd( botID, 'F', CAL_DIST, 120 );
-        while(!check_bot_free(botID))
+        while(!check_bot_free(botID)&&(i<wait_times))
         {
             cout<<"Waiting\r"<<endl;
             updateframe();
         }
+		if(i==wait_times)
+			continue;
         updateframe();
-        distance = sqrt((bot_pos.x-bot[0].x)*(bot_pos.x-bot[0].x) + (bot_pos.y-bot[0].y)*(bot_pos.y-bot[0].y));
+        distance = sqrt((bot_pos.x-bot[botID].x)*(bot_pos.x-bot[botID].x) + (bot_pos.y-bot[botID].y)*(bot_pos.y-bot[botID].y));
         new_encoder_value=CAL_DIST*(old_encoder_value/(float)distance);		//Assuming the encoder mapping to be linear, then slope is 200/CAL_DIST.
-	cout<<"Div"<<(old_encoder_value/(float)distance)<<endl;
         cout<<"The distance  : "<<distance<<endl;
         cout<<"Existing value: "<<(int)old_encoder_value<<endl;
         cout<<"Proposed value: "<<(int)new_encoder_value<<endl;
         old_encoder_value=new_encoder_value;
-        while(getchar()!='c');	
-	e_sendenccmd(botID,'P',new_encoder_value);
-	bot_pos = cvPoint( bot[0].x, bot[0].y );
+        e_sendenccmd(botID,'P',new_encoder_value);
+		bot_pos = cvPoint( bot[botID].x, bot[botID].y );
     }
 }
 
@@ -45,35 +49,38 @@ void calb_angle(int botID)
 {
     double diff_angle=0;
     unsigned char ne=0,oe=0,CAL_ANGLE=45;
-    double bot_angle=bot[0].angle;
+    char action='l';
+    double bot_angle=bot[botID].angle;
     oe=bot_code[botID][9];
     bot_status();
     cout<<"OE:"<<oe<<endl;
     while(abs(diff_angle-CAL_ANGLE)>ANGLE_TOL)
     {
-        e_sendenccmd( botID, 'l', CAL_ANGLE);
+        action=(bot[botID].angle<0)?'r':'l';
+    	e_sendenccmd( botID,action, CAL_ANGLE);
         while(!check_bot_free(botID))
         {
             cout<<"Waiting\r"<<endl;
             updateframe();
         }
         updateframe();
-        diff_angle = bot_angle-bot[0].angle;
+        diff_angle =bot_angle-bot[botID].angle;
+        bot_angle=bot[botID].angle;
         if(diff_angle==0)
-	{
-	    oe=oe*3;
-            e_sendenccmd(botID,'T',oe);
-            cout<<"Division by zero error has been avoided"<<endl; 
-            continue;
-	}
-        ne=CAL_ANGLE*(oe/(double)diff_angle);		//Assuming the encoder mapping to be linear, then slope is 200/CAL_DIST.
-	cout<<"Div"<<(oe/(double)diff_angle)<<endl;
+		{
+			oe=oe*3;
+			e_sendenccmd(botID,'T',oe);
+			cout<<"Division by zero error has been avoided"<<endl; 
+			continue;
+		}
+    	ne=CAL_ANGLE*(oe/(double)diff_angle);		//Assuming the encoder mapping to be linear, then slope is 200/CAL_DIST.
+	    cout<<"Div"<<(oe/(double)diff_angle)<<endl;
         cout<<"The angle     : "<<diff_angle<<endl;
         cout<<"Existing value: "<<(int)oe<<endl;
         cout<<"Proposed value: "<<(int)ne<<endl;
         oe=ne;
         while(getchar()!='c');	
-	e_sendenccmd(botID,'T',ne);
+    	e_sendenccmd(botID,'T',ne);
     }
 }
 
@@ -83,9 +90,19 @@ void kick_off_calibrate(int botID)
     e_sendenccmd( botID, 'R');	
     img = cvQueryFrame(capture);
     e_sendenccmd(botID,'E');
-//    calb_dist(botID);
-    calb_angle(botID);
+    calb_dist(botID);
+	cout<<"Testing if the bot goes for 20 cm"<<endl;
+    while(getchar()!='c');	
+	e_sendenccmd(botID,'F',20,150);
+    while(!check_bot_free(botID))
+    {
+        cout<<"Waiting\r"<<endl;
+        updateframe();
+    }
+    updateframe();
+    cout<<"The distance  : "<<sqrt((bot_pos.x-bot[botID].x)*(bot_pos.x-bot[botID].x) + (bot_pos.y-bot[botID].y)*(bot_pos.y-bot[botID].y))<<endl;
+//    calb_angle(botID);
     cout<<"Done calibration..testing"<<endl;
     e_sendenccmd(botID,'l',180);
-    bot[0].update();
+    bot[botID].update();
 }

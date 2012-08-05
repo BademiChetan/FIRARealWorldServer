@@ -1,3 +1,4 @@
+#pragma once
 #define FINAL                                                   // Remove the IP based commands by x corrupting it
 /**************Left to do************************
  * 1. Remove the TXChar(' ',1); and quicken the process
@@ -20,14 +21,15 @@ bool enforce_cmd=1;                                             // Enforces the 
 bool ensure_cmd=1;                                              // In cases of error, the bot is made free
 bool auto_correct=1;                                            // Auto correction,i.e, in the event of error. The bot is 
                                                                 // interrupted and the command is forced.
-#define max_enc_value   255                                     // Encoder maximum value
-#define NO_TIMEOUT      1                                       // The amount of tries to read from AP before giving up
-#define TIMEOUT_VAL     10000                                   // Timeout value in ms
-#define TIMEOUT_READ    5000                                    // Timeout in read
-#define SLEEP_TIME      1000
-#define ANGLE_TOL       10
-#define X_TOL           2
-#define Y_TOL           2
+#define max_enc_value   	255                                     // Encoder maximum value
+#define NO_TIMEOUT      	1                                       // The amount of tries to read from AP before giving up
+#define TIMEOUT_VAL     	10000                                   // Timeout value in ms
+#define TIMEOUT_READ    	5000                                    // Timeout in read
+#define SLEEP_TIME      	1000
+#define ANGLE_TOL       	10
+#define X_TOL           	2
+#define Y_TOL           	2
+#define NO_TIMEOUT_4_WAIT	30
 //bool update_table=1;                                          // Updates the table with the newly read values of the enc/battery
 
 #include "iostream"
@@ -43,6 +45,7 @@ bool auto_correct=1;                                            // Auto correcti
     #include "cv.h"
     #include "update_frame.h"
     #include "our_bot.h"
+    using namespace cv;
 #endif
 
 using namespace std;
@@ -1246,10 +1249,20 @@ void ensure_bot_free(int botID)
  ************************************************/
 void wait_4_bot(int botID)
 {
+    unsigned char wait_timeout=0;
     if(STR_DEBUG)
         cout<<"\nWaiting for the bot "<<botID<<endl;
     while(!check_bot_free(botID))
-        elecsleep(SLEEP_TIME);
+    {	
+        if(wait_timeout>NO_TIMEOUT_4_WAIT)
+	{
+		cout<<"URGENT!!! Report to Bazooka that we need to change the NO_TIMEOUT_4_WAIT"<<endl;
+		cout<<"Press any key to continue the program...The command under execution will be interrupted for you. :)"<<endl;
+//		cvWaitKey(0);
+		ensure_bot_free(botID);
+		break;
+	}
+    }
 }
 
 #ifndef FINAL

@@ -15,3 +15,4 @@ extern void wait_4_bot(int botID);
 extern void bot_status();
 
 extern char bot_code[5][11];
+
