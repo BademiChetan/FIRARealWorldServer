@@ -1,4 +1,4 @@
-#define FINAL                                                   // Remove the IP based commands by x corrupting it
+#define xFINAL                                                   // Remove the IP based commands by x corrupting it
 /**************Left to do************************
  * 1. Remove the TXChar(' ',1); and quicken the process
  * 2. Find the time spent in the spat business
@@ -1240,9 +1240,11 @@ int main()
 {	
 	Uinit();
     int botID=3;
-    e_sendenccmd(3,'F',40,190);
+    e_sendenccmd(3,'P',230);
+    bot_status();
+    e_sendenccmd(3,'F',180,190);
     wait_4_bot(3);
-    e_sendenccmd(3,'t',250);
+/*    e_sendenccmd(3,'t',250);
     e_sendenccmd(2,'t',250);
     e_sendenccmd(4,'t',250);
     wait_4_bot(0);
@@ -1314,7 +1316,7 @@ int main()
     e_sendenccmd(3,'P',68);
     ensure_bot_free(botID);
     e_sendenccmd(3,'E');
-    ensure_bot_free(botID);
+    ensure_bot_free(botID);*/
     Uend();
 }
 #endif
