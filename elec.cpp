@@ -1258,7 +1258,6 @@ void wait_4_bot(int botID)
 	{
 		cout<<"URGENT!!! Report to Bazooka that we need to change the NO_TIMEOUT_4_WAIT"<<endl;
 		cout<<"Press any key to continue the program...The command under execution will be interrupted for you. :)"<<endl;
-//		cvWaitKey(0);
 		ensure_bot_free(botID);
 		break;
 	}

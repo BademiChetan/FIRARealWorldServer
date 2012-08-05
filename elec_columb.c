@@ -78,4 +78,23 @@ void gotoxyov(int botID, int x_final, int y_final, int o, char v)
     e_sendenccmd(botID,'l',ang);
     wait_for_bot(botID);
     e_sendenccmd(botID,'F',DIST,v);
+    wait_for_bot(botID);
 }
+
+/*************************************************
+ * FUNCTION NAME: gotoxy() 
+ * ARGUMENTS    : int botID     => Bot ID
+ *                int x_final   => Final x coordinate
+ *                int y_final   => Final y coordinate
+ *                int o         => Final orientation
+ *                char v        => Velocity preferred
+ * DESCRIPTION  : Simulate columb code and get the bot reach the desired location without hitting the walls and the bots (ours and 
+ *                there)
+ * RETURN VALUES: 
+ ************************************************/
+void gotoxyovstr(int botID, int x_final, int y_final, int o, char v)
+{
+   double bx=0,by=0,ba=0;
+   bx=bot[botID].x;
+}
+
