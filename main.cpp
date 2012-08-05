@@ -20,8 +20,7 @@ using namespace std;
 #include "kick_off_calibration.h"
 
 
-//CvCapture *capture = cvCreateCameraCapture(1);
-CvCapture *capture = cvCreateFileCapture( "../multibot.avi" );
+CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
 IplImage *hsv = cvCreateImage( cvGetSize( img ), IPL_DEPTH_8U, 3 );
@@ -80,5 +79,7 @@ int main( int argc, char** argv ){
         }
     }
 
+#ifdef ELEC
     Uend();
+#endif
 }

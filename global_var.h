@@ -8,7 +8,7 @@
 
 #define NUM_OF_OUR_BOTS 5
 
-#define NUM_OF_OPP_BOTS 0
+#define NUM_OF_OPP_BOTS 5
 
 #define BOT0_COLOR 'p'
 #define BOT1_COLOR 'g'
