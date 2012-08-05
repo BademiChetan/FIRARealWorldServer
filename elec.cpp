@@ -14,16 +14,20 @@
 #define DTIMER 0
 #define SHOW_TIMEOUT 1
 #define xSEC                                                    // Remove 'x' Corruption for mirror based communication
+
+int ENSURE_TIMEOUT=5;                                           // No. of tries to ensure
 bool enforce_cmd=1;                                             // Enforces the command in the event of ack fail
 bool ensure_cmd=1;                                              // In cases of error, the bot is made free
 bool auto_correct=1;                                            // Auto correction,i.e, in the event of error. The bot is 
                                                                 // interrupted and the command is forced.
-#define max_enc_value 255                                       // Encoder maximum value
-#define NO_TIMEOUT 1                                            // The amount of tries to read from AP before giving up
-#define TIMEOUT_VAL 10000                                       // Timeout value in ms
-#define TIMEOUT_READ 5000                                       // Timeout in read
-int ENSURE_TIMEOUT=20;                                          // No. of tries to ensure
-#define SLEEP_TIME 1000
+#define max_enc_value   255                                     // Encoder maximum value
+#define NO_TIMEOUT      1                                       // The amount of tries to read from AP before giving up
+#define TIMEOUT_VAL     10000                                   // Timeout value in ms
+#define TIMEOUT_READ    5000                                    // Timeout in read
+#define SLEEP_TIME      1000
+#define ANGLE_TOL       10
+#define X_TOL           2
+#define Y_TOL           2
 //bool update_table=1;                                          // Updates the table with the newly read values of the enc/battery
 
 #include "iostream"
@@ -1097,7 +1101,11 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
     double diff=0,diff_s=0,diff_us=0;
     char res=sendenccmd(botID,action,value,speed);
 #ifdef FINAL
-    //Need to check for the bot's current status
+    double bx=0,by=0,ba=0;
+    updateframe();
+    bx=bot[botID].x;
+    by=bot[botID].y;
+    ba=bot[botID].angle;
 #endif
     if(TIMER)
     {
@@ -1116,12 +1124,18 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
     }
     else if((enforce_cmd)&&(res==2))                                             //No ack
     {
-#ifdef FINAL
-    //Need to check if the bot did do something. If it did, then put peace
-#endif
         if(STR_DEBUG)
             cout<<"Trying again as the ack failed in last attempt..."<<endl;
-        while(sendenccmd(botID,action,value,speed));
+        do
+        {
+#ifdef FINAL
+            updateframe();
+            if(((ba-bot[botID].angle)>ANGLE_TOL)||((bx-bot[botID].x)>X_TOL)||((by-bot[botID].y)>Y_TOL))
+            {
+                break;
+            }
+#endif
+        }while(sendenccmd(botID,action,value,speed));
         //The tally has not been added to success as it is known that eventually it has to succeed
     }
     else
@@ -1241,82 +1255,15 @@ int main()
 	Uinit();
     int botID=3;
     e_sendenccmd(3,'P',230);
+    e_sendenccmd(3,'T',70);
     bot_status();
-    e_sendenccmd(3,'F',180,190);
-    wait_4_bot(3);
-/*    e_sendenccmd(3,'t',250);
-    e_sendenccmd(2,'t',250);
-    e_sendenccmd(4,'t',250);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'F',40,90);
-    e_sendenccmd(2,'F',40,90);
-    e_sendenccmd(3,'F',40,90);
-    e_sendenccmd(4,'F',40,90);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'r',180);
-    e_sendenccmd(2,'r',180);
-    e_sendenccmd(3,'r',180);
-    e_sendenccmd(4,'r',180);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'B',40,'a');
-    e_sendenccmd(2,'B',40,'a');
-    e_sendenccmd(3,'B',40,'a');
-    e_sendenccmd(4,'B',40,'a');
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'r',180);
-    e_sendenccmd(2,'r',180);
-    e_sendenccmd(3,'r',180);
-    e_sendenccmd(4,'r',180);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'F',40,90);
-    e_sendenccmd(2,'F',40,90);
-    e_sendenccmd(3,'F',40,90);
-    e_sendenccmd(4,'F',40,90);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'l',180);
-    e_sendenccmd(2,'l',180);
-    e_sendenccmd(3,'l',180);
-    e_sendenccmd(4,'l',180);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(0,'F',40,90);
-    e_sendenccmd(2,'F',40,90);
-    e_sendenccmd(3,'F',40,90);
-    e_sendenccmd(4,'F',40,90);
-    wait_4_bot(0);
-    wait_4_bot(2);
-    wait_4_bot(3);
-    wait_4_bot(4);
-    e_sendenccmd(3,'t',67);
-    ensure_bot_free(botID);
-    e_sendenccmd(3,'T',65);
-    ensure_bot_free(botID);
-    e_sendenccmd(3,'p',66);
-    ensure_bot_free(botID);
-    e_sendenccmd(3,'P',68);
-    ensure_bot_free(botID);
-    e_sendenccmd(3,'E');
-    ensure_bot_free(botID);*/
+    for(int i=0;i<5;++i)
+    {
+        e_sendenccmd(3,'F',' ',100);
+        wait_4_bot(3);
+        e_sendenccmd(3,'r',90);
+        wait_4_bot(3);
+    }
     Uend();
 }
 #endif
