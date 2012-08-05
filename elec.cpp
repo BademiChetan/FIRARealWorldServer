@@ -1,4 +1,4 @@
-#define xFINAL                                                   // Remove the IP based commands by x corrupting it
+#define FINAL                                                   // Remove the IP based commands by x corrupting it
 /**************Left to do************************
  * 1. Remove the TXChar(' ',1); and quicken the process
  * 2. Find the time spent in the spat business
