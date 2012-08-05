@@ -45,31 +45,34 @@ void update_our_bot()
         bot[i].update();
 }
 
+void update_opp_bot()
+{
+    for( int i=0;i < NUM_OF_OPP_BOTS;i++)
+        o_bot[i].update();
+}
 void updateframe(){
 
     img = cvQueryFrame( capture );
 
     int i;
     
-    //  cvCvtColor( img, hsv, CV_BGR2HSV );
-    for(i=0;i<NUM_OF_OUR_BOTS;i++) {
-        cvSetImageROI(img,bot[i].location);
-        cvSetImageROI(hsv,bot[i].location);
-        cvCvtColor( img, hsv, CV_BGR2HSV );
-        cvResetImageROI(img);
-        cvResetImageROI(hsv);
-    }
-
-   boost::thread our_bot_thread(update_our_bot); 
-
-
     for(i=0;i<NUM_OF_OPP_BOTS;i++) {
         cvSetImageROI(img,o_bot[i].location);
         cvSetImageROI(hsv,o_bot[i].location);
         cvCvtColor( img, hsv, CV_BGR2HSV );
         cvResetImageROI(img);
         cvResetImageROI(hsv);
-        o_bot[i].update();
+    }
+
+   boost::thread our_bot_thread(update_opp_bot); 
+   
+       for(i=0;i<NUM_OF_OUR_BOTS;i++) {
+        cvSetImageROI(img,bot[i].location);
+        cvSetImageROI(hsv,bot[i].location);
+        cvCvtColor( img, hsv, CV_BGR2HSV );
+        cvResetImageROI(img);
+        cvResetImageROI(hsv);
+        bot[i].update();
     }
 
     cvSetImageROI(img,Ball.location);

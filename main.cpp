@@ -18,7 +18,7 @@ using namespace std;
 #include "global_var.h"
 #include "kick_off_calibration.h"
 
-
+//CvCapture *capture = cvCreateCameraCapture(0);
 CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
