@@ -58,6 +58,7 @@ int main( int argc, char** argv ){
 
     Ball.location = pitch;
     int frames=0;
+#ifdef ELEC
     e_sendenccmd(0,'F',30,120);
     while(!check_bot_free(botID))
     {
@@ -72,7 +73,6 @@ int main( int argc, char** argv ){
         updateframe();
         cout<<++frames<<endl;
     }
-#ifdef ELEC
     kick_off_calibrate(0);
     exit(0);
 #endif
