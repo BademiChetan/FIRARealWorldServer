@@ -26,7 +26,7 @@ inline bool check_orange(uchar *ptr,int x)
 
 inline bool check_yellow(uchar *ptr,int x)
 {
-    if((ptr[3*x]>20&&ptr[3*x]<40)&&(ptr[3*x+1]>215&&ptr[3*x+1]<=245)&&(ptr[3*x+2]>190&&ptr[3*x+2]<220))
+    if((ptr[3*x]>20&&ptr[3*x]<40)&&(ptr[3*x+1]>180&&ptr[3*x+1]<=235)&&(ptr[3*x+2]>190&&ptr[3*x+2]<245))
         return true;
     else
         return false;
@@ -35,7 +35,7 @@ inline bool check_yellow(uchar *ptr,int x)
 
 inline bool check_blue(uchar *ptr,int x)
 {	
-    if((ptr[3*x]>90&&ptr[3*x]<110)&&(ptr[3*x+1]>130&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>150&&ptr[3*x+2]<180))
+    if((ptr[3*x]>90&&ptr[3*x]<110)&&(ptr[3*x+1]>160&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>120&&ptr[3*x+2]<200))
         return true;
     else
         return false;
@@ -43,7 +43,7 @@ inline bool check_blue(uchar *ptr,int x)
 
 inline bool check_red(uchar *ptr,int x)
 {
-    if((ptr[3*x]>170||(ptr[3*x]>=0&&ptr[3*x]<10))&&(ptr[3*x+1]>200&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>150&&ptr[3*x+2]<=190))
+    if((ptr[3*x]>0&&ptr[3*x]<5)&&(ptr[3*x+1]>170&&ptr[3*x+1]<230)&&(ptr[3*x+2]>130&&ptr[3*x+2]<200))
         return true;
     else
         return false;
@@ -59,7 +59,7 @@ inline bool check_lgreen(uchar *ptr,int x)
 
 inline bool check_violet(uchar *ptr,int x)
 {
-    if((ptr[3*x]>120&&ptr[3*x]<140)&&(ptr[3*x+1]>100&&ptr[3*x+1]<140)&&(ptr[3*x+2]>100&&ptr[3*x+2]<=140))
+    if((ptr[3*x]>5&&ptr[3*x]<17)&&(ptr[3*x+1]>150&&ptr[3*x+1]<210)&&(ptr[3*x+2]>140&&ptr[3*x+2]<=210))
         return true;
     else
         return false;
@@ -67,7 +67,7 @@ inline bool check_violet(uchar *ptr,int x)
 
 inline bool check_pink(uchar *ptr,int x)
 {
-    if((ptr[3*x]>165&&ptr[3*x]<180)&&(ptr[3*x+1]>120&&ptr[3*x+1]<230)&&(ptr[3*x+2]>160&&ptr[3*x+2]<190))
+    if((ptr[3*x]>165||(ptr[3*x]>=0&&ptr[3*x]<5))&&(ptr[3*x+1]>150&&ptr[3*x+1]<=220)&&(ptr[3*x+2]>120&&ptr[3*x+2]<=180))
         return true;
     else
         return false;
@@ -75,7 +75,7 @@ inline bool check_pink(uchar *ptr,int x)
 
 inline bool check_dgreen(uchar *ptr,int x)
 {
-    if((ptr[3*x]>40&&ptr[3*x]<60)&&(ptr[3*x+1]>90&&ptr[3*x+1]<=135)&&(ptr[3*x+2]>150&&ptr[3*x+2]<170))
+    if((ptr[3*x]>45&&ptr[3*x]<65)&&(ptr[3*x+1]>90&&ptr[3*x+1]<=175)&&(ptr[3*x+2]>120&&ptr[3*x+2]<190))
         return true;
     else
         return false;

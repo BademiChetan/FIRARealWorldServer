@@ -16,40 +16,44 @@ char c=0;
 //CvCapture *capture= cvCreateCameraCapture(1);
 
 CvPoint ClosestFrontCenter( IplImage* frame, CvPoint closest_to ){
-CvSeq* contours = 0,*FrontContour = 0;
-	CvMemStorage* str = cvCreateMemStorage(0);
-	CvMemStorage* boxfromseq_str = cvCreateMemStorage(0);
-	CvMemStorage* storage =  cvCreateMemStorage(0);    
-	int a = 0, b = 0;
-	int j = 0;
-	int min_dis = 10000;
-	int dis = 0;
-	CvPoint center = cvPoint( 0, 0 ), final_cen = cvPoint( 0, 0 );
-	CvBox2D contour_box;
+    CvSeq* contours = 0,*FrontContour = 0;
+    CvMemStorage* str = cvCreateMemStorage(0);
+    CvMemStorage* boxfromseq_str = cvCreateMemStorage(0);
+    CvMemStorage* storage =  cvCreateMemStorage(0);    
+    int a = 0, b = 0;
+    int j = 0;
+    int min_dis = 10000;
+    int dis = 0;
+    CvPoint center = cvPoint( 0, 0 ), final_cen = cvPoint( 0, 0 );
+    CvBox2D contour_box;
 
-	//Finds all the external contours in the mask given by <frame>
-	cvFindContours( frame, storage, &contours, sizeof( CvContour ), CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, cvPoint( 0, 0 ) );
-	//cvDrawContours( img, contours, cvScalar( 255, 255, 255, 0 ), cvScalar( 255, 255, 255, 0 ) , 1, 5, 8, cvPoint( 0, 0 ) );
+    //Finds all the external contours in the mask given by <frame>
+    cvFindContours( frame, storage, &contours, sizeof( CvContour ), CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, cvPoint( 0, 0 ) );
+    //cvDrawContours( img, contours, cvScalar( 255, 255, 255, 0 ), cvScalar( 255, 255, 255, 0 ) , 1, 5, 8, cvPoint( 0, 0 ) );
 
-	for( CvSeq* con = contours; con != NULL; con = con->h_next ){
-		if( cvContourArea( con, CV_WHOLE_SEQ ) > THRESH_AREA ){
-			int b = con->total - 1;
+    for( CvSeq* con = contours; con != NULL; con = con->h_next ){
+        if( cvContourArea( con, CV_WHOLE_SEQ ) > THRESH_AREA ){
+            int b = con->total - 1;
 
-			FrontContour = cvSeqSlice( con, cvSlice( 0, b ), str, 0 );
+            FrontContour = cvSeqSlice( con, cvSlice( 0, b ), str, 0 );
 
-			if( FrontContour ){
-				contour_box = cvMinAreaRect2( FrontContour, boxfromseq_str );
-				center = cvPoint( ( int ) contour_box.center.x, ( int ) contour_box.center.y );
-				dis = distanc( center, closest_to );
-				if( dis < min_dis && dis <= BOT_WIDTH ){
-					min_dis = dis;
-					final_cen = center;
-				}
-			}
-		}
-	}
+            if( FrontContour ){
+                contour_box = cvMinAreaRect2( FrontContour, boxfromseq_str );
+                center = cvPoint( ( int ) contour_box.center.x, ( int ) contour_box.center.y );
+                dis = distanc( center, closest_to );
+                if( dis < min_dis && dis <= BOT_WIDTH ){
+                    min_dis = dis;
+                    final_cen = center;
+                }
+            }
+        }
+    }
 
-	return final_cen;
+
+    cvReleaseMemStorage( &str );
+    cvReleaseMemStorage( &boxfromseq_str);
+    cvReleaseMemStorage( &storage );
+    return final_cen;
 }
 
 
@@ -83,6 +87,9 @@ CvSeq* contours = 0;
 		}
 	}
 
+    cvReleaseMemStorage( &str );
+    cvReleaseMemStorage( &boxfromseq_str);
+    cvReleaseMemStorage( &finalcon_str);
 	return center;
 
 }
@@ -125,6 +132,9 @@ CvSeq* contours = 0;
 	if( contours )
 		cvClearSeq( contours );
 
+    cvReleaseMemStorage( &str );
+    cvReleaseMemStorage( &boxfromseq_str);
+    cvReleaseMemStorage( &storage );
 	return center;
 }
 
