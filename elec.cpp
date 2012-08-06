@@ -1247,7 +1247,7 @@ void ensure_bot_free(int botID)
  * DESCRIPTION  : Call check_bot_free till bot becomes free
  * RETURN VALUES: NONE
  ************************************************/
-void wait_4_bot(int botID)
+bool wait_4_bot(int botID)
 {
     unsigned char wait_timeout=0;
     if(STR_DEBUG)
@@ -1255,13 +1255,15 @@ void wait_4_bot(int botID)
     while(!check_bot_free(botID))
     {	
         if(wait_timeout>NO_TIMEOUT_4_WAIT)
-	{
-		cout<<"URGENT!!! Report to Bazooka that we need to change the NO_TIMEOUT_4_WAIT"<<endl;
-		cout<<"Press any key to continue the program...The command under execution will be interrupted for you. :)"<<endl;
-		ensure_bot_free(botID);
-		break;
-	}
+		{
+			cout<<"URGENT!!! Report to Bazooka that we need to change the NO_TIMEOUT_4_WAIT"<<endl;
+			cout<<"Press any key to continue the program...The command under execution will be interrupted for you. :)"<<endl;
+			ensure_bot_free(botID);
+            return 1;
+			break;
+		}
     }
+    return 0;
 }
 
 #ifndef FINAL

@@ -10,7 +10,7 @@ extern bool check_bot_free(int botID);
 
 extern void ensure_bot_free(int botID);
 
-extern void wait_4_bot(int botID);
+extern bool wait_4_bot(int botID);
 
 extern void bot_status();
 

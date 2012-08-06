@@ -59,28 +59,7 @@ int main( int argc, char** argv ){
     Ball.location = pitch;
     int frames=0;
 #ifdef ELEC
-   /* e_sendenccmd(0,'F',50,80);
-    while(!check_bot_free(0))
-    {
-        updateframe();
-        cout<<++frames<<endl;
-    }
-    cout<<"Medium version"<<endl;
-    frames=0;
-    e_sendenccmd(0,'F',50,120);
-    while(!check_bot_free(0))
-    {
-        updateframe();
-        cout<<++frames<<endl;
-    }*/
-    cout<<"Faster version"<<endl;
-    frames=0;
-    e_sendenccmd(0,'F',150,254);
-    while(!check_bot_free(0))
-    {
-        updateframe();
-        cout<<++frames<<endl;
-    }
+    nc_gotoxyov(0,30,30,30,120);
     exit(0);
 #endif
 
