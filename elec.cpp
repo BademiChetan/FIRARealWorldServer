@@ -1269,18 +1269,9 @@ bool wait_4_bot(int botID)
 #ifndef FINAL
 int main()
 {	
-	Uinit();
-    int botID=3;
-    e_sendenccmd(3,'P',230);
-    e_sendenccmd(3,'T',70);
-    bot_status();
-    for(int i=0;i<5;++i)
-    {
-        e_sendenccmd(3,'F',' ',100);
-        wait_4_bot(3);
-        e_sendenccmd(3,'r',90);
-        wait_4_bot(3);
-    }
+    Uinit();
+    int botID=0;
+    e_sendenccmd(botID,'F',30,250);
     Uend();
 }
 #endif
