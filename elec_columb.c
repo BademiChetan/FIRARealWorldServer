@@ -82,19 +82,44 @@ void gotoxyov(int botID, int x_final, int y_final, int o, char v)
 }
 
 /*************************************************
- * FUNCTION NAME: gotoxy() 
+ * FUNCTION NAME: nc_gotoxyov() 
  * ARGUMENTS    : int botID     => Bot ID
  *                int x_final   => Final x coordinate
  *                int y_final   => Final y coordinate
  *                int o         => Final orientation
  *                char v        => Velocity preferred
- * DESCRIPTION  : Simulate columb code and get the bot reach the desired location without hitting the walls and the bots (ours and 
- *                there)
+ * DESCRIPTION  : 
  * RETURN VALUES: 
  ************************************************/
-void gotoxyovstr(int botID, int x_final, int y_final, int o, char v)
+void nc_gotoxyov(int botID, int x_final, int y_final, int o, char v)
 {
    double bx=0,by=0,ba=0;
+   char action=0;
    bx=bot[botID].x;
+   by=bot[botID].y;
+   ba=bot[botID].angle;
+   float dist=sqrt(pow(x_final-bx,2)+pow(y_final-by,2));
+   float angle=atan(y_final/x_final);
+   diff_angle=getdiffangle(bot[botID].angle,action);
+   bool wait;
+   e_sendenccmd(botID,action,diff_angle);
+   wait=wait_4_bot(botID);
+   if(wait)
+   {
+       cout<<"Pain in turning:("<<endl;
+    }
+   //check for the overshoot and all if you want
+   e_sendenccmd(botID,'F',dist,v);
+   wait=wait_4_bot(botID);
+   if(wait)
+   {
+       cout<<"Pain in moving forward:("<<endl;
+   }
+   diff_angle=getdiffangle(o,action);
+   wait=wait_4_bot(botID);
+   if(wait)
+   {
+       cout<<"Pain in final orientation:("<<endl;
+   }
 }
 
