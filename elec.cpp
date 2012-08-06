@@ -89,7 +89,7 @@ void e_sendenccmd(int botID, char action, int value,unsigned char speed);
 bool check_bot_free(int botID);
 bool make_bot_free(int botID);
 void ensure_bot_free(int botID);
-void wait_4_bot(int botID);
+bool wait_4_bot(int botID);
  /************************************************/
 
  
