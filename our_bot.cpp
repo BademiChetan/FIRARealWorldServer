@@ -22,6 +22,7 @@ our_bot::our_bot(){
             2* BOUND_RECT, 2 * BOUND_RECT);
     mask[0] = cvCreateImage( cvSize(640,480), IPL_DEPTH_8U, 1 );
     mask[1] = cvCreateImage( cvSize(640,480), IPL_DEPTH_8U, 1 );
+    idle = true; 
 }
 
 our_bot::~our_bot(){

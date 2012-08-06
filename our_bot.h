@@ -7,8 +7,10 @@ class our_bot{
         CvRect location;
         CvPoint front_center, back_center, bot_center;
         double x,y,angle;
+        bool idle; 
+        boost::thread *thread_ptr; 
 
-        our_bot();
+        our_bot(); 
         void FindCenter();
         double pos();
         double orientation();

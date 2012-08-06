@@ -19,8 +19,8 @@ using namespace std;
 #include "global_var.h"
 #include "kick_off_calibration.h"
 
-CvCapture *capture = cvCreateCameraCapture(1);
-//CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
+//CvCapture *capture = cvCreateCameraCapture(1);
+CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
 IplImage *hsv = cvCreateImage( cvGetSize( img ), IPL_DEPTH_8U, 3 );
@@ -58,25 +58,30 @@ int main( int argc, char** argv ){
 
     Ball.location = pitch;
     int frames=0;
-#ifdef ELEC
-    nc_gotoxyov(0,30,30,30,120);
-    exit(0);
-#endif
 
     while( c != 27 ){
 
-
+        // Update the frame and all other details. 
         updateframe();
-
-
-    cout<<"bot values = "<<bot[0].x<<' '<<bot[0].y<<' '<<bot[0].angle<<endl;
-
-
+        cout<<"bot values = "<<bot[0].x<<' '<<bot[0].y<<' '<<bot[0].angle<<endl;
         FrameCount++;
-
         cout<<FrameCount<<endl;
 
-        //For debugging - checking frame by frame.
+        // Fork off threads here
+        for (int i = 0; i < NO_OF_OUR_BOTS; i ++) {
+            if (bot[i].idle) {
+                // give it some work
+            }
+        }
+
+        // Join all the idle threads
+        for (int i = 0; i < NO_OF_OUR_BOTS; i ++) {
+            if (bot[i].idle) {
+                bot[i].thread_ptr -> join(); 
+            }
+        }
+
+        //Uncomment the next line for debugging frame by frame
         //c=' ';
         if( c == ' ' ){
             c = cvWaitKey( 0 );
