@@ -89,6 +89,10 @@ int main( int argc, char** argv ){
 
         updateframe();
 
+
+    cout<<"bot values = "<<bot[0].x<<' '<<bot[0].y<<' '<<bot[0].angle<<endl;
+
+
         FrameCount++;
 
         cout<<FrameCount<<endl;

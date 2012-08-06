@@ -6,7 +6,7 @@
 
 #define OPP_JERSEY_COLOR 'y'
 
-#define NUM_OF_OUR_BOTS 3
+#define NUM_OF_OUR_BOTS 1
 
 #define NUM_OF_OPP_BOTS 2
 
@@ -20,7 +20,12 @@
 
 #define BOT_WIDTH 20
 
-
+/**********************
+  co-ordinates :
+    x-axis - right from the center (+ve)
+    y-axis - upwards from the center (+ve)
+    angle  - starts from the +ve x-axis and increases anticlockwise (0-360).
+  ********************/
 extern CvRect goal_rect;
 extern CvPoint arena_center;
 extern CvRect pitch;
