@@ -1,5 +1,5 @@
 #pragma once
-#define xELEC									//Remove x corruption to remove elec stuff
+#define ELEC // Remove x corruption to add elec stuff
 #include <cv.h>
 #include <highgui.h>
 
@@ -17,6 +17,7 @@ using namespace std;
 #include "ball.h"
 #include "update_frame.h"
 #include "global_var.h"
+#include "bot_actions.h"
 #include "kick_off_calibration.h"
 
 //CvCapture *capture = cvCreateCameraCapture(1);
@@ -24,7 +25,7 @@ CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
 IplImage *hsv = cvCreateImage( cvGetSize( img ), IPL_DEPTH_8U, 3 );
-int FrameCount = 0;
+int FrameCount = 0; 
 CvRect goal_rect = cvRect( 0, 0, 0, 0 );
 CvRect pitch;
 CvPoint arena_center;
@@ -68,15 +69,19 @@ int main( int argc, char** argv ){
         cout<<FrameCount<<endl;
 
         // Fork off threads here
-        for (int i = 0; i < NO_OF_OUR_BOTS; i ++) {
-            if (bot[i].idle) {
+        for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+            if (check_bot_free(i)) {
                 // give it some work
+                cout << "Starting = " << FrameCount << endl; 
+                bot[i].thread_ptr = new boost::thread(
+                        boost::bind(turn, i, 240,'r')); 
             }
         }
 
         // Join all the idle threads
-        for (int i = 0; i < NO_OF_OUR_BOTS; i ++) {
-            if (bot[i].idle) {
+        for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+            if (check_bot_free(i)) {
+                cout << "Ending = " << FrameCount << endl; 
                 bot[i].thread_ptr -> join(); 
             }
         }

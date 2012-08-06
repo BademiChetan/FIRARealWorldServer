@@ -1,4 +1,6 @@
 #pragma once
+#include <cv.h>
+#include <highgui.h>
 
 #define THRESH_AREA 50
 
@@ -34,4 +36,4 @@ extern CvCapture *capture;
 extern IplImage *img;
 extern IplImage *hsv;
 extern CvSeq* contours, *finalcon;
-extern int FrameCount;
+extern int FrameCount; 
