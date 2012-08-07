@@ -121,7 +121,7 @@ cout<<"\n\t("<<' '<<box.x<<' '<<box.y<<' '<<box.width<<' '<<box.height<<") "<<en
 cout<<endl;
 if(color==1)
 {
-IplImage *hsvimg=cvCreateImage(cvGetSize(image),IPL_DEPTH_8U,3);
+IplImage *hsvimg=cvCreateImage(cvSize(640, 480),IPL_DEPTH_8U,3);
 cvCvtColor(image,hsvimg,CV_BGR2HSV);
 for(n=box.y;n<box.y+box.height;n++)
 	{

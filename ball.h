@@ -9,6 +9,7 @@ class ball
 
         void update();
         void FindCenter( CvPoint &cen );
+        void getCenter(double &x, double &y); 
         ball();
 };
 

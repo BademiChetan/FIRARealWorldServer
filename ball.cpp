@@ -25,6 +25,10 @@ void ball::FindCenter( CvPoint &cen ){
     cen = LargestContourCenter( mask );	
 }
 
+void ball::getCenter(double &x, double &y) {
+    x = ( ( center.x - arena_center.x ) *250 ) / goal_rect.width;		//center wrt the arena center.
+    y = -1*((center.y-arena_center.y)*250)/goal_rect.width;
+}
 
 void ball::update(){
 

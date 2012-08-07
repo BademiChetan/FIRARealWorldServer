@@ -21,11 +21,11 @@ using namespace std;
 #include "bot_actions.h"
 #include "kick_off_calibration.h"
 
-//CvCapture *capture = cvCreateCameraCapture(1);
-CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
+CvCapture *capture = cvCreateCameraCapture(1);
+//CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
-IplImage *hsv = cvCreateImage( cvGetSize( img ), IPL_DEPTH_8U, 3 );
+IplImage *hsv = cvCreateImage( cvSize( 640, 480), IPL_DEPTH_8U, 3 );
 int FrameCount = 0; 
 CvRect goal_rect = cvRect( 0, 0, 0, 0 );
 CvRect pitch;
@@ -80,22 +80,41 @@ int main( int argc, char** argv ){
     int frames=0;
 
     while( c != 27 ){
+#ifdef ELEC
         bot_status(); 
+#endif
         updateframe(); 
+        double x2, y2; 
+        double x1 = bot[0].x; 
+        double y1 = bot[0].y; 
+        double angle = bot[0].angle; 
+        Ball.getCenter(x2, y2); 
+        printf("%d:  Bot at (%lf, %lf) and oriented at %lf\n", FrameCount, x1, y1, angle); 
+        printf("%d:  Ball at (%lf, %lf)\n", FrameCount, x2, y2); 
         FrameCount ++; 
-        for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-            if (bot_queue[i].empty()) {
-                algo(i); 
-            }
+        // Just turn towards the wall
+        double orient = get_angle_to_point(x1, y1, x2, y2); 
+        cout << orient << endl; 
+        if (check_bot_free(0)) {
+            printf("Turning now...\n"); 
+            e_sendenccmd(0, orient > angle ? 'l' : 'r', (int)(fabs(angle - orient))); 
         }
 
-        for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-            if (check_bot_free(i)) {
-                Action curr = bot_queue[i].front(); 
-                curr.do_action(); 
-                bot_queue[i].pop(); 
-            }
-        }
+       // for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+       //     if (bot_queue[i].empty()) {
+       //         algo(i); 
+       //     }
+       // }
+
+#ifdef ELEC
+       // for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+       //     if (check_bot_free(i)) {
+       //         Action curr = bot_queue[i].front(); 
+       //         curr.do_action(); 
+       //         bot_queue[i].pop(); 
+       //     }
+       // }
+#endif
 
     }
 
