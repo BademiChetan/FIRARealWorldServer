@@ -27,9 +27,10 @@ bool auto_correct=1;                                            // Auto correcti
 #define TIMEOUT_READ    	5000                                    // Timeout in read
 #define SLEEP_TIME      	1000
 #define ANGLE_TOL       	10
-#define X_TOL           	2
-#define Y_TOL           	2
+#define X_TOL           	10
+#define Y_TOL           	10
 #define NO_TIMEOUT_4_WAIT	30
+#define NO_TIMEOUT_2_KILL   10	
 //bool update_table=1;                                          // Updates the table with the newly read values of the enc/battery
 
 #include "iostream"
@@ -1104,6 +1105,7 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
 {
     struct timeval begin,end;
     double diff=0,diff_s=0,diff_us=0;
+    char i=0;
     char res=sendenccmd(botID,action,value,speed);
 #ifdef FINAL
     double bx=0,by=0,ba=0;
@@ -1119,16 +1121,19 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
     if(res==1)
     {
         cout<<"Bot "<<botID<<" commits error no. "<<int(++bot_code[botID][2])<<endl<<endl;
+        i=0;
         if(auto_correct)
         {
             if(STR_DEBUG)
                 cout<<"Trying again as the bot was found to be busy..."<<endl;
             ensure_bot_free(botID);
-            while(sendenccmd(botID,action,value,speed));
+            while(sendenccmd(botID,action,value,speed)&&(i<NO_TIMEOUT_2_KILL))
+                ++i;
         }
     }
     else if((enforce_cmd)&&(res==2))                                             //No ack
     {
+        i=0;
         if(STR_DEBUG)
             cout<<"Trying again as the ack failed in last attempt..."<<endl;
         do
@@ -1140,8 +1145,9 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 cout<<"We have successfully detected a rogue packet!!!"<<endl;
                 break;
             }
+            ++i;
 #endif
-        }while(sendenccmd(botID,action,value,speed));
+        }while(sendenccmd(botID,action,value,speed)&&(i<NO_TIMEOUT_2_KILL));
         //The tally has not been added to success as it is known that eventually it has to succeed
     }
     else

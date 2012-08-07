@@ -17,7 +17,7 @@ using namespace std;
 
 inline bool check_orange(uchar *ptr,int x)
 {
-	if((ptr[3*x]>5&&ptr[3*x]<25)&&ptr[3*x+1]>150&&ptr[3*x+1]<=245&&ptr[3*x+2]>60&&ptr[3*x+2]<180)
+	if((ptr[3*x]>5&&ptr[3*x]<25)&&ptr[3*x+1]>200&&ptr[3*x+1]<=245&&ptr[3*x+2]>60&&ptr[3*x+2]<180)
 		return true;
 	else
 		return false;

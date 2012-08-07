@@ -36,16 +36,18 @@ void algo(int id) {
     double x = bot[id].x; 
     double y = bot[id].y; 
     double angle = bot[id].angle; 
-
-    double bx = Ball.center.x; 
-    double by = Ball.center.y; 
+    
+    double bx, by; 
+    Ball.getCenter(bx, by); 
 
     // if not very close to the ball, go to the ball
-    if ( fabs(bx - x) > 1 && fabs(y - by) > 1 ) {
+    if ( fabs(bx - x) > 1  || fabs(y - by) > 1 ) {
         vector<Action> res = hold(id, x, y, angle, bx, by); 
         for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
             bot_queue[id].push(*it); 
         }
+    } else {
+        printf("Already holding the ball dude! WTF!\n"); 
     }
 }
 
@@ -80,24 +82,13 @@ int main( int argc, char** argv ){
     int frames=0;
 
     while( c != 27 ){
-#ifdef ELEC
-        bot_status(); 
-#endif
+
         updateframe(); 
-        double x2, y2; 
-        double x1 = bot[0].x; 
-        double y1 = bot[0].y; 
-        double angle = bot[0].angle; 
-        Ball.getCenter(x2, y2); 
-        printf("%d:  Bot at (%lf, %lf) and oriented at %lf\n", FrameCount, x1, y1, angle); 
-        printf("%d:  Ball at (%lf, %lf)\n", FrameCount, x2, y2); 
-        FrameCount ++; 
-        // Just turn towards the wall
-        double orient = get_angle_to_point(x1, y1, x2, y2); 
-        cout << orient << endl; 
-        if (check_bot_free(0)) {
-            printf("Turning now...\n"); 
-            e_sendenccmd(0, orient > angle ? 'l' : 'r', (int)(fabs(angle - orient))); 
+
+        if (bot_queue[0].empty()) {
+            algo(0); 
+        } else {
+            printf("."); 
         }
 
        // for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
@@ -107,13 +98,13 @@ int main( int argc, char** argv ){
        // }
 
 #ifdef ELEC
-       // for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-       //     if (check_bot_free(i)) {
-       //         Action curr = bot_queue[i].front(); 
-       //         curr.do_action(); 
-       //         bot_queue[i].pop(); 
-       //     }
-       // }
+        for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+            if (check_bot_free(i)) {
+                Action curr = bot_queue[i].front(); 
+                curr.do_action(); 
+                bot_queue[i].pop(); 
+            }
+        }
 #endif
 
     }
