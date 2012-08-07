@@ -78,9 +78,6 @@ int main( int argc, char** argv ){
 
     Ball.location = pitch;
     int frames=0;
-    int threads_created = 0 ; 
-    int threads_deleted = 0 ; 
-
 
     while( c != 27 ){
         bot_status(); 
