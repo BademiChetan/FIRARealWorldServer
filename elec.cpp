@@ -1168,6 +1168,11 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
     }
 }
 
+bool is_bot_free(int id) {
+    if (bot_code[id][1] == 'f' )
+        return true;
+    return false; 
+}
 /*************************************************
  * FUNCTION NAME: check_bot_free()
  * ARGUMENTS    : int botID     => Bot no. to be checked

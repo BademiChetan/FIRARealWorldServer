@@ -1,5 +1,5 @@
 #pragma once
-#define ELEC // Remove x corruption to add elec stuff
+#define xELEC // Remove x corruption to add elec stuff
 #include <cv.h>
 #include <highgui.h>
 #include <ctime> 
@@ -49,6 +49,7 @@ void algo(int id) {
     } else {
         printf("Already holding the ball dude! WTF!\n"); 
     }
+    cout << "Returning from algo\n " ; 
 }
 
 int main( int argc, char** argv ){
@@ -84,6 +85,7 @@ int main( int argc, char** argv ){
     while( c != 27 ){
 
         updateframe(); 
+
 
         if (bot_queue[0].empty()) {
             algo(0); 

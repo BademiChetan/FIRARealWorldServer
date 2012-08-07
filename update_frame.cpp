@@ -86,7 +86,7 @@ void updateframe(){
 
 
     //Not rendering all the frames to decrease the code execution time.
-    if( FrameCount % 5 == 0 )
+    //if( FrameCount % 5 == 0 )
     {
         cvCircle( img, Ball.center, Ball.location.width / 5, CV_RGB( 255, 0, 0 ), 1, 8, 0 );
 
@@ -97,13 +97,16 @@ void updateframe(){
             cvRectangle( img, cvPoint( bot[i].location.x, bot[i].location.y ),
                     cvPoint( bot[i].location.x + bot[i].location.width, bot[i].location.y + bot[i].location.height ),
                     cvScalar( 255, 0, 0, 0 ), 1, 4, 0 );
+	    cvLine( img, bot[i].front_center, bot[i].back_center, cvScalar(255,0,8,0),5);
+
         }
 
         for( int i = 0; i < NUM_OF_OPP_BOTS; i++ ){
             cvCircle( img, o_bot[i].center, 2, CV_RGB( 255, 255, 255 ), -1, 8, 0 );
             cvRectangle( img, cvPoint( o_bot[i].location.x, o_bot[i].location.y ),
                     cvPoint( o_bot[i].location.x + o_bot[i].location.width, o_bot[i].location.y + o_bot[i].location.height ),
-                    cvScalar( 0, 0, 255, 0 ), 1, 4, 0 );
+                    cvScalar( 0, 0, 255, 0 ), 1, 4, 0 );	
+
         }
 
         cvShowImage( "SAHAS", img);
