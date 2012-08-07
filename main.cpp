@@ -2,6 +2,7 @@
 #define ELEC // Remove x corruption to add elec stuff
 #include <cv.h>
 #include <highgui.h>
+#include <ctime> 
 
 using namespace cv;
 using namespace std;
@@ -29,6 +30,24 @@ int FrameCount = 0;
 CvRect goal_rect = cvRect( 0, 0, 0, 0 );
 CvRect pitch;
 CvPoint arena_center;
+queue<Action> bot_queue[5]; 
+
+void algo(int id) {
+    double x = bot[id].x; 
+    double y = bot[id].y; 
+    double angle = bot[id].angle; 
+
+    double bx = Ball.center.x; 
+    double by = Ball.center.y; 
+
+    // if not very close to the ball, go to the ball
+    if ( fabs(bx - x) > 1 && fabs(y - by) > 1 ) {
+        vector<Action> res = hold(id, x, y, angle, bx, by); 
+        for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
+            bot_queue[id].push(*it); 
+        }
+    }
+}
 
 int main( int argc, char** argv ){
 
@@ -59,39 +78,28 @@ int main( int argc, char** argv ){
 
     Ball.location = pitch;
     int frames=0;
+    int threads_created = 0 ; 
+    int threads_deleted = 0 ; 
+
 
     while( c != 27 ){
-
-        // Update the frame and all other details. 
-        updateframe();
-        cout<<"bot values = "<<bot[0].x<<' '<<bot[0].y<<' '<<bot[0].angle<<endl;
-        FrameCount++;
-        cout<<FrameCount<<endl;
-
-        // Fork off threads here
+        bot_status(); 
+        updateframe(); 
+        FrameCount ++; 
         for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-            if (check_bot_free(i)) {
-                // give it some work
-                cout << "Starting = " << FrameCount << endl; 
-                bot[i].thread_ptr = new boost::thread(
-                        boost::bind(turn, i, 240,'r')); 
+            if (bot_queue[i].empty()) {
+                algo(i); 
             }
         }
 
-        // Join all the idle threads
         for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
             if (check_bot_free(i)) {
-                cout << "Ending = " << FrameCount << endl; 
-                bot[i].thread_ptr -> join(); 
+                Action curr = bot_queue[i].front(); 
+                curr.do_action(); 
+                bot_queue[i].pop(); 
             }
         }
 
-        //Uncomment the next line for debugging frame by frame
-        //c=' ';
-        if( c == ' ' ){
-            c = cvWaitKey( 0 );
-            c = 0;
-        }
     }
 
 #ifdef ELEC
