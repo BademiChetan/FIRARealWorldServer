@@ -80,7 +80,7 @@ void updateframe(){
     cvCvtColor( img, hsv, CV_BGR2HSV );
     cvResetImageROI(img);
     cvResetImageROI(hsv);
-    //Ball.update();
+    Ball.update();
 
     our_bot_thread.join(); 
 
