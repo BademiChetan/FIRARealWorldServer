@@ -3,6 +3,7 @@
 #include <cv.h>
 #include <highgui.h>
 #include <ctime> 
+#include <boost/thread.hpp>
 
 using namespace cv;
 using namespace std;
@@ -22,7 +23,7 @@ using namespace std;
 #include "kick_off_calibration.h"
 
 CvCapture *capture = cvCreateCameraCapture(1);
-//CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
+// CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
 IplImage *hsv = cvCreateImage( cvSize( 640, 480), IPL_DEPTH_8U, 3 );
@@ -33,23 +34,35 @@ CvPoint arena_center;
 queue<Action> bot_queue[5]; 
 
 void algo(int id) {
-    double x = bot[id].x; 
-    double y = bot[id].y; 
-    double angle = bot[id].angle; 
-    
-    double bx, by; 
-    Ball.getCenter(bx, by); 
+    if (id == 0) {
+        // Attacker
+        double x = bot[id].x; 
+        double y = bot[id].y; 
+        double angle = bot[id].angle; 
 
-    // if not very close to the ball, go to the ball
-    if ( fabs(bx - x) > 1  || fabs(y - by) > 1 ) {
-        vector<Action> res = hold(id, x, y, angle, bx, by); 
-        for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
-            bot_queue[id].push(*it); 
+        double bx, by; 
+        Ball.getCenter(bx, by); 
+
+        // if not very close to the ball, go to the ball
+        if ( fabs(bx - x) > 1  || fabs(y - by) > 1 ) {
+            vector<Action> res = hold(id, x, y, angle, bx, by); 
+            for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
+                bot_queue[id].push(*it); 
+            }
+        } else {
+            printf("Already holding the ball dude! WTF!\n"); 
         }
-    } else {
-        printf("Already holding the ball dude! WTF!\n"); 
+    } else if (id == 1) {
+
+    } else if (id == 2) {
+
     }
-    cout << "Returning from algo\n " ; 
+}
+
+void keep_updating_frames() {
+    while (true) {
+        updateframe(); 
+    }
 }
 
 int main( int argc, char** argv ){
@@ -80,35 +93,40 @@ int main( int argc, char** argv ){
         o_bot[i].location = pitch;
 
     Ball.location = pitch;
-    int frames=0;
 
-    while( c != 27 ){
-
+//    boost::thread ip_thread(keep_updating_frames()); 
+//
+//    while( c != 27 ){
+//
+//        if (bot_queue[0].empty()) {
+//            algo(0); 
+//        } else {
+//            printf("."); 
+//        }
+//
+//        // for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+//        //     if (bot_queue[i].empty()) {
+//        //         algo(i); 
+//        //     }
+//        // }
+//
+//#ifdef ELEC
+//        for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+//            if (check_bot_free(i)) {
+//                Action curr = bot_queue[i].front(); 
+//                curr.do_action(); 
+//                bot_queue[i].pop(); 
+//            }
+//        }
+//#endif
+//        updateframe(); 
+//
+//    }
+//
+//    ip_thread.join(); 
+    while(true) {
         updateframe(); 
-
-
-        if (bot_queue[0].empty()) {
-            algo(0); 
-        } else {
-            printf("."); 
-        }
-
-       // for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-       //     if (bot_queue[i].empty()) {
-       //         algo(i); 
-       //     }
-       // }
-
-#ifdef ELEC
-        for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-            if (check_bot_free(i)) {
-                Action curr = bot_queue[i].front(); 
-                curr.do_action(); 
-                bot_queue[i].pop(); 
-            }
-        }
-#endif
-
+        cout << FrameCount++ << endl; 
     }
 
 #ifdef ELEC
