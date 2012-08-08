@@ -20,7 +20,7 @@ int ENSURE_TIMEOUT=5;                                           // No. of tries 
 bool enforce_cmd=1;                                             // Enforces the command in the event of ack fail
 bool ensure_cmd=1;                                              // In cases of error, the bot is made free
 bool auto_correct=1;                                            // Auto correction,i.e, in the event of error. The bot is 
-                                                                // interrupted and the command is forced.
+// interrupted and the command is forced.
 #define max_enc_value   	255                                     // Encoder maximum value
 #define NO_TIMEOUT      	1                                       // The amount of tries to read from AP before giving up
 #define TIMEOUT_VAL     	10000                                   // Timeout value in ms
@@ -43,10 +43,10 @@ bool auto_correct=1;                                            // Auto correcti
 #include "math.h"
 #include "sys/time.h"
 #ifdef FINAL
-    #include "cv.h"
-    #include "update_frame.h"
-    #include "our_bot.h"
-    using namespace cv;
+#include "cv.h"
+#include "update_frame.h"
+#include "our_bot.h"
+using namespace cv;
 #endif
 
 using namespace std;
@@ -71,7 +71,7 @@ unsigned long int read_timeout=0;                               // Counter for t
  *                      'f' -> Free
  * Counters for no. of errors, successes and interruptions
  *************************************************************************************/
- /************************************************/
+/************************************************/
 
 /***************Function prototypes****************/
 void elecsleep(unsigned int mseconds);
@@ -91,9 +91,9 @@ bool check_bot_free(int botID);
 bool make_bot_free(int botID);
 void ensure_bot_free(int botID);
 bool wait_4_bot(int botID);
- /************************************************/
+/************************************************/
 
- 
+
 /*************************************************
  * FUNCTION NAME: elecsleep()
  * ARGUMENTS    : unsigned int mseconds => mseconds
@@ -139,7 +139,7 @@ int usart_init()
     {
         if(!usart_fl)
             cout<<"Port not open...trying"<<endl;
- 	   	try
+        try
         {
             pu->Open(SerialPort::BAUD_9600,
                     SerialPort::CHAR_SIZE_8,
@@ -174,8 +174,8 @@ void bot_status()
 {
     cout<<"**********************************************************Bots Status*****************************************************************"<<endl;
     /*cout<<"ID  "<<"Conx  "<<"Status  "<<"Errors  "<<"Success "<<"Interrupted "<<"No_ack   "<<"Gen_pwm  "<<"Enc_cnt "<<"Turn_pwm "<<"Enc_cnt_turn "<<"Battery "<<endl;
-    for(int i=0;i<5;++i)
-        cout<<i<<"     "<<bot_code[i][0]<<"      "<<bot_code[i][1]<<"      "<<int(bot_code[i][2])<<"        "<<int(bot_code[i][3])<<"        "<<int(bot_code[i][4])<<"         "<<int(bot_code[i][5])<<"         "<<int(bot_code[i][6])<<"        "<<int(bot_code[i][7])<<"         "<<int(bot_code[i][8])<<"         "<<int(bot_code[i][9])<<"         "<<int(bot_code[i][10])<<endl;*/
+      for(int i=0;i<5;++i)
+      cout<<i<<"     "<<bot_code[i][0]<<"      "<<bot_code[i][1]<<"      "<<int(bot_code[i][2])<<"        "<<int(bot_code[i][3])<<"        "<<int(bot_code[i][4])<<"         "<<int(bot_code[i][5])<<"         "<<int(bot_code[i][6])<<"        "<<int(bot_code[i][7])<<"         "<<int(bot_code[i][8])<<"         "<<int(bot_code[i][9])<<"         "<<int(bot_code[i][10])<<endl;*/
     cout<<"ID  "<<"Conx  "<<"Status  "<<"Errors  "<<"Success "<<"Interrupted "<<"No_ack   "<<"Gen_pwm  "<<"Enc_cnt "<<"Turn_pwm "<<"Enc_cnt_turn "<<"Battery_Voltage"<<endl;
     for(int i=0;i<5;++i)
         cout<<i<<"     "<<bot_code[i][0]<<"      "<<bot_code[i][1]<<"\t    "<<int(bot_code[i][2])<<"\t    "<<int(bot_code[i][3])<<"\t       "<<int(bot_code[i][4])<<"\t"<<int(bot_code[i][5])<<"\t  "<<int(bot_code[i][6])<<"\t   "<<int(bot_code[i][7])<<"\t    "<<int(bot_code[i][8])<<"\t      "<<int(bot_code[i][9])<<"\t\t"<<int(bot_code[i][10])<<endl;
@@ -236,7 +236,7 @@ void extract()
     while(strcmp(C2b,serial_buffer)||timedout)               
     {
         timedout=rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG);                 //Connected to all bots.
-            cout<<strcmp(C2b,serial_buffer)<<endl;
+        cout<<strcmp(C2b,serial_buffer)<<endl;
     }
     cout<<"Connected to the bots"<<endl;
 }
@@ -421,7 +421,7 @@ int is_enc_cmd(char action)
         case 'a':
         case 'd':
         case 's':{
-                    return 0;
+                     return 0;
                  }
         case 'f':
         case 'r':
@@ -491,7 +491,7 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
         cout<<endl;
         ensure_bot_free(botID);                                              //A second chance
         if(checkbotstat(botID,action))
-          return 1;
+            return 1;
     }
     if(is_enc_cmd(action)==2)                                       
     {
@@ -755,7 +755,7 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             if(timecount==NO_TIMEOUT)
             {
                 if(bot_code[botID][1]=='b')                                // If the bot is busy, only then show timeout. Else it
-                                                                           // is obviously going to timeout
+                    // is obviously going to timeout
                 {
                     if(STR_DEBUG)
                     {
@@ -889,7 +889,7 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             if(timecount==NO_TIMEOUT)
             {
                 if(bot_code[botID][1]=='b')                                  // If the bot is busy, only then show timeout. Else it
-                                                                              // is obviously going to timeout
+                    // is obviously going to timeout
                 {
                     if(STR_DEBUG)
                     {
@@ -1266,13 +1266,13 @@ bool wait_4_bot(int botID)
     while(!check_bot_free(botID))
     {	
         if(wait_timeout>NO_TIMEOUT_4_WAIT)
-		{
-			cout<<"URGENT!!! Report to Bazooka that we need to change the NO_TIMEOUT_4_WAIT"<<endl;
-			cout<<"Press any key to continue the program...The command under execution will be interrupted for you. :)"<<endl;
-			ensure_bot_free(botID);
+        {
+            cout<<"URGENT!!! Report to Bazooka that we need to change the NO_TIMEOUT_4_WAIT"<<endl;
+            cout<<"Press any key to continue the program...The command under execution will be interrupted for you. :)"<<endl;
+            ensure_bot_free(botID);
             return 1;
-			break;
-		}
+            break;
+        }
     }
     return 0;
 }
