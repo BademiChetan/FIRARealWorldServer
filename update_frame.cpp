@@ -55,7 +55,7 @@ void updateframe(){
     img = cvQueryFrame( capture );
 
     int i;
-    
+
     for(i=0;i<NUM_OF_OPP_BOTS;i++) {
         cvSetImageROI(img,o_bot[i].location);
         cvSetImageROI(hsv,o_bot[i].location);
@@ -65,8 +65,8 @@ void updateframe(){
     }
 
     boost::thread our_bot_thread(update_opp_bot); 
-   
-       for(i=0;i<NUM_OF_OUR_BOTS;i++) {
+
+    for(i=0;i<NUM_OF_OUR_BOTS;i++) {
         cvSetImageROI(img,bot[i].location);
         cvSetImageROI(hsv,bot[i].location);
         cvCvtColor( img, hsv, CV_BGR2HSV );
@@ -82,7 +82,7 @@ void updateframe(){
     cvResetImageROI(hsv);
     Ball.update();
 
-     our_bot_thread.join(); 
+    our_bot_thread.join(); 
 
 
     // Not rendering all the frames to decrease the code execution time.
@@ -97,7 +97,7 @@ void updateframe(){
             cvRectangle( img, cvPoint( bot[i].location.x, bot[i].location.y ),
                     cvPoint( bot[i].location.x + bot[i].location.width, bot[i].location.y + bot[i].location.height ),
                     cvScalar( 255, 0, 0, 0 ), 1, 4, 0 );
-	    cvLine( img, bot[i].front_center, bot[i].back_center, cvScalar(255,0,8,0),5);
+            cvLine( img, bot[i].front_center, bot[i].back_center, cvScalar(255,0,8,0),5);
 
         }
         for( int i = 0; i < NUM_OF_OPP_BOTS; i++ ){

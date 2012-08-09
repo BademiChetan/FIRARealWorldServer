@@ -1,5 +1,5 @@
 #pragma once
-#define xELEC // Remove x corruption to add elec stuff
+#define ELEC // Remove x corruption to add elec stuff
 #include <cv.h>
 #include <highgui.h>
 #include <ctime> 
@@ -22,8 +22,8 @@ using namespace std;
 #include "bot_actions.h"
 #include "kick_off_calibration.h"
 
-// CvCapture *capture = cvCreateCameraCapture(1);
-CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
+CvCapture *capture = cvCreateCameraCapture(1);
+// CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
 IplImage *hsv = cvCreateImage( cvSize( 640, 480), IPL_DEPTH_8U, 3 );
@@ -45,9 +45,9 @@ void algo(int id) {
     // TODO: Move this to elec.cpp 
     // If it's colliding with the arena, stop the bot. 
     if (x > ARENA_LENGTH - BOT_LENGTH / 2 ||
-        x < - ARENA_LENGTH + BOT_LENGTH / 2 ||
-        y > ARENA_WIDTH - BOT_LENGTH / 2 || 
-        y < - ARENA_WIDTH + BOT_LENGTH / 2) {
+            x < - ARENA_LENGTH + BOT_LENGTH / 2 ||
+            y > ARENA_WIDTH - BOT_LENGTH / 2 || 
+            y < - ARENA_WIDTH + BOT_LENGTH / 2) {
 #ifdef ELEC
         e_sendenccmd(id, 's'); 
 #endif
