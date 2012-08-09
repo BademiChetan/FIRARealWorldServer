@@ -17,16 +17,6 @@
 
  */
 
-double arena_length = 220 ; 
-double arena_width  = 180 ; 
-double goal_length = 30 ; 
-double goal_width = 15 ; 
-double bot_length = 8 ; 
-double bot_width = 8 ; 
-double ball_diameter = 3 ; 
-double PI = 3.14159265;
-double normal_velocity = 70 ; 
-double frame_rate = 15 ; 
 
 
 

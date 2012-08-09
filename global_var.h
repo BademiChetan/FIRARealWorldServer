@@ -19,8 +19,15 @@
 #define BOT4_COLOR 'd'
 
 #define BOUND_RECT 30
-
 #define BOT_WIDTH 20
+
+#define ARENA_LENGTH    220
+#define ARENA_WIDTH     180
+#define GOAL_LENGTH     30
+#define GOAL_WIDTH      15
+#define BOT_LENGTH      8
+#define BALL_DIAMETER   3
+#define PI              3.14159265
 
 /**********************
   co-ordinates :

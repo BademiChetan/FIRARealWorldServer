@@ -34,32 +34,34 @@ CvPoint arena_center;
 queue<Action> bot_queue[5]; 
 
 void algo(int id) {
-    if (id == 0) {
-        // Attacker
-        double x = bot[id].x; 
-        double y = bot[id].y; 
-        double angle = bot[id].angle; 
 
-        double bx, by; 
-        Ball.getCenter(bx, by); 
+    double x = bot[id].x; 
+    double y = bot[id].y; 
+    double angle = bot[id].angle; 
+    double bx, by; 
+    Ball.getCenter(bx, by); 
 
-        // if not very close to the ball, go to the ball
-        if ( fabs(bx - x) > 1  || fabs(y - by) > 1 ) {
-            vector<Action> res = hold(id, x, y, angle, bx, by); 
-            for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
-                bot_queue[id].push(*it); 
-            }
-        } else {
-            printf("Already holding the ball dude! WTF!\n"); 
-        }
-    } else if (id == 1) {
-
-    } else if (id == 2) {
-
+    // TODO: Move this to elec.cpp 
+    // If it's colliding with the arena, stop the bot. 
+    if (x > ARENA_LENGTH - BOT_LENGTH / 2 ||
+        x < - ARENA_LENGTH + BOT_LENGTH / 2 ||
+        y > ARENA_WIDTH - BOT_LENGTH / 2 || 
+        y < - ARENA_WIDTH + BOT_LENGTH / 2) {
+#ifdef ELEC
+        e_sendenccmd(id, 's'); 
+#endif
     }
+
+
+    vector<Action> res = hold(id, x, y, angle, bx, by); 
+    for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
+        bot_queue[id].push(*it); 
+    }
+
 }
 
-void keep_updating_frames() {
+void image_processing() {
+
     while (true) {
         updateframe(); 
     }
@@ -70,8 +72,6 @@ int main( int argc, char** argv ){
 #ifdef ELEC
     Uinit();
 #endif
-
-    int i = 0;	
 
     bot[0].color = BOT0_COLOR;
     bot[1].color = BOT1_COLOR;
@@ -86,50 +86,46 @@ int main( int argc, char** argv ){
     pitch = cvRect( goal_rect.x, goal_rect.y - goal_rect.width * 7 / 25, goal_rect.width,goal_rect.width * 18 / 25 );
     arena_center = cvPoint( goal_rect.x + goal_rect.width / 2, goal_rect.y + goal_rect.height / 2 );
 
-    for( i = 0; i < NUM_OF_OUR_BOTS; i++ )
+    for(int i = 0; i < NUM_OF_OUR_BOTS; i++)
         bot[i].location = pitch;
 
-    for( i = 0; i < NUM_OF_OPP_BOTS; i++ )
+    for(int i = 0; i < NUM_OF_OPP_BOTS; i++)
         o_bot[i].location = pitch;
 
     Ball.location = pitch;
+    cvShowImage("SAHAS", img); 
+    // Fork off thread for IP. 
+    // boost::thread ip_thread(image_processing); 
 
-//    boost::thread ip_thread(keep_updating_frames()); 
-//
-//    while( c != 27 ){
-//
-//        if (bot_queue[0].empty()) {
-//            algo(0); 
-//        } else {
-//            printf("."); 
-//        }
-//
-//        // for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-//        //     if (bot_queue[i].empty()) {
-//        //         algo(i); 
-//        //     }
-//        // }
-//
-//#ifdef ELEC
-//        for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-//            if (check_bot_free(i)) {
-//                Action curr = bot_queue[i].front(); 
-//                curr.do_action(); 
-//                bot_queue[i].pop(); 
-//            }
-//        }
-//#endif
-//        updateframe(); 
-//
-//    }
-//
-//    ip_thread.join(); 
-    while(true) {
+
+    // Elec stuff starts here {
+
+
+    while( c != 27 ){
         updateframe(); 
-        cout << FrameCount++ << endl; 
+        cout << ++ FrameCount << endl; 
+
+       // for (int i = 0 + 1; i < 1 + NUM_OF_OUR_BOTS; i ++) {
+       //     if (bot_queue[i].empty()) {
+       //         algo(i); 
+       //     }
+       // }
+
+       // for (int i = 0 + 1; i < 1 + NUM_OF_OUR_BOTS; i ++) {
+       //     if (check_bot_free(i)) {
+       //         Action curr = bot_queue[i].front(); 
+       //         curr.do_action(); 
+       //         bot_queue[i].pop(); 
+       //     }
+       // }
+
     }
+
 
 #ifdef ELEC
     Uend();
 #endif
+
+    // Elec stuff ends here } 
+    // ip_thread.join(); 
 }
