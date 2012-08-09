@@ -1109,7 +1109,7 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
     char res=sendenccmd(botID,action,value,speed);
 #ifdef FINAL
     double bx=0,by=0,ba=0;
-    updateframe();
+    // updateframe();
     bx=bot[botID].x;
     by=bot[botID].y;
     ba=bot[botID].angle;
@@ -1139,7 +1139,7 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
         do
         {
 #ifdef FINAL
-            updateframe();
+            // updateframe();
             if((abs(ba-bot[botID].angle)>ANGLE_TOL)||(abs(bx-bot[botID].x)>X_TOL)||(abs(by-bot[botID].y)>Y_TOL))
             {
                 cout<<"We have successfully detected a rogue packet!!!"<<endl;

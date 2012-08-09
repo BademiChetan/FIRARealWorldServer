@@ -64,7 +64,7 @@ void updateframe(){
         cvResetImageROI(hsv);
     }
 
-   boost::thread our_bot_thread(update_opp_bot); 
+    boost::thread our_bot_thread(update_opp_bot); 
    
        for(i=0;i<NUM_OF_OUR_BOTS;i++) {
         cvSetImageROI(img,bot[i].location);
@@ -82,7 +82,7 @@ void updateframe(){
     cvResetImageROI(hsv);
     Ball.update();
 
-    our_bot_thread.join(); 
+     our_bot_thread.join(); 
 
 
     // Not rendering all the frames to decrease the code execution time.
@@ -100,7 +100,6 @@ void updateframe(){
 	    cvLine( img, bot[i].front_center, bot[i].back_center, cvScalar(255,0,8,0),5);
 
         }
-
         for( int i = 0; i < NUM_OF_OPP_BOTS; i++ ){
             cvCircle( img, o_bot[i].center, 2, CV_RGB( 255, 255, 255 ), -1, 8, 0 );
             cvRectangle( img, cvPoint( o_bot[i].location.x, o_bot[i].location.y ),
@@ -108,9 +107,7 @@ void updateframe(){
                     cvScalar( 0, 0, 255, 0 ), 1, 4, 0 );	
 
         }
-
         cvShowImage( "SAHAS", img);
-
-        c = cvWaitKey( 1 );
+        c = cvWaitKey(1); 
     }
 }

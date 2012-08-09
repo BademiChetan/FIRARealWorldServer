@@ -22,11 +22,12 @@ using namespace std;
 #include "bot_actions.h"
 #include "kick_off_calibration.h"
 
-CvCapture *capture = cvCreateCameraCapture(1);
-// CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
+// CvCapture *capture = cvCreateCameraCapture(1);
+CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
 IplImage *hsv = cvCreateImage( cvSize( 640, 480), IPL_DEPTH_8U, 3 );
+bool ip_done; 
 int FrameCount = 0; 
 CvRect goal_rect = cvRect( 0, 0, 0, 0 );
 CvRect pitch;
@@ -60,19 +61,8 @@ void algo(int id) {
 
 }
 
+bool done = false; 
 void image_processing() {
-
-    while (true) {
-        updateframe(); 
-    }
-}
-
-int main( int argc, char** argv ){
-
-#ifdef ELEC
-    Uinit();
-#endif
-
     bot[0].color = BOT0_COLOR;
     bot[1].color = BOT1_COLOR;
     bot[2].color = BOT2_COLOR;
@@ -93,31 +83,57 @@ int main( int argc, char** argv ){
         o_bot[i].location = pitch;
 
     Ball.location = pitch;
-    cvShowImage("SAHAS", img); 
+
+    ip_done = true; 
+
+    while( true) {
+        updateframe(); 
+        cout << FrameCount++ << endl; 
+    }
+}
+
+int main( int argc, char** argv ){
+    ip_done = false; 
+
+#ifdef ELEC
+    Uinit();
+#endif
+
     // Fork off thread for IP. 
-    // boost::thread ip_thread(image_processing); 
+    boost::thread ip_thread(image_processing); 
+    // Wait for IP to finish
+    while(!ip_done); 
+
+
 
 
     // Elec stuff starts here {
 
 
     while( c != 27 ){
-        updateframe(); 
-        cout << ++ FrameCount << endl; 
 
-       // for (int i = 0 + 1; i < 1 + NUM_OF_OUR_BOTS; i ++) {
-       //     if (bot_queue[i].empty()) {
-       //         algo(i); 
-       //     }
-       // }
+        // if (check_bot_free(0)) {
+        //     cnt ++; 
+        //     if (cnt & 1)
+        //        e_sendenccmd(1, 'r', 20); 
+        //     else
+        //        e_sendenccmd(1, 'F', 10, 150); 
 
-       // for (int i = 0 + 1; i < 1 + NUM_OF_OUR_BOTS; i ++) {
-       //     if (check_bot_free(i)) {
-       //         Action curr = bot_queue[i].front(); 
-       //         curr.do_action(); 
-       //         bot_queue[i].pop(); 
-       //     }
-       // }
+        // }
+
+        for (int i = 1; i <= 1; i ++) {
+            if (bot_queue[i].empty()) {
+                algo(i); 
+            }
+        }
+
+        for (int i = 1; i <= 1; i ++) {
+            if (check_bot_free(i)) {
+                Action curr = bot_queue[i].front(); 
+                curr.do_action(); 
+                bot_queue[i].pop(); 
+            }
+        }
 
     }
 
@@ -127,5 +143,5 @@ int main( int argc, char** argv ){
 #endif
 
     // Elec stuff ends here } 
-    // ip_thread.join(); 
+    ip_thread.join(); 
 }

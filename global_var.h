@@ -8,12 +8,12 @@
 
 #define OPP_JERSEY_COLOR 'y'
 
-#define NUM_OF_OUR_BOTS 1
+#define NUM_OF_OUR_BOTS 2
 
-#define NUM_OF_OPP_BOTS 2
+#define NUM_OF_OPP_BOTS 0
 
-#define BOT0_COLOR 'r'
-#define BOT1_COLOR 'p'
+#define BOT0_COLOR 'p'
+#define BOT1_COLOR 'r'
 #define BOT2_COLOR 'g'
 #define BOT3_COLOR 'v'
 #define BOT4_COLOR 'd'
