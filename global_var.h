@@ -12,8 +12,8 @@
 
 #define NUM_OF_OPP_BOTS 0
 
-#define BOT0_COLOR 'r'
-#define BOT1_COLOR 'd'
+#define BOT0_COLOR 'd'
+#define BOT1_COLOR 'r'
 #define BOT2_COLOR 'v'
 #define BOT3_COLOR 'g'
 #define BOT4_COLOR 'p'
