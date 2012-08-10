@@ -252,10 +252,14 @@ void prelude()
     char next[]="N";
     char bn,bi;
     int i=1,timedout=0;
+    while(!rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG))
+        cout<<"clearing the buffer"<<endl;
+    elecsleep(1000);
     do
     {
         pu->WriteByte('c');
         timedout=rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG);
+        cout<<(int)serial_buffer[0]<<endl;
         if(*serial_buffer=='P')
         {
             cout<<"Communication working"<<endl;
@@ -1089,6 +1093,8 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             diff_us=difftime(end.tv_usec,begin.tv_usec);
             diff=diff_s*1000000+diff_us;
             cout<<"Time taken for next cmd: "<<diff<<" us"<<endl;
+            if(diff>maxtime)
+                maxtime=diff;
             begin=end;
         }
     }
@@ -1282,16 +1288,23 @@ bool wait_4_bot(int botID)
 int main()
 {	
     Uinit();
-    int botID=1;
-    while(1)
+    int botID=0;
+    unsigned int i=0;
+    while(i<100)
     {
         if(check_bot_free(botID))
         {
-            e_sendenccmd(botID,'l',90);
-            wait_4_bot(botID);
-            bot_status();
+            //e_sendenccmd(botID,'l',90);
+            //e_sendenccmd(botID,'s');
             e_sendenccmd(botID,'F',30,150);
+            ensure_bot_free(botID);
+            //e_sendenccmd(botID,'s');
+            e_sendenccmd(botID,'w');
+            e_sendenccmd(botID,'a');
+            e_sendenccmd(botID,'d');
+            bot_status();
         }
+        ++i;
     }
     Uend();
 }
