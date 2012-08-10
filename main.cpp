@@ -1,5 +1,5 @@
 #pragma once
-#define ELEC // Remove x corruption to add elec stuff
+#define xELEC // Remove x corruption to add elec stuff
 #include <cv.h>
 #include <highgui.h>
 #include <ctime> 
