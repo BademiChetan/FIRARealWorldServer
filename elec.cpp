@@ -1,5 +1,5 @@
 #pragma once
-#define FINAL                                                   // Remove the IP based commands by x corrupting it
+#define xFINAL                                                   // Remove the IP based commands by x corrupting it
 /**************Left to do************************
  * 1. Remove the TXChar(' ',1); and quicken the process
  * 2. Find the time spent in the spat business
@@ -11,8 +11,8 @@
 #define PLAYERS 1
 
 #define STR_DEBUG 1
-#define TIMER 0
-#define DTIMER 0
+#define TIMER 1
+#define DTIMER 1
 #define SHOW_TIMEOUT 1
 #define xSEC                                                    // Remove 'x' Corruption for mirror based communication
 
@@ -25,7 +25,7 @@ bool auto_correct=1;                                            // Auto correcti
 #define NO_TIMEOUT      	1                                       // The amount of tries to read from AP before giving up
 #define TIMEOUT_VAL     	10000                                   // Timeout value in ms
 #define TIMEOUT_READ    	5000                                    // Timeout in read
-#define SLEEP_TIME      	1000
+#define SLEEP_TIME      	45
 #define ANGLE_TOL       	10
 #define X_TOL           	10
 #define Y_TOL           	10
@@ -141,7 +141,7 @@ int usart_init()
             cout<<"Port not open...trying"<<endl;
         try
         {
-            pu->Open(SerialPort::BAUD_9600,
+            pu->Open(SerialPort::BAUD_115200,
                     SerialPort::CHAR_SIZE_8,
                     SerialPort::PARITY_NONE,
                     SerialPort::StopBits(1),
@@ -252,10 +252,14 @@ void prelude()
     char next[]="N";
     char bn,bi;
     int i=1,timedout=0;
+    while(!rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG))
+        cout<<"clearing the buffer"<<endl;
+    elecsleep(1000);
     do
     {
         pu->WriteByte('c');
         timedout=rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG);
+        cout<<(int)serial_buffer[0]<<endl;
         if(*serial_buffer=='P')
         {
             cout<<"Communication working"<<endl;
@@ -1089,6 +1093,8 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             diff_us=difftime(end.tv_usec,begin.tv_usec);
             diff=diff_s*1000000+diff_us;
             cout<<"Time taken for next cmd: "<<diff<<" us"<<endl;
+            if(diff>maxtime)
+                maxtime=diff;
             begin=end;
         }
     }
@@ -1103,6 +1109,7 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
  ************************************************/
 void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
 {
+    elecsleep(SLEEP_TIME);
     struct timeval begin,end;
     double diff=0,diff_s=0,diff_us=0;
     char i=0;
@@ -1282,7 +1289,23 @@ int main()
 {	
     Uinit();
     int botID=0;
-    e_sendenccmd(botID,'F',30,250);
+    unsigned int i=0;
+    while(i<100)
+    {
+        if(check_bot_free(botID))
+        {
+            //e_sendenccmd(botID,'l',90);
+            //e_sendenccmd(botID,'s');
+            e_sendenccmd(botID,'F',30,150);
+            ensure_bot_free(botID);
+            //e_sendenccmd(botID,'s');
+            e_sendenccmd(botID,'w');
+            e_sendenccmd(botID,'a');
+            e_sendenccmd(botID,'d');
+            bot_status();
+        }
+        ++i;
+    }
     Uend();
 }
 #endif
