@@ -1,5 +1,5 @@
 #pragma once
-#define xFINAL                                                   // Remove the IP based commands by x corrupting it
+#define FINAL                                                   // Remove the IP based commands by x corrupting it
 /**************Left to do************************
  * 1. Remove the TXChar(' ',1); and quicken the process
  * 2. Find the time spent in the spat business
@@ -10,10 +10,10 @@
  * *********************************************/
 #define PLAYERS 1
 
-#define STR_DEBUG 1
-#define TIMER 1
-#define DTIMER 1
-#define SHOW_TIMEOUT 1
+#define STR_DEBUG 0
+#define TIMER 0
+#define DTIMER 0
+#define SHOW_TIMEOUT 0
 #define xSEC                                                    // Remove 'x' Corruption for mirror based communication
 
 int ENSURE_TIMEOUT=5;                                           // No. of tries to ensure

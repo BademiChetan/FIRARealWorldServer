@@ -107,7 +107,7 @@ void updateframe(){
                     cvScalar( 0, 0, 255, 0 ), 1, 4, 0 );	
 
         }
-        cvShowImage( "SAHAS", img);
-        c = cvWaitKey(1); 
+       // cvShowImage( "SAHAS", img);
+       // c = cvWaitKey(1); 
     }
 }

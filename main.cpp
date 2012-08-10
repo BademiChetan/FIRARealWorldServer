@@ -60,8 +60,6 @@ void algo(int id) {
     }
 
 }
-
-bool done = false; 
 void image_processing() {
     bot[0].color = BOT0_COLOR;
     bot[1].color = BOT1_COLOR;
@@ -84,11 +82,12 @@ void image_processing() {
 
     Ball.location = pitch;
 
+    updateframe(); 
     ip_done = true; 
 
-    while( true) {
+    while(true) {
         updateframe(); 
-        cout << FrameCount++ << endl; 
+        cout << '!' ; 
     }
 }
 
@@ -103,39 +102,32 @@ int main( int argc, char** argv ){
     boost::thread ip_thread(image_processing); 
     // Wait for IP to finish
     while(!ip_done); 
+    cout << "IP is done!\n"; 
 
+    e_sendenccmd(1, 'F', 100, 155); 
 
 
 
     // Elec stuff starts here {
 
 
-    while( c != 27 ){
+   // while( c != 27 ){
+   //     for (int i = 1; i <= 1; i ++) {
+   //         if (bot_queue[i].empty()) {
+   //             cout << bot[i].x << ' ' << bot[i].y << ' ' << bot[i].angle << endl; 
+   //             algo(i); 
+   //         }
+   //     }
 
-        // if (check_bot_free(0)) {
-        //     cnt ++; 
-        //     if (cnt & 1)
-        //        e_sendenccmd(1, 'r', 20); 
-        //     else
-        //        e_sendenccmd(1, 'F', 10, 150); 
+   //     for (int i = 1; i <= 1; i ++) {
+   //         if (check_bot_free(i)) {
+   //             Action curr = bot_queue[i].front(); 
+   //             curr.do_action(); 
+   //             bot_queue[i].pop(); 
+   //         }
+   //     }
 
-        // }
-
-        for (int i = 1; i <= 1; i ++) {
-            if (bot_queue[i].empty()) {
-                algo(i); 
-            }
-        }
-
-        for (int i = 1; i <= 1; i ++) {
-            if (check_bot_free(i)) {
-                Action curr = bot_queue[i].front(); 
-                curr.do_action(); 
-                bot_queue[i].pop(); 
-            }
-        }
-
-    }
+   // }
 
 
 #ifdef ELEC
