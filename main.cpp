@@ -1,5 +1,5 @@
 #pragma once
-#define xELEC // Remove x corruption to add elec stuff
+#define ELEC // Remove x corruption to add elec stuff
 #include <cv.h>
 #include <highgui.h>
 #include <ctime> 
@@ -111,23 +111,23 @@ int main( int argc, char** argv ){
     // Elec stuff starts here {
 
 
-   // while( c != 27 ){
-   //     for (int i = 1; i <= 1; i ++) {
-   //         if (bot_queue[i].empty()) {
-   //             cout << bot[i].x << ' ' << bot[i].y << ' ' << bot[i].angle << endl; 
-   //             algo(i); 
-   //         }
-   //     }
+    while( c != 27 ){
+        for (int i = 1; i <= 1; i ++) {
+            if (bot_queue[i].empty()) {
+                cout << bot[i].x << ' ' << bot[i].y << ' ' << bot[i].angle << endl; 
+                algo(i); 
+            }
+        }
 
-   //     for (int i = 1; i <= 1; i ++) {
-   //         if (check_bot_free(i)) {
-   //             Action curr = bot_queue[i].front(); 
-   //             curr.do_action(); 
-   //             bot_queue[i].pop(); 
-   //         }
-   //     }
+        for (int i = 1; i <= 1; i ++) {
+            if (check_bot_free(i)) {
+                Action curr = bot_queue[i].front(); 
+                curr.do_action(); 
+                bot_queue[i].pop(); 
+            }
+        }
 
-   // }
+    }
 
 
 #ifdef ELEC
