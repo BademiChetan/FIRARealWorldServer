@@ -40,7 +40,7 @@ int angl( CvPoint dst, CvPoint cen, CvPoint front ){
         else if( cen.y > front.y )
             angle = 0;
         else
-            printf( "angl(): The three input points are not unique\n" );
+            printf( " < " );
     }
     return angle;
 }
