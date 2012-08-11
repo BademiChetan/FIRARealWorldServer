@@ -34,6 +34,9 @@ CvRect pitch;
 CvPoint arena_center;
 queue<Action> bot_queue[5]; 
 
+double prev_x[5][10]; 
+double prev_y[5][10]; 
+double prev_angle[5][10]; 
 void algo(int id) {
 
     double x = bot[id].x; 
@@ -83,12 +86,39 @@ void image_processing() {
     Ball.location = pitch;
 
     updateframe(); 
+    for(int i = 0; i < NUM_OF_OUR_BOTS; i++) {
+        prev_x[i][FrameCount] = bot[i].x; 
+        prev_y[i][FrameCount] = bot[i].y; 
+        prev_angle[i][FrameCount] = bot[i].angle; 
+    }
+
+
     ip_done = true; 
 
     while(true) {
+        ++ FrameCount; 
         updateframe(); 
+        for(int i = 0; i < NUM_OF_OUR_BOTS; i++) {
+            prev_x[i][FrameCount] = bot[i].x; 
+            prev_y[i][FrameCount] = bot[i].y; 
+            prev_angle[i][FrameCount] = bot[i].angle; 
+        }
         cout << '!' ; 
     }
+}
+
+bool check_same_position(int id) {
+    bool ret = true; 
+    if (FrameCount < 3 )
+        return ret; 
+    for (int i = FrameCount - 3; i < FrameCount; i ++) {
+        if ( !fabs(prev_x[id][FrameCount] - prev_x[id][i] ) < 2 ||
+                !fabs(prev_y[id][FrameCount] - prev_y[id][i] ) < 2 ||
+                !fabs(prev_angle[id][FrameCount] - prev_angle[id][i] ) < 60) {
+            ret = false; 
+        }
+    }
+    return ret; 
 }
 
 int main( int argc, char** argv ){
@@ -106,10 +136,11 @@ int main( int argc, char** argv ){
 
     // Elec stuff starts here {
 
-
     while( c != 27 ){
         for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
             if (bot_queue[i].empty()) {
+                if (!check_same_position(i))
+                    continue; 
                 cout << bot[i].x << ' ' << bot[i].y << ' ' << bot[i].angle << endl; 
                 algo(i); 
             }
@@ -122,7 +153,6 @@ int main( int argc, char** argv ){
                 bot_queue[i].pop(); 
             }
         }
-
     }
 
 

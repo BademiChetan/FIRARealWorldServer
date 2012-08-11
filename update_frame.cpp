@@ -64,7 +64,8 @@ void updateframe(){
         cvResetImageROI(hsv);
     }
 
-    boost::thread our_bot_thread(update_opp_bot); 
+    // boost::thread our_bot_thread(update_opp_bot); 
+    update_opp_bot(); 
 
     for(i=0;i<NUM_OF_OUR_BOTS;i++) {
         cvSetImageROI(img,bot[i].location);
@@ -82,7 +83,7 @@ void updateframe(){
     cvResetImageROI(hsv);
     Ball.update();
 
-    our_bot_thread.join(); 
+    // our_bot_thread.join(); 
 
 
     // Not rendering all the frames to decrease the code execution time.
