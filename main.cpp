@@ -37,6 +37,8 @@ queue<Action> bot_queue[5];
 double prev_x[5][10]; 
 double prev_y[5][10]; 
 double prev_angle[5][10]; 
+int still_count[5]; 
+
 void algo(int id) {
 
     double x = bot[id].x; 
@@ -123,6 +125,7 @@ bool check_same_position(int id) {
 
 int main( int argc, char** argv ){
     ip_done = false; 
+    memset(still_count, 0, sizeof(still_count)); 
 
 #ifdef ELEC
     Uinit();
@@ -139,9 +142,13 @@ int main( int argc, char** argv ){
     while( c != 27 ){
         for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
             if (bot_queue[i].empty()) {
-                if (!check_same_position(i))
+                if (still_count[i] <= 3) {
+                    still_count[i] ++; 
                     continue; 
-                cout << bot[i].x << ' ' << bot[i].y << ' ' << bot[i].angle << endl; 
+                }
+                still_count[i] = 0; 
+                printf("Bot %d is at (%f, %f) with angle %f\n", i, bot[i].x,
+                        bot[i].y, bot[i].angle); 
                 algo(i); 
             }
         }
