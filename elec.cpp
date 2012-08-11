@@ -141,7 +141,7 @@ int usart_init()
             cout<<"Port not open...trying"<<endl;
         try
         {
-            pu->Open(SerialPort::BAUD_9600,
+            pu->Open(SerialPort::BAUD_115200,
                     SerialPort::CHAR_SIZE_8,
                     SerialPort::PARITY_NONE,
                     SerialPort::StopBits(1),
