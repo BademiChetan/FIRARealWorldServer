@@ -154,7 +154,7 @@ int main( int argc, char** argv ){
         }
 
         for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-            if (check_bot_free(i)) {
+            if (check_bot_free(i) && !bot_queue[i].empty()) {
                 Action curr = bot_queue[i].front(); 
                 curr.do_action(); 
                 bot_queue[i].pop(); 
