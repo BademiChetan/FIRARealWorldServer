@@ -104,22 +104,18 @@ int main( int argc, char** argv ){
     while(!ip_done); 
     cout << "IP is done!\n"; 
 
-    e_sendenccmd(1, 'F', 100, 155); 
-
-
-
     // Elec stuff starts here {
 
 
     while( c != 27 ){
-        for (int i = 1; i <= 1; i ++) {
+        for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
             if (bot_queue[i].empty()) {
                 cout << bot[i].x << ' ' << bot[i].y << ' ' << bot[i].angle << endl; 
                 algo(i); 
             }
         }
 
-        for (int i = 1; i <= 1; i ++) {
+        for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
             if (check_bot_free(i)) {
                 Action curr = bot_queue[i].front(); 
                 curr.do_action(); 
