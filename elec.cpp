@@ -1,5 +1,5 @@
 #pragma once
-#define xFINAL                                                   // Remove the IP based commands by x corrupting it
+#define FINAL                                                   // Remove the IP based commands by x corrupting it
 /**************Left to do************************
  * 1. Remove the TXChar(' ',1); and quicken the process
  * 2. Find the time spent in the spat business
@@ -141,7 +141,7 @@ int usart_init()
             cout<<"Port not open...trying"<<endl;
         try
         {
-            pu->Open(SerialPort::BAUD_115200,
+            pu->Open(SerialPort::BAUD_9600,
                     SerialPort::CHAR_SIZE_8,
                     SerialPort::PARITY_NONE,
                     SerialPort::StopBits(1),
@@ -433,6 +433,7 @@ int is_enc_cmd(char action)
         case 'b':
         case 'p':
         case 'P':
+        case 'S':
         case 't':
         case 'T':{
                      return 5;
@@ -1284,13 +1285,52 @@ bool wait_4_bot(int botID)
     return 0;
 }
 
+void getcmd()
+{
+    /*unsigned char botID=0,direction=0,value=0,speed=0;
+    cout<<"BotID"<<endl;
+    cin>>botID;
+    cout<<"Direction"<<endl;
+    cin>>direction;
+    if((direction!='E')&&(direction!='R'))
+        cout<<"Value"<<endl;
+    cin>>value;
+    if((direction=='F')||(direction=='B')||(direction=='V'))
+    {
+        cout<<"Speed"<<endl;
+        cin>>speed;
+    }
+    e_sendenccmd(botID,direction,value,speed);*/
+    char str[6];
+    gets(str);
+    char c=strlen(str);
+    switch(c)
+    {
+        case 4:{
+                    e_sendenccmd(str[0],str[1],str[2],str[3]);
+                    break;
+               }
+        case 5:{
+                    e_sendenccmd(str[0],str[1],str[2]*100+str[3]*10+str[4]);
+                    break;
+               }
+        case 2:{
+                    e_sendenccmd(str[0],str[1]);
+                    break;
+               }
+        default:{
+                    cout<<"Sorry no support"<<endl;
+                }
+    }
+}
+
 #ifndef FINAL
 int main()
 {	
     Uinit();
     int botID=0;
     unsigned int i=0;
-    while(i<100)
+/*    while(i<100)
     {
         if(check_bot_free(botID))
         {
@@ -1305,7 +1345,48 @@ int main()
             bot_status();
         }
         ++i;
+    }*/
+    /*e_sendenccmd(botID,'F',5,100);
+    elecsleep(2000);
+    wait_4_bot(botID);
+    e_sendenccmd(botID,'B',5,100);
+    elecsleep(2000);
+    wait_4_bot(botID);
+    e_sendenccmd(botID,'B',20,100);
+    elecsleep(2000);
+    wait_4_bot(botID);
+    e_sendenccmd(botID,'F',20,100);
+    elecsleep(2000);
+    wait_4_bot(botID);
+    for(i=0;i<9;++i)
+    {
+        e_sendenccmd(botID,'l',10);
+        wait_4_bot(botID);
     }
-    Uend();
+    e_sendenccmd(botID,'S',15);
+    elecsleep(2000);
+    for(i=0;i<9;++i)
+    {
+        e_sendenccmd(botID,'r',10);
+        wait_4_bot(botID);
+    }
+    elecsleep(2000);
+    for(i=0;i<3;++i)
+    {
+        e_sendenccmd(botID,'l',30);
+        wait_4_bot(botID);
+    }
+    elecsleep(2000);
+    for(i=0;i<3;++i)
+    {
+        e_sendenccmd(botID,'r',30);
+        wait_4_bot(botID);
+    }
+    elecsleep(2000);
+    e_sendenccmd(botID,'l',90);
+    wait_4_bot(botID);
+    elecsleep(2000);
+    e_sendenccmd(botID,'r',90);
+    wait_4_bot(botID);*/
 }
 #endif
