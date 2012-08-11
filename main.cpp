@@ -63,6 +63,13 @@ void algo(int id) {
     }
 
 }
+void update_locations() {
+    for(int i = 0; i < NUM_OF_OUR_BOTS; i++) {
+        prev_x[i][FrameCount] = bot[i].x; 
+        prev_y[i][FrameCount] = bot[i].y; 
+        prev_angle[i][FrameCount] = bot[i].angle; 
+    }
+}
 void image_processing() {
     bot[0].color = BOT0_COLOR;
     bot[1].color = BOT1_COLOR;
@@ -86,11 +93,7 @@ void image_processing() {
     Ball.location = pitch;
 
     updateframe(); 
-    for(int i = 0; i < NUM_OF_OUR_BOTS; i++) {
-        prev_x[i][FrameCount] = bot[i].x; 
-        prev_y[i][FrameCount] = bot[i].y; 
-        prev_angle[i][FrameCount] = bot[i].angle; 
-    }
+    update_locations(); 
 
 
     ip_done = true; 
@@ -98,11 +101,7 @@ void image_processing() {
     while(true) {
         ++ FrameCount; 
         updateframe(); 
-        for(int i = 0; i < NUM_OF_OUR_BOTS; i++) {
-            prev_x[i][FrameCount] = bot[i].x; 
-            prev_y[i][FrameCount] = bot[i].y; 
-            prev_angle[i][FrameCount] = bot[i].angle; 
-        }
+        update_locations(); 
         cout << '!' ; 
     }
 }
@@ -112,9 +111,9 @@ bool check_same_position(int id) {
     if (FrameCount < 3 )
         return ret; 
     for (int i = FrameCount - 3; i < FrameCount; i ++) {
-        if ( !fabs(prev_x[id][FrameCount] - prev_x[id][i] ) < 2 ||
-                !fabs(prev_y[id][FrameCount] - prev_y[id][i] ) < 2 ||
-                !fabs(prev_angle[id][FrameCount] - prev_angle[id][i] ) < 60) {
+        if ( !fabs(prev_x[id][FrameCount % 10] - prev_x[id][i % 10] ) < 2 ||
+                !fabs(prev_y[id][FrameCount % 10] - prev_y[id][i % 10] ) < 2 ||
+                !fabs(prev_angle[id][FrameCount % 10] - prev_angle[id][i % 10] ) < 10) {
             ret = false; 
         }
     }
