@@ -65,9 +65,9 @@ void algo(int id) {
 }
 void update_locations() {
     for(int i = 0; i < NUM_OF_OUR_BOTS; i++) {
-        prev_x[i][FrameCount] = bot[i].x; 
-        prev_y[i][FrameCount] = bot[i].y; 
-        prev_angle[i][FrameCount] = bot[i].angle; 
+        prev_x[i][FrameCount % 10] = bot[i].x; 
+        prev_y[i][FrameCount % 10] = bot[i].y; 
+        prev_angle[i][FrameCount % 10] = bot[i].angle; 
     }
 }
 void image_processing() {
