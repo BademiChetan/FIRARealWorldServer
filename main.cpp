@@ -111,9 +111,10 @@ bool check_same_position(int id) {
     if (FrameCount < 3 )
         return ret; 
     for (int i = FrameCount - 3; i < FrameCount; i ++) {
-        if ( !fabs(prev_x[id][FrameCount % 10] - prev_x[id][i % 10] ) < 2 ||
-                !fabs(prev_y[id][FrameCount % 10] - prev_y[id][i % 10] ) < 2 ||
-                !fabs(prev_angle[id][FrameCount % 10] - prev_angle[id][i % 10] ) < 10) {
+        // FIXME: Find least count for all this once openGL stuff is written. 
+        if ( !fabs(prev_x[id][FrameCount % 10] - prev_x[id][i % 10] ) < 5 ||
+                !fabs(prev_y[id][FrameCount % 10] - prev_y[id][i % 10] ) < 5 ||
+                !fabs(prev_angle[id][FrameCount % 10] - prev_angle[id][i % 60] ) < 10) {
             ret = false; 
         }
     }
