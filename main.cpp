@@ -77,7 +77,7 @@ void algo(int id) {
 
 
     printf("Will hold (%f, %f). Ball is at (%f, %f).\n", goto_x, goto_y, bx, by); 
-    vector<Action> res = hold(id, x, y, angle, bx, by); 
+    vector<Action> res = hold(id, x, y, angle, goto_x, goto_y); 
     for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
         bot_queue[id].push(*it); 
     }
