@@ -47,40 +47,60 @@ void algo(int id) {
     double bx, by; 
     Ball.getCenter(bx, by); 
 
-    // TODO: Move this to elec.cpp 
-    // If it's colliding with the arena, stop the bot. 
-    if (x > ARENA_LENGTH - BOT_LENGTH / 2 ||
-            x < - ARENA_LENGTH + BOT_LENGTH / 2 ||
-            y > ARENA_WIDTH - BOT_LENGTH / 2 || 
-            y < - ARENA_WIDTH + BOT_LENGTH / 2) {
-#ifdef ELEC
-        e_sendenccmd(id, 's'); 
-#endif
+    // Hold Stuff Starts Here {
+
+   // // Try to go behind the ball from the goal. 
+   // double gx = -100; 
+   // double gy = 0; 
+   // double theta = get_angle_to_point(bx, by, gx, gy); 
+   // cout << "Theta in degrees: " << theta << endl; 
+   // theta *= PI / 180; 
+
+   // // Get the point on the line from goal to ball 5cm behind it
+   // double goto_x = bx - 5 * cos(theta); 
+   // double goto_y = by - 5 * sin(theta); 
+
+   // // Check if it lies in the arena
+   // if (goto_x < -90 || goto_x > 90 || goto_y < -90 || goto_y > 90) {
+   //     goto_x = bx; 
+   //     goto_y = by; 
+   // }
+
+
+   // printf("Will hold (%f, %f). Ball is at (%f, %f).\n", goto_x, goto_y, bx, by); 
+   // vector<Action> res = hold(id, x, y, angle, goto_x, goto_y); 
+   // for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
+   //     bot_queue[id].push(*it); 
+   // }
+
+    // Hold stuff ends here }
+
+
+    // Goalie and defender starts here {
+    double theta1 = get_angle_to_point(bx, by, -110, -25, true); 
+    double theta2 = get_angle_to_point(bx, by, -110, 0, true); 
+    double theta3 = get_angle_to_point(bx, by, -110, +25, true); 
+    vector<Action> res; 
+    if (id == 0) {
+        // Goalie
+        double goalie_x = -110 + 7.5; 
+        double goalie_dx = goalie_x - bx; 
+        double goalie_y = by + goalie_dx * ( tan(theta1) + tan(theta2) ) / 2; 
+        res = defend(id, x, y, angle, goalie_x, goalie_y); 
+
+    } else {
+        // Defender 1
+        double defender_x = -110 + 25; 
+        double defender_dx = defender_x - bx; 
+        double defender_y = by + defender_dx * ( tan(theta1) + tan(theta2) ) / 2; 
+        res = defend(id, x, y, angle, defender_x, defender_y); 
     }
 
-    // Try to go behind the ball from the goal. 
-    double gx = -100; 
-    double gy = 0; 
-    double theta = get_angle_to_point(bx, by, gx, gy); 
-    cout << "Theta in degrees: " << theta << endl; 
-    theta *= PI / 180; 
-
-    // Get the point on the line from goal to ball 5cm behind it
-    double goto_x = bx - 5 * cos(theta); 
-    double goto_y = by - 5 * sin(theta); 
-
-    // Check if it lies in the arena
-    if (goto_x < -90 || goto_x > 90 || goto_y < -90 || goto_y > 90) {
-        goto_x = bx; 
-        goto_y = by; 
-    }
-
-
-    printf("Will hold (%f, %f). Ball is at (%f, %f).\n", goto_x, goto_y, bx, by); 
-    vector<Action> res = hold(id, x, y, angle, goto_x, goto_y); 
     for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
         bot_queue[id].push(*it); 
     }
+
+    // Goalie and defender end here }
 
 }
 void interrupt_near_arena() {
@@ -183,17 +203,6 @@ int main( int argc, char** argv ){
                     continue; 
                 }
                 still_count[i] = 0; 
-                printf("Bot %d is at (%f, %f) with angle %f\n", i, bot[i].x,
-                        bot[i].y, bot[i].angle); 
-                double bx, by; 
-                Ball.getCenter(bx, by); 
-                printf("Ball is at (%f, %f).\n", bx, by); 
-               // char ch; 
-               // while (true) {
-               //     ch = getchar(); 
-               //     if (ch == 'y')
-               //         break; 
-               // }
                 algo(i); 
             }
         }
@@ -201,12 +210,14 @@ int main( int argc, char** argv ){
         for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
             if (check_bot_free(i) && !bot_queue[i].empty()) {
                 Action curr = bot_queue[i].front(); 
-                if (curr.speed == 0) {
-                    curr.do_action(); 
-                } else {
-                    if (fabs(angle_from_bot_to_ball(i) - bot[i].angle) < 15)
-                        curr.do_action();
-                }
+               // Required for the "cool" hold
+               // if (curr.speed == 0) {
+               //     curr.do_action(); 
+               // } else {
+               //     if (fabs(angle_from_bot_to_ball(i) - bot[i].angle) < 15)
+               //         curr.do_action();
+               // }
+                curr.do_action(); 
                 bot_queue[i].pop(); 
             }
         }
