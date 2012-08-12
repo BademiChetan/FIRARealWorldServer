@@ -76,8 +76,7 @@ vector<Action> hold(int id, double x1, double y1, double angle, double x2, doubl
     double orient = get_angle_to_point(x1, y1, x2, y2); 
     int direction = 0; // l => 0 and r => 1
     direction = orient > angle ? 1 : 0; 
-    int turn_by = fabs(orient - angle); 
-    if (turn_by > 180) {
+    int turn_by = fabs(orient - angle); if (turn_by > 180) {
         turn_by = 360 - turn_by; 
         direction ^= 1; 
     }
@@ -91,6 +90,7 @@ vector<Action> hold(int id, double x1, double y1, double angle, double x2, doubl
 
 // Currently at (x1, y1). Hold the ball which is at (x2, y2). 
 vector<Action> defend(int id, double x1, double y1, double angle, double x2, double y2) {
+    printf("id = %d, (%f, %f) < %f, (%f, %f)\n", id, x1, y1, angle, x2, y2); 
     vector<Action> res; 
     double distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); 
     if (distance <= 3)

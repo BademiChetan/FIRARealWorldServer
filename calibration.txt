@@ -5,3 +5,6 @@ v4l2-ctl --device=/dev/video1 --set-ctrl exposure_auto=1,brightness=150,zoom_abs
 
 v4l2-ctl --device=/dev/video1 --set-ctrl exposure_auto=1,brightness=150,zoom_absolute=100,pan_absolute=0,tilt_absolute=0,focus_absolute=0,exposure_absolute=250,white_balance_temperature=5000,gain=0,exposure_auto_priority=0,saturation=255,contrast=180,sharpness=50
 
+
+v4l2-ctl --device=/dev/video1 --set-ctrl exposure_auto=1,brightness=125,zoom_absolute=100,pan_absolute=0,tilt_absolute=0,focus_absolute=0,exposure_absolute=500,white_balance_temperature=3800,gain=0,exposure_auto_priority=0,saturation=255,contrast=255,sharpness=255
+

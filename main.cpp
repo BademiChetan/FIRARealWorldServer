@@ -159,7 +159,7 @@ void image_processing() {
         ++ FrameCount; 
         updateframe(); 
         update_locations(); 
-        interrupt_near_arena(); 
+        // interrupt_near_arena(); 
         cout << '!' ; 
     }
 }
