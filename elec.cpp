@@ -1,6 +1,7 @@
 #pragma once
 #define FINAL                                                   // Remove the IP based commands by x corrupting it
-#define HIGHS                                                    // Remove the x corruption to get 115200 bps speed
+#define xHIGHS                                                  // Remove the x corruption to get 115200 bps speed
+#define REMOVE_TIMEOUT                                          // Removes the elec sleep thing. 
 /**************Left to do************************
  * 1. Remove the TXChar(' ',1); and quicken the process
  * 2. Find the time spent in the spat business
@@ -18,14 +19,14 @@
 #define xSEC                                                    // Remove 'x' Corruption for mirror based communication
 
 int ENSURE_TIMEOUT=5;                                           // No. of tries to ensure
-bool enforce_cmd=1;                                             // Enforces the command in the event of ack fail
+bool enforce_cmd=0;                                             // Enforces the command in the event of ack fail
 bool ensure_cmd=1;                                              // In cases of error, the bot is made free
 bool auto_correct=1;                                            // Auto correction,i.e, in the event of error. The bot is 
 // interrupted and the command is forced.
 #define max_enc_value   	255                                     // Encoder maximum value
 #define NO_TIMEOUT      	1                                       // The amount of tries to read from AP before giving up
-#define TIMEOUT_VAL     	10000                                   // Timeout value in ms
-#define TIMEOUT_READ    	5000                                    // Timeout in read
+#define TIMEOUT_VAL     	1000                                   // Timeout value in ms
+#define TIMEOUT_READ    	1000                                    // Timeout in read
 #define SLEEP_TIME      	45
 #define ANGLE_TOL       	10
 #define X_TOL           	10
@@ -1128,7 +1129,9 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
  ************************************************/
 void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
 {
+#ifndef REMOVE_TIMEOUT
     elecsleep(SLEEP_TIME);
+#endif
     struct timeval begin,end;
     double diff=0,diff_s=0,diff_us=0;
     char i=0;
@@ -1260,7 +1263,9 @@ bool make_bot_free(int botID)
  ************************************************/
 void ensure_bot_free(int botID)
 {
+#ifndef REMOVE_TIMEOUT
     elecsleep(SLEEP_TIME);
+#endif
     if(STR_DEBUG)
         cout<<"Trying to ensure bot is free\n";
     int ensure_timeout=0;

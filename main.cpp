@@ -58,13 +58,48 @@ void algo(int id) {
 #endif
     }
 
+    // Try to go behind the ball from the goal. 
+    double gx = -100; 
+    double gy = 0; 
+    double theta = get_angle_to_point(bx, by, gx, gy); 
+    cout << "Theta in degrees: " << theta << endl; 
+    theta *= PI / 180; 
 
+    // Get the point on the line from goal to ball 5cm behind it
+    double goto_x = bx - 5 * cos(theta); 
+    double goto_y = by - 5 * sin(theta); 
+
+    // Check if it lies in the arena
+    if (goto_x < -90 || goto_x > 90 || goto_y < -90 || goto_y > 90) {
+        goto_x = bx; 
+        goto_y = by; 
+    }
+
+
+    printf("Will hold (%f, %f). Ball is at (%f, %f).\n", goto_x, goto_y, bx, by); 
     vector<Action> res = hold(id, x, y, angle, bx, by); 
     for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
         bot_queue[id].push(*it); 
     }
 
 }
+void interrupt_near_arena() {
+    for (int id = 0; id < NUM_OF_OUR_BOTS; id ++) {
+        double x = bot[id].x; 
+        double y = bot[id].y; 
+        printf("Bot at (%f, %f)\n", x, y); 
+        // If it's colliding with the arena, stop the bot. 
+        // FIXME: Use global variables. 
+        if (x > 215 || x < -215 || y > 175 || y < -175 ) {
+        cout << "Interrupting.\n"; 
+#ifdef ELEC
+            e_sendenccmd(id, 's'); 
+#endif
+        }
+    }
+
+}
+
 void update_locations() {
     for(int i = 0; i < NUM_OF_OUR_BOTS; i++) {
         prev_x[i][FrameCount % 10] = bot[i].x; 
@@ -104,6 +139,7 @@ void image_processing() {
         ++ FrameCount; 
         updateframe(); 
         update_locations(); 
+        interrupt_near_arena(); 
         cout << '!' ; 
     }
 }
@@ -142,20 +178,22 @@ int main( int argc, char** argv ){
     while( c != 27 ){
         for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
             if (bot_queue[i].empty()) {
-                if (still_count[i] <= 3) {
+                if (still_count[i] <= 10) {
                     still_count[i] ++; 
                     continue; 
                 }
                 still_count[i] = 0; 
                 printf("Bot %d is at (%f, %f) with angle %f\n", i, bot[i].x,
                         bot[i].y, bot[i].angle); 
-                printf("Ball is at (%f, %f).\n", Ball.center.x, Ball.center.y); 
-                char ch; 
-                while (true) {
-                    ch = getchar(); 
-                    if (ch == 'y')
-                        break; 
-                }
+                double bx, by; 
+                Ball.getCenter(bx, by); 
+                printf("Ball is at (%f, %f).\n", bx, by); 
+               // char ch; 
+               // while (true) {
+               //     ch = getchar(); 
+               //     if (ch == 'y')
+               //         break; 
+               // }
                 algo(i); 
             }
         }
@@ -163,7 +201,12 @@ int main( int argc, char** argv ){
         for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
             if (check_bot_free(i) && !bot_queue[i].empty()) {
                 Action curr = bot_queue[i].front(); 
-                curr.do_action(); 
+                if (curr.speed == 0) {
+                    curr.do_action(); 
+                } else {
+                    if (fabs(angle_from_bot_to_ball(i) - bot[i].angle) < 15)
+                        curr.do_action();
+                }
                 bot_queue[i].pop(); 
             }
         }
