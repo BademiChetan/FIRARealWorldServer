@@ -37,7 +37,7 @@ void ball::update(){
 
     pick_color( &mask, location, color );
     FindCenter( cen );
-    //cvShowImage("ball",mask);
+    cvShowImage("ball",mask);
     cvResetImageROI( mask );
 
     if( cen.x != 0 ){

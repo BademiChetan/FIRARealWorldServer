@@ -287,6 +287,7 @@ void prelude()
     while(strcmp(next,serial_buffer)||(timedout))
         timedout=rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG);                                  //Waiting for all connections to be made
     cout<<"Next cmd prompt received"<<endl<<endl;
+    bot_status(); 
 }
 
 /*************************************************

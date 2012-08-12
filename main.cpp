@@ -149,6 +149,13 @@ int main( int argc, char** argv ){
                 still_count[i] = 0; 
                 printf("Bot %d is at (%f, %f) with angle %f\n", i, bot[i].x,
                         bot[i].y, bot[i].angle); 
+                printf("Ball is at (%f, %f).\n", Ball.center.x, Ball.center.y); 
+                char ch; 
+                while (true) {
+                    ch = getchar(); 
+                    if (ch == 'y')
+                        break; 
+                }
                 algo(i); 
             }
         }
