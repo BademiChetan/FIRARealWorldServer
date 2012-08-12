@@ -1,22 +1,23 @@
 #pragma once
-#include "process_image.h"
-#include "contours.h"
-#include "colors.h"
-#include "global_var.h"
 #include <cv.h>
 #include <highgui.h>
 #include <stdio.h>
 #include <vector>
-#include "our_bot.h"
 
 using namespace cv;
 using namespace std;
+
+#include "process_image.h"
+#include "contours.h"
+#include "colors.h"
+#include "global_var.h"
+#include "our_bot.h"
 
 // calibration conditions - if ( ( Hue range ) && ( Saturation range ) && ( Value range ) )
 
 inline bool check_orange(uchar *ptr,int x)
 {
-	 if((ptr[3*x]>15&&ptr[3*x]<30)&&ptr[3*x+1]>220&&ptr[3*x+1]<=255&&ptr[3*x+2]>210&&ptr[3*x+2]<245)
+	if((ptr[3*x]>15&&ptr[3*x]<25)&&ptr[3*x+1]>220&&ptr[3*x+1]<=255&&ptr[3*x+2]>170&&ptr[3*x+2]<245)
 		return true;
 	else
 		return false;
@@ -25,7 +26,7 @@ inline bool check_orange(uchar *ptr,int x)
 
 inline bool check_yellow(uchar *ptr,int x)
 {
-    if((ptr[3*x]>20&&ptr[3*x]<35)&&(ptr[3*x+1]>210&&ptr[3*x+1]<=255)&&(ptr[3*x+2]>190&&ptr[3*x+2]<255))
+    if((ptr[3*x]>25&&ptr[3*x]<35)&&(ptr[3*x+1]>210&&ptr[3*x+1]<=255)&&(ptr[3*x+2]>210&&ptr[3*x+2]<255))
         return true;
     else
         return false;
@@ -34,7 +35,7 @@ inline bool check_yellow(uchar *ptr,int x)
 
 inline bool check_blue(uchar *ptr,int x)
 {	
-    if((ptr[3*x]>95&&ptr[3*x]<115)&&(ptr[3*x+1]>100&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>150&&ptr[3*x+2]<220))
+    if((ptr[3*x]>95&&ptr[3*x]<115)&&(ptr[3*x+1]>220&&ptr[3*x+1]<=255)&&(ptr[3*x+2]>200&&ptr[3*x+2]<240))
         return true;
     else
         return false;
@@ -42,7 +43,7 @@ inline bool check_blue(uchar *ptr,int x)
 
 inline bool check_red(uchar *ptr,int x)
 {
-    if((ptr[3*x]>=0&&ptr[3*x]<5)&&(ptr[3*x+1]>170&&ptr[3*x+1]<240)&&(ptr[3*x+2]>170&&ptr[3*x+2]<230))
+    if(( (ptr[3*x]>175)||(ptr[3*x]>=0&&ptr[3*x]<5) )&&(ptr[3*x+1]>220&&ptr[3*x+1]<255)&&(ptr[3*x+2]>170&&ptr[3*x+2]<230))
         return true;
     else
         return false;
@@ -50,7 +51,7 @@ inline bool check_red(uchar *ptr,int x)
 
 inline bool check_lgreen(uchar *ptr,int x)
 {
-    if((ptr[3*x]>25&&ptr[3*x]<40)&&(ptr[3*x+1]>130&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>130&&ptr[3*x+2]<=210))
+    if((ptr[3*x]>25&&ptr[3*x]<45)&&(ptr[3*x+1]>170&&ptr[3*x+1]<=220)&&(ptr[3*x+2]>160&&ptr[3*x+2]<=200))
         return true;
     else
         return false;
@@ -58,7 +59,7 @@ inline bool check_lgreen(uchar *ptr,int x)
 
 inline bool check_violet(uchar *ptr,int x)
 {
-    if((ptr[3*x]>120&&ptr[3*x]<150)&&(ptr[3*x+1]>40&&ptr[3*x+1]<120)&&(ptr[3*x+2]>80&&ptr[3*x+2]<=210))
+    if((ptr[3*x]>115&&ptr[3*x]<130)&&(ptr[3*x+1]>170&&ptr[3*x+1]<210)&&(ptr[3*x+2]>130&&ptr[3*x+2]<=210))
         return true;
     else
         return false;
@@ -74,7 +75,7 @@ inline bool check_pink(uchar *ptr,int x)
 
 inline bool check_dgreen(uchar *ptr,int x)
 {
-    if((ptr[3*x]>40&&ptr[3*x]<65)&&(ptr[3*x+1]>90&&ptr[3*x+1]<=175)&&(ptr[3*x+2]>140&&ptr[3*x+2]<210))
+    if((ptr[3*x]>40&&ptr[3*x]<65)&&(ptr[3*x+1]>90&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>100&&ptr[3*x+2]<230))
         return true;
     else
         return false;
