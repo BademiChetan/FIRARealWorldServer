@@ -1354,7 +1354,6 @@ void test_angles(int botID)
         e_sendenccmd(botID,'l',10);
         wait_4_bot(botID);
     }
-    e_sendenccmd(botID,'S',15);
     elecsleep(2000);
     for(i=0;i<9;++i)
     {
@@ -1408,7 +1407,8 @@ int main()
     Uinit();
     int botID=0;
     unsigned int i=0;
-    test_dist(botID);
+    //test_dist(botID);
+    test_angles(botID);
     Uend();
 }
 #endif
