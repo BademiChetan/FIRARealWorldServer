@@ -1,5 +1,6 @@
 #pragma once
 #define FINAL                                                   // Remove the IP based commands by x corrupting it
+#define HIGHS                                                    // Remove the x corruption to get 115200 bps speed
 /**************Left to do************************
  * 1. Remove the TXChar(' ',1); and quicken the process
  * 2. Find the time spent in the spat business
@@ -29,8 +30,9 @@ bool auto_correct=1;                                            // Auto correcti
 #define ANGLE_TOL       	10
 #define X_TOL           	10
 #define Y_TOL           	10
-#define NO_TIMEOUT_4_WAIT	30
+#define NO_TIMEOUT_4_WAIT	200
 #define NO_TIMEOUT_2_KILL   10	
+#define F_THRESH            35                                  // The threshold for the 'F' to convert into 'f'
 //bool update_table=1;                                          // Updates the table with the newly read values of the enc/battery
 
 #include "iostream"
@@ -141,12 +143,22 @@ int usart_init()
             cout<<"Port not open...trying"<<endl;
         try
         {
+#ifdef HIGHS
             pu->Open(SerialPort::BAUD_115200,
                     SerialPort::CHAR_SIZE_8,
                     SerialPort::PARITY_NONE,
                     SerialPort::StopBits(1),
                     SerialPort::FLOW_CONTROL_NONE
                     );
+#endif
+#ifndef HIGHS
+            pu->Open(SerialPort::BAUD_9600,
+                    SerialPort::CHAR_SIZE_8,
+                    SerialPort::PARITY_NONE,
+                    SerialPort::StopBits(1),
+                    SerialPort::FLOW_CONTROL_NONE
+                    );
+#endif
             usart_fl=0;
         }
         catch(SerialPort::OpenFailed)
@@ -515,7 +527,8 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             {
                 temp=pu->ReadByte(TIMEOUT_READ);
                 if(STR_DEBUG)
-                    cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
+                    cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                    //cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
             }
             catch(SerialPort::ReadTimeout &e)
             {
@@ -660,7 +673,8 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 {
                     temp=pu->ReadByte(TIMEOUT_READ);
                     if(STR_DEBUG)
-                        cout<<"Trying to link to bot "<<botID<<". It spat out the character"<<(int)temp<<endl;
+                        cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                       // cout<<"Trying to link to bot "<<botID<<". It spat out the character"<<(int)temp<<endl;
                 }
                 catch(SerialPort::ReadTimeout &e)
                 {
@@ -791,7 +805,8 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 {
                     temp=pu->ReadByte(TIMEOUT_READ);
                     if(STR_DEBUG)
-                        cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
+                        cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                       //cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
                 }
                 catch(SerialPort::ReadTimeout &e)
                 {
@@ -915,7 +930,8 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             {
                 temp=pu->ReadByte(TIMEOUT_READ);
                 if(STR_DEBUG)
-                    cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
+                    cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                    //cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
             }
             catch(SerialPort::ReadTimeout &e)
             {
@@ -966,7 +982,8 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             {
                 temp=pu->ReadByte(TIMEOUT_READ);
                 if(STR_DEBUG)
-                    cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
+                    cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                    //cout<<" Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
             }
             catch(SerialPort::ReadTimeout &e)
             {
@@ -1114,6 +1131,10 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
     struct timeval begin,end;
     double diff=0,diff_s=0,diff_us=0;
     char i=0;
+    if((value<=F_THRESH)&&(action=='F'))
+    {
+        action='f';                                                 // Encoder correction for distances less than 35 cm is in 'f'
+    }
     char res=sendenccmd(botID,action,value,speed);
 #ifdef FINAL
     double bx=0,by=0,ba=0;
@@ -1281,6 +1302,7 @@ bool wait_4_bot(int botID)
             return 1;
             break;
         }
+        wait_timeout++;
     }
     return 0;
 }
@@ -1324,40 +1346,9 @@ void getcmd()
     }
 }
 
-#ifndef FINAL
-int main()
-{	
-    Uinit();
-    int botID=0;
-    unsigned int i=0;
-/*    while(i<100)
-    {
-        if(check_bot_free(botID))
-        {
-            //e_sendenccmd(botID,'l',90);
-            //e_sendenccmd(botID,'s');
-            e_sendenccmd(botID,'F',30,150);
-            ensure_bot_free(botID);
-            //e_sendenccmd(botID,'s');
-            e_sendenccmd(botID,'w');
-            e_sendenccmd(botID,'a');
-            e_sendenccmd(botID,'d');
-            bot_status();
-        }
-        ++i;
-    }*/
-    /*e_sendenccmd(botID,'F',5,100);
-    elecsleep(2000);
-    wait_4_bot(botID);
-    e_sendenccmd(botID,'B',5,100);
-    elecsleep(2000);
-    wait_4_bot(botID);
-    e_sendenccmd(botID,'B',20,100);
-    elecsleep(2000);
-    wait_4_bot(botID);
-    e_sendenccmd(botID,'F',20,100);
-    elecsleep(2000);
-    wait_4_bot(botID);
+void test_angles(int botID)
+{
+    int i=0;
     for(i=0;i<9;++i)
     {
         e_sendenccmd(botID,'l',10);
@@ -1387,6 +1378,37 @@ int main()
     wait_4_bot(botID);
     elecsleep(2000);
     e_sendenccmd(botID,'r',90);
-    wait_4_bot(botID);*/
+    wait_4_bot(botID);
+}
+
+void test_dist(int botID)                   // 13 commands
+{
+    int i=0;
+    for(i=0;i<10;++i)
+    {
+        e_sendenccmd(botID,'F',5,80);
+        wait_4_bot(botID);
+    }
+    e_sendenccmd(botID,'r',180);
+    wait_4_bot(botID);
+    elecsleep(2000);
+    e_sendenccmd(botID,'F',35,160);
+    wait_4_bot(botID);
+    e_sendenccmd(botID,'F',15,160);
+    wait_4_bot(botID);
+    elecsleep(2000);
+    e_sendenccmd(botID,'l',180);
+    wait_4_bot(botID);
+    e_sendenccmd(botID,'F',50,160);
+    wait_4_bot(botID);
+}
+#ifndef FINAL
+int main()
+{	
+    Uinit();
+    int botID=0;
+    unsigned int i=0;
+    test_dist(botID);
+    Uend();
 }
 #endif
