@@ -46,6 +46,7 @@ void algo(int id) {
     double angle = bot[id].angle; 
     double bx, by; 
     Ball.getCenter(bx, by); 
+    vector<Action> res; 
 
     // Hold Stuff Starts Here {
 
@@ -77,30 +78,38 @@ void algo(int id) {
 
 
     // Goalie and defender starts here {
-    double theta1 = get_angle_to_point(bx, by, +110, -25, true); 
-    double theta2 = get_angle_to_point(bx, by, +110, 0, true); 
-    double theta3 = get_angle_to_point(bx, by, +110, +25, true); 
-    vector<Action> res; 
-    if (id == 0) {
-        // Goalie
-        double goalie_x = +110 - 7.5; 
-        double goalie_dx = goalie_x - bx; 
-        double goalie_y = by + goalie_dx * ( tan(theta1) + tan(theta2) ) / 2; 
-        res = defend(id, x, y, angle, goalie_x, goalie_y); 
+   // double theta1 = get_angle_to_point(bx, by, +110, -25, true); 
+   // double theta2 = get_angle_to_point(bx, by, +110, 0, true); 
+   // double theta3 = get_angle_to_point(bx, by, +110, +25, true); 
+   // if (id == 0) {
+   //     // Goalie
+   //     double goalie_x = +110 - 7.5; 
+   //     double goalie_dx = goalie_x - bx; 
+   //     double goalie_y = by + goalie_dx * ( tan(theta1) + tan(theta2) ) / 2; 
+   //     res = defend(id, x, y, angle, goalie_x, goalie_y); 
 
-    } else {
-        // Defender 1
-        double defender_x = +110 - 25; 
-        double defender_dx = defender_x - bx; 
-        double defender_y = by + defender_dx * ( tan(theta3) + tan(theta2) ) / 2; 
-        res = defend(id, x, y, angle, defender_x, defender_y); 
+   // } else {
+   //     // Defender 1
+   //     double defender_x = +110 - 25; 
+   //     double defender_dx = defender_x - bx; 
+   //     double defender_y = by + defender_dx * ( tan(theta3) + tan(theta2) ) / 2; 
+   //     res = defend(id, x, y, angle, defender_x, defender_y); 
+   // }
+
+
+    // Goalie and defender end here }
+
+
+    // Attacker stuff starts here {
+    if (id == 0) {
+
     }
+    // Attacker stuff ends here } 
+
 
     for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
         bot_queue[id].push(*it); 
     }
-
-    // Goalie and defender end here }
 
 }
 void interrupt_near_arena() {

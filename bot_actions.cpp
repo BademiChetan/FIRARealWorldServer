@@ -138,3 +138,36 @@ vector<Action> defend(int id, double x1, double y1, double angle, double x2, dou
     return res; 
 }
 
+bool have_the_ball(int id){
+    // have the ball with me
+    if (distance_from_bot_to_ball(id) <= 8 &&
+            angle_from_bot_to_ball(id) <= 20 )
+        return true;
+    return false; 
+}
+
+
+void attack(int id) {
+    // Do I have the ball? 
+    if (have_the_ball(id)) {
+        return hold(bot[id].x, bot[id].y, 110, 0); 
+    }
+
+    vector<Action> res; 
+    // Oriented towards the ball? 
+    if (angle_from_bot_to_ball(id) <= 20) {
+        Action run(id, min(20, distance_from_bot_to_ball(id)), 'F', 80, x2, y2); 
+        res.push_back(run); 
+    } else {
+        int direction = 0; // l => 1 and r => 0
+        direction = orient < 90 ? 1 : 0; 
+        int turn_by = fabs(orient - 90); 
+        if (turn_by > 180) {
+            turn_by = 360 - turn_by; 
+            direction ^= 1; 
+        }
+        Action turn(id, turn_by, direction ? 'l' : 'r', -1); 
+        res.push_back(turn); 
+    }
+    return res; 
+}
