@@ -102,7 +102,7 @@ void algo(int id) {
 
     // Attacker stuff starts here {
     if (id == 0) {
-
+        res = attack(id); 
     }
     // Attacker stuff ends here } 
 

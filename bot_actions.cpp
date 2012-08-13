@@ -20,6 +20,14 @@ Action::Action(int a, int b, int c, int d = 0, int e = 0, int f = 0) {
 }
 
 
+void keyboard_interrupt() {
+    char ch; 
+    while (true) {
+        ch = getchar(); 
+        if (ch == 'y')
+            break; 
+    }
+}
 // Absolute angle of line going from (x1,y1) to (x2,y2)
 double get_angle_to_point(double x1, double y1, double x2, double y2, bool
         radian = false) {
@@ -66,12 +74,6 @@ void Action::do_action() {
     printf("Command: %d, %d, %c, %d.\n", id, magnitude, (char)(direction), speed); 
     printf("Pos: (%f, %f)\n", bot[id].x, bot[id].y); 
 
-   // char ch; 
-   // while (true) {
-   //     ch = getchar(); 
-   //     if (ch == 'y')
-   //         break; 
-   // }
 
     if (speed == 0) {
         cout << "Sending turn\n"; 
@@ -147,27 +149,36 @@ bool have_the_ball(int id){
 }
 
 
-void attack(int id) {
+std::vector<Action> attack(int id) {
     // Do I have the ball? 
     if (have_the_ball(id)) {
-        return hold(bot[id].x, bot[id].y, 110, 0); 
+        keyboard_interrupt(); 
+        return hold(id, bot[id].x, bot[id].y, bot[id].angle, 110, 0); 
     }
 
-    vector<Action> res; 
-    // Oriented towards the ball? 
-    if (angle_from_bot_to_ball(id) <= 20) {
-        Action run(id, min(20, distance_from_bot_to_ball(id)), 'F', 80, x2, y2); 
-        res.push_back(run); 
-    } else {
-        int direction = 0; // l => 1 and r => 0
-        direction = orient < 90 ? 1 : 0; 
-        int turn_by = fabs(orient - 90); 
-        if (turn_by > 180) {
-            turn_by = 360 - turn_by; 
-            direction ^= 1; 
-        }
-        Action turn(id, turn_by, direction ? 'l' : 'r', -1); 
-        res.push_back(turn); 
+    double x = bot[id].x; 
+    double y = bot[id].y; 
+    double angle = bot[id].angle; 
+    double bx, by; 
+    Ball.getCenter(bx, by); 
+
+    // Try to go behind the ball from the goal. 
+    double gx = +110; 
+    double gy = 0; 
+    double theta = get_angle_to_point(bx, by, gx, gy); 
+    theta *= PI / 180; 
+
+    // Get the point on the line from goal to ball 5cm behind it
+    double goto_x = bx - 5 * cos(theta); 
+    double goto_y = by - 5 * sin(theta); 
+
+    // Check if it lies in the arena
+    if (goto_x < -90 || goto_x > 90 || goto_y < -90 || goto_y > 90) {
+        goto_x = bx; 
+        goto_y = by; 
     }
-    return res; 
+
+
+    printf("Will hold (%f, %f). Ball is at (%f, %f).\n", goto_x, goto_y, bx, by); 
+    return hold(id, x, y, angle, goto_x, goto_y); 
 }

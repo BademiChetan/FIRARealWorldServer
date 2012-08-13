@@ -21,3 +21,4 @@ std::vector<Action> defend(int id, double x1, double y1, double angle, double x2
 double get_angle_to_point(double x1, double y1, double x2, double y2, bool radian); 
 double get_distance_to_point(double x1, double y1, double x2, double y2); 
 double angle_from_bot_to_ball(int id); 
+std::vector<Action> attack(int id); 

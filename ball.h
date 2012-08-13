@@ -5,6 +5,7 @@ class ball
         IplImage *mask;
         CvRect location;
         CvPoint center;
+        double x, y; 
         char color;
 
         void update();

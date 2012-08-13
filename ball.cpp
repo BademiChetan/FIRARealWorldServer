@@ -51,4 +51,6 @@ void ball::update(){
 
     limit_location_within_arena( location );
 
+    getCenter(x, y); 
+
 }
