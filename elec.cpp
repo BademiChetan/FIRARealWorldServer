@@ -973,11 +973,13 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
         {
             gettimeofday(&begin,NULL);
         }
-        if((action=='s')&&(bot_code[botID][1]=='b'))
+        if(action=='s')
             bypass_normal_protocol=1;                                         // We are going to interrupt and hence no mirror
         else
+        {
             bypass_normal_protocol=0;
-        bot_code[botID][1]='b';
+            bot_code[botID][1]='b';
+        }
         cout<<"NFS style:"<<botID<<action<<endl;
         while(!((temp>='0')&&(temp<='4')))
         {
@@ -1100,14 +1102,17 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 return 1;
             }
         }
-        if((bypass_normal_protocol)&&(bot_code[botID][1]=='f'))
+        if(bypass_normal_protocol)
         {
-            cout<<"Command at bot "<<botID<<" successfully interrupted"<<endl<<endl;
-        }
-        else if(bypass_normal_protocol)
-        {
-            cout<<"Interruption at bot "<<botID<<" unsuccessful"<<endl<<endl;
-            return 1;
+            if(bot_code[botID][1]=='f')
+            {
+                cout<<"Command at bot "<<botID<<" successfully interrupted"<<endl<<endl;
+            }
+            else 
+            {
+                cout<<"Interruption at bot "<<botID<<" unsuccessful"<<endl<<endl;
+                return 1;
+            }
         }
         cout<<"Next cmd prompt received"<<endl<<endl;
         if(DTIMER)
