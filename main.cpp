@@ -77,20 +77,20 @@ void algo(int id) {
 
 
     // Goalie and defender starts here {
-    double theta1 = get_angle_to_point(bx, by, -110, -25, true); 
-    double theta2 = get_angle_to_point(bx, by, -110, 0, true); 
-    double theta3 = get_angle_to_point(bx, by, -110, +25, true); 
+    double theta1 = get_angle_to_point(bx, by, +110, -25, true); 
+    double theta2 = get_angle_to_point(bx, by, +110, 0, true); 
+    double theta3 = get_angle_to_point(bx, by, +110, +25, true); 
     vector<Action> res; 
     if (id == 0) {
         // Goalie
-        double goalie_x = -110 + 7.5; 
+        double goalie_x = +110 - 7.5; 
         double goalie_dx = goalie_x - bx; 
         double goalie_y = by + goalie_dx * ( tan(theta1) + tan(theta2) ) / 2; 
         res = defend(id, x, y, angle, goalie_x, goalie_y); 
 
     } else {
         // Defender 1
-        double defender_x = -110 + 25; 
+        double defender_x = +110 - 25; 
         double defender_dx = defender_x - bx; 
         double defender_y = by + defender_dx * ( tan(theta1) + tan(theta2) ) / 2; 
         res = defend(id, x, y, angle, defender_x, defender_y); 
