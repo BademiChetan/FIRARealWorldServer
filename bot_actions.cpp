@@ -44,6 +44,9 @@ double get_angle_to_point(double x1, double y1, double x2, double y2, bool
     return res; 
 }
 
+double get_distance_to_point(double x1, double y1, double x2, double y2) {
+    return sqrt( (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) ); 
+}
 double angle_from_bot_to_ball(int id) {
     double x = bot[id].x; 
     double y = bot[id].y; 
@@ -52,6 +55,13 @@ double angle_from_bot_to_ball(int id) {
     return get_angle_to_point(x, y, bx, by); 
 }
 
+double distance_from_bot_to_ball(int id) {
+    double x = bot[id].x; 
+    double y = bot[id].y; 
+    double bx, by; 
+    Ball.getCenter(bx, by); 
+    return get_distance_to_point(x, y, bx, by); 
+}
 void Action::do_action() {
     printf("Command: %d, %d, %c, %d.\n", id, magnitude, (char)(direction), speed); 
     printf("Pos: (%f, %f)\n", bot[id].x, bot[id].y); 
@@ -120,7 +130,7 @@ vector<Action> defend(int id, double x1, double y1, double angle, double x2, dou
         turn_by = 360 - turn_by; 
         direction ^= 1; 
     }
-    Action turn2(id, turn_by, direction ? 'l' : 'r'); 
+    Action turn2(id, turn_by, direction ? 'l' : 'r', -1); 
     res.push_back(turn2); 
     return res; 
 }

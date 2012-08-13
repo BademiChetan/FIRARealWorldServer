@@ -86,14 +86,14 @@ void algo(int id) {
         double goalie_x = +110 - 7.5; 
         double goalie_dx = goalie_x - bx; 
         double goalie_y = by + goalie_dx * ( tan(theta1) + tan(theta2) ) / 2; 
-        res = hold(id, x, y, angle, goalie_x, goalie_y); 
+        res = defend(id, x, y, angle, goalie_x, goalie_y); 
 
     } else {
         // Defender 1
         double defender_x = +110 - 25; 
         double defender_dx = defender_x - bx; 
         double defender_y = by + defender_dx * ( tan(theta1) + tan(theta2) ) / 2; 
-        res = hold(id, x, y, angle, defender_x, defender_y); 
+        res = defend(id, x, y, angle, defender_x, defender_y); 
     }
 
     for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
@@ -213,6 +213,13 @@ int main( int argc, char** argv ){
                // Required for the "cool" hold
                 if (curr.speed == 0) {
                     curr.do_action(); 
+                } else if (curr.speed == -1) {
+                    double dist = get_distance_to_point(bot[i].x, bot[i].y, 
+                            curr.x, curr.y, false); 
+                    if ( dist < 2) {
+                        curr.do_action(); 
+                    }
+
                 } else {
                     double diff = get_angle_to_point(bot[i].x, bot[i].y, 
                             curr.x, curr.y, false) - bot[i].angle; 
