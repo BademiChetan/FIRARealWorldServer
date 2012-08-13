@@ -9,8 +9,9 @@ class Action {
         int magnitude;     // angle or distance
         int direction;     // l, r, F, B 
         int speed; 
+        int x, y; 
 
-        Action(int, int, int, int); 
+        Action(int, int, int, int, int, int); 
         void do_action(); 
 };
 

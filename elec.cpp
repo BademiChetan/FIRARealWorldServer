@@ -89,7 +89,6 @@ bool checkbotstat(int botID,char action);
 int is_enc_cmd(char action);
 string conv_value_char(int value);
 int sendenccmd(int botID, char action, int value,unsigned char speed);
-// FIXME: Needs a lock. 
 void e_sendenccmd(int botID, char action, int value,unsigned char speed);
 bool check_bot_free(int botID);
 bool make_bot_free(int botID);
@@ -1167,13 +1166,16 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 ++i;
         }
     }
-    else if(res==2))                                             //No ack
+    else if(res==2)                                             //No ack
     {
         i=0;
         if(STR_DEBUG)
             cout<<"Trying again as the ack failed in last attempt..."<<endl;
 
-        while(sendenccmd(botID, 's')); 
+        while(sendenccmd(botID, 's')) {
+            cout << "Stuck here!\n"; 
+            bot_status(); 
+        }
         //The tally has not been added to success as it is known that eventually it has to succeed
     }
     else

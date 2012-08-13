@@ -12,11 +12,11 @@
 
 #define NUM_OF_OPP_BOTS 0
 
-#define BOT0_COLOR 'r'
-#define BOT1_COLOR 'd'
+#define BOT0_COLOR 'd'
+#define BOT1_COLOR 'p'
 #define BOT2_COLOR 'v'
 #define BOT3_COLOR 'g'
-#define BOT4_COLOR 'p'
+#define BOT4_COLOR 'r'
 
 #define BOUND_RECT 30
 #define BOT_WIDTH 20

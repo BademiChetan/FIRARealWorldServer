@@ -10,11 +10,13 @@
 using namespace std; 
 using namespace cv; 
 
-Action::Action(int a, int b, int c, int d = 0) {
+Action::Action(int a, int b, int c, int d = 0, int e = 0, int f = 0) {
     id = a ; 
     magnitude = b; 
     direction = c; 
     speed = d; 
+    x = e; 
+    y = f; 
 }
 
 
@@ -83,7 +85,7 @@ vector<Action> hold(int id, double x1, double y1, double angle, double x2, doubl
     Action turn(id, turn_by, direction ? 'l' : 'r'); 
     res.push_back(turn); 
     double distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); 
-    Action run(id, min((int)(distance), 40), 'F', 80); 
+    Action run(id, min((int)(distance), 40), 'F', 80, x2, y2); 
     res.push_back(run); 
     return res; 
 }
@@ -108,7 +110,7 @@ vector<Action> defend(int id, double x1, double y1, double angle, double x2, dou
     Action turn1(id, turn_by, direction ? 'l' : 'r'); 
     res.push_back(turn1); 
     // Move towards the point
-    Action run(id, min((int)(distance), 40), 'F', 80); 
+    Action run(id, min((int)(distance), 40), 'F', 80, x2, y2); 
     res.push_back(run); 
     // Orient ourselves back
     direction = 0; // l => 1 and r => 0
