@@ -12,10 +12,10 @@
  * *********************************************/
 #define PLAYERS 1
 
-#define STR_DEBUG 0
+#define STR_DEBUG 1
 #define TIMER 0
 #define DTIMER 0
-#define SHOW_TIMEOUT 0
+#define SHOW_TIMEOUT 1
 #define xSEC                                                    // Remove 'x' Corruption for mirror based communication
 
 // interrupted and the command is forced.
@@ -1101,7 +1101,9 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             }
         }
         if((bypass_normal_protocol)&&(bot_code[botID][1]=='f'))
+        {
             cout<<"Command at bot "<<botID<<" successfully interrupted"<<endl<<endl;
+        }
         else if(bypass_normal_protocol)
         {
             cout<<"Interruption at bot "<<botID<<" unsuccessful"<<endl<<endl;
@@ -1176,6 +1178,7 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             cout << "Stuck here!\n"; 
             bot_status(); 
         }
+        cout << "Interrupted successfully\n"; 
         //The tally has not been added to success as it is known that eventually it has to succeed
     }
     else
@@ -1194,6 +1197,7 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 maxtime=diff;
         }
     }
+    cout << "Going out of e_sendenccmd()\n"; 
 }
 
 bool is_bot_free(int id) {

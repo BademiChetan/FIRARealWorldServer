@@ -10,7 +10,7 @@ using namespace std;
 
 #include "SerialStream.h"
 #include "select_arena.h"
-#include "process_image.h"
+#include"process_image.h"
 #include "elec.h"
 #include "contours.h"
 #include "colors.h"
@@ -149,8 +149,10 @@ void image_processing() {
 
     Ball.location = pitch;
 
-    updateframe(); 
-    update_locations(); 
+    for (int i = 0; i < 10; i ++){
+        updateframe(); 
+        update_locations(); 
+    }
 
 
     ip_done = true; 
@@ -208,25 +210,37 @@ int main( int argc, char** argv ){
         }
 
         for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-            if (check_bot_free(i) && !bot_queue[i].empty()) {
+            printf("Size of queue for %d is %d\n", i, bot_queue[i].size()); 
+            if (bot_queue[i].empty())
+                continue; 
+            if (check_bot_free(i)) {
                 Action curr = bot_queue[i].front(); 
                // Required for the "cool" hold
                 if (curr.speed == 0) {
+                    cout << "Turn " << curr.magnitude << ' ' ; 
                     curr.do_action(); 
+                    bot_status(); 
+                    cout << "Turn " << curr.magnitude << ' ' ; 
                 } else if (curr.speed == -1) {
                     double dist = get_distance_to_point(bot[i].x, bot[i].y, 
-                            curr.x, curr.y, false); 
+                            curr.x, curr.y); 
+                    cout << "Orient " << dist << ' ' ; 
                     if ( dist < 2) {
                         curr.do_action(); 
                     }
-
+                    bot_status(); 
+                    cout << "Orient " << dist << ' ' ; 
                 } else {
                     double diff = get_angle_to_point(bot[i].x, bot[i].y, 
                             curr.x, curr.y, false) - bot[i].angle; 
+                    cout << "Forward "  << fabs(diff) << ' ' ; 
                     if (fabs(diff) < 15) {
                         curr.do_action();
                     }
+                    bot_status(); 
+                    cout << "Forward "  << fabs(diff) << ' ' ; 
                 }
+                bot_queue[i].pop(); 
             }
         }
     }

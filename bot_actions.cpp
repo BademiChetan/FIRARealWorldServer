@@ -80,6 +80,7 @@ void Action::do_action() {
         cout << "Sending forward\n"; 
         e_sendenccmd(id, direction, magnitude, speed); 
     }
+    cout << "Done doing action. \n" ; 
 }
 // Currently at (x1, y1). Hold the ball which is at (x2, y2). 
 vector<Action> hold(int id, double x1, double y1, double angle, double x2, double y2) {
@@ -102,11 +103,13 @@ vector<Action> hold(int id, double x1, double y1, double angle, double x2, doubl
 
 // Currently at (x1, y1). Hold the ball which is at (x2, y2). 
 vector<Action> defend(int id, double x1, double y1, double angle, double x2, double y2) {
-    printf("id = %d, (%f, %f) < %f, (%f, %f)\n", id, x1, y1, angle, x2, y2); 
+    printf("Defend: id = %d, (%f, %f) < %f, (%f, %f)\n", id, x1, y1, angle, x2, y2); 
     vector<Action> res; 
     double distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); 
-    if (distance <= 3)
+    if (distance <= 2) {
+        cout << "Already there!\n"; 
         return res; 
+    }
     printf("id = %d, (%f, %f) < %f, (%f, %f)\n", id, x1, y1, angle, x2, y2); 
     // Initial turn towards the point
     double orient = get_angle_to_point(x1, y1, x2, y2); 
@@ -120,7 +123,7 @@ vector<Action> defend(int id, double x1, double y1, double angle, double x2, dou
     Action turn1(id, turn_by, direction ? 'l' : 'r'); 
     res.push_back(turn1); 
     // Move towards the point
-    Action run(id, min((int)(distance), 40), 'F', 80, x2, y2); 
+    Action run(id, min((int)(distance), 10), 'F', 80, x2, y2); 
     res.push_back(run); 
     // Orient ourselves back
     direction = 0; // l => 1 and r => 0
