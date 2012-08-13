@@ -1278,10 +1278,11 @@ void ensure_bot_free(int botID)
         while((bot_code[botID][1]=='b')&&(ensure_timeout<ENSURE_TIMEOUT))
         {
             ensure_timeout++;
-            check_bot_free(botID);
+            if(!check_bot_free(botID))
+                make_bot_free(botID);
         }
-        if(!check_bot_free(botID))
-            while(!make_bot_free(botID));
+        if(ensure_timeout==ENSURE_TIMEOUT)
+            bot_code[botID][1]='f';
     }
     else if(STR_DEBUG)
     {
