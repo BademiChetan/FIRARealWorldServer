@@ -15,6 +15,7 @@ using namespace std;
 
 // calibration conditions - if ( ( Hue range ) && ( Saturation range ) && ( Value range ) )
 
+//TT Ball orange
 inline bool check_orange(uchar *ptr,int x)
 {
 	if((ptr[3*x]>15&&ptr[3*x]<25)&&ptr[3*x+1]>220&&ptr[3*x+1]<=255&&ptr[3*x+2]>170&&ptr[3*x+2]<245)
@@ -23,6 +24,16 @@ inline bool check_orange(uchar *ptr,int x)
 		return false;
 }
 
+
+//Golf ball orange (very close to Red)
+/*inline bool check_orange(uchar *ptr,int x)
+{
+	if((ptr[3*x]>0&&ptr[3*x]<5)&&ptr[3*x+1]>220&&ptr[3*x+1]<=255&&ptr[3*x+2]>100&&ptr[3*x+2]<225)
+		return true;
+	else
+		return false;
+}
+*/
 
 inline bool check_yellow(uchar *ptr,int x)
 {

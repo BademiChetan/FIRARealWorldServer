@@ -211,13 +211,12 @@ int main( int argc, char** argv ){
             if (check_bot_free(i) && !bot_queue[i].empty()) {
                 Action curr = bot_queue[i].front(); 
                // Required for the "cool" hold
-               // if (curr.speed == 0) {
-               //     curr.do_action(); 
-               // } else {
-               //     if (fabs(angle_from_bot_to_ball(i) - bot[i].angle) < 15)
-               //         curr.do_action();
-               // }
-                curr.do_action(); 
+                if (curr.speed == 0) {
+                    curr.do_action(); 
+                } else {
+                    if (fabs(angle_from_bot_to_ball(i) - bot[i].angle) < 15)
+                        curr.do_action();
+                }
                 bot_queue[i].pop(); 
             }
         }
