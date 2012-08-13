@@ -106,7 +106,7 @@ vector<Action> defend(int id, double x1, double y1, double angle, double x2, dou
     printf("Defend: id = %d, (%f, %f) < %f, (%f, %f)\n", id, x1, y1, angle, x2, y2); 
     vector<Action> res; 
     double distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); 
-    if (distance <= 2) {
+    if (distance <= 1) {
         cout << "Already there!\n"; 
         return res; 
     }
@@ -137,3 +137,4 @@ vector<Action> defend(int id, double x1, double y1, double angle, double x2, dou
     res.push_back(turn2); 
     return res; 
 }
+

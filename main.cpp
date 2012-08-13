@@ -92,7 +92,7 @@ void algo(int id) {
         // Defender 1
         double defender_x = +110 - 25; 
         double defender_dx = defender_x - bx; 
-        double defender_y = by + defender_dx * ( tan(theta1) + tan(theta2) ) / 2; 
+        double defender_y = by + defender_dx * ( tan(theta3) + tan(theta2) ) / 2; 
         res = defend(id, x, y, angle, defender_x, defender_y); 
     }
 
