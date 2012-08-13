@@ -18,10 +18,6 @@
 #define SHOW_TIMEOUT 0
 #define xSEC                                                    // Remove 'x' Corruption for mirror based communication
 
-int ENSURE_TIMEOUT=5;                                           // No. of tries to ensure
-bool enforce_cmd=0;                                             // Enforces the command in the event of ack fail
-bool ensure_cmd=1;                                              // In cases of error, the bot is made free
-bool auto_correct=1;                                            // Auto correction,i.e, in the event of error. The bot is 
 // interrupted and the command is forced.
 #define max_enc_value   	255                                     // Encoder maximum value
 #define NO_TIMEOUT      	1                                       // The amount of tries to read from AP before giving up
@@ -45,6 +41,7 @@ bool auto_correct=1;                                            // Auto correcti
 #include "cstring"
 #include "math.h"
 #include "sys/time.h"
+#include <string> 
 #ifdef FINAL
 #include "cv.h"
 #include "update_frame.h"
@@ -59,12 +56,15 @@ using namespace LibSerial;
 /***************Global Variables******************/
 SerialPort *pu;                                                 
 int usart_fl=0;                                                 // Flag for usart_init
-char charval[3];                                                // String to convert the value received into character for TX
-unsigned char bot_code[5][11];                                            // Matrix which acts like the semaphore
+unsigned char bot_code[5][11];                                  // Matrix which acts like the semaphore
 double maxtime=0;                                               // The maximum delay in the current run. Active only if TIMER is 1
 bool bypass_normal_protocol=0;                                  // Flag for generic purposes
 char serial_buffer[10];                                         // Our buffer for serial communication
 unsigned long int read_timeout=0;                               // Counter for timeouts
+int ENSURE_TIMEOUT=5;                                           // No. of tries to ensure
+bool enforce_cmd=0;                                             // Enforces the command in the event of ack fail
+bool ensure_cmd=1;                                              // In cases of error, the bot is made free
+bool auto_correct=0;                                            // Auto correction,i.e, in the event of error. The bot is 
 /************************************************************************************
  * Bot_code matrix has the following info for each bot and are mapped to their botID:
  * Connection status:   'x' -> Connected
@@ -87,8 +87,9 @@ void Uend();
 bool rxstring(char *cstr, unsigned int timeout_val, bool print_str);
 bool checkbotstat(int botID,char action);
 int is_enc_cmd(char action);
-void conv_value_char(int value);
+string conv_value_char(int value);
 int sendenccmd(int botID, char action, int value,unsigned char speed);
+// FIXME: Needs a lock. 
 void e_sendenccmd(int botID, char action, int value,unsigned char speed);
 bool check_bot_free(int botID);
 bool make_bot_free(int botID);
@@ -470,13 +471,15 @@ int is_enc_cmd(char action)
  * DESCRIPTION  : Converts integers into a character string stored in charval for TX
  * RETURN VALUES: NONE
  ************************************************/
-void conv_value_char(int value)
+string conv_value_char(int value)
 {
-    charval[0]=(value/100+48);
+    string res; 
+    res[0]=(value/100+48);
     value=value%100;
-    charval[1]=(value/10+48);
+    res[1]=(value/10+48);
     value=value%10;
-    charval[2]=value+48;
+    res[2]=value+48;
+    return res; 
 }
 
 /*************************************************
@@ -816,7 +819,7 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 }
             }
             pu->WriteByte(action);
-            conv_value_char(value);
+            string charval = conv_value_char(value);
             do
             {
                 timedout=rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG);               // AP will send out the decision as a sync 
@@ -1164,23 +1167,13 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 ++i;
         }
     }
-    else if((enforce_cmd)&&(res==2))                                             //No ack
+    else if(res==2))                                             //No ack
     {
         i=0;
         if(STR_DEBUG)
             cout<<"Trying again as the ack failed in last attempt..."<<endl;
-        do
-        {
-#ifdef FINAL
-            // updateframe();
-            if((abs(ba-bot[botID].angle)>ANGLE_TOL)||(abs(bx-bot[botID].x)>X_TOL)||(abs(by-bot[botID].y)>Y_TOL))
-            {
-                cout<<"We have successfully detected a rogue packet!!!"<<endl;
-                break;
-            }
-            ++i;
-#endif
-        }while(sendenccmd(botID,action,value,speed)&&(i<NO_TIMEOUT_2_KILL));
+
+        while(sendenccmd(botID, 's')); 
         //The tally has not been added to success as it is known that eventually it has to succeed
     }
     else
