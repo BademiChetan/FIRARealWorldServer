@@ -214,7 +214,9 @@ int main( int argc, char** argv ){
                 if (curr.speed == 0) {
                     curr.do_action(); 
                 } else {
-                    if (fabs(angle_from_bot_to_ball(i) - bot[i].angle) < 15) {
+                    double diff = get_angle_to_point(bot[i].x, bot[i].y, 
+                            curr.x, curr.y, false) - bot[i].angle; 
+                    if (fabs(diff) < 15) {
                         curr.do_action();
                     }
                 }
