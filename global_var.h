@@ -8,7 +8,7 @@
 
 #define OPP_JERSEY_COLOR 'y'
 
-#define NUM_OF_OUR_BOTS 2
+#define NUM_OF_OUR_BOTS 3
 
 #define NUM_OF_OPP_BOTS 0
 

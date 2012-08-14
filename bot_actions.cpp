@@ -86,7 +86,7 @@ void Action::do_action() {
 }
 // Currently at (x1, y1). Hold the ball which is at (x2, y2). 
 vector<Action> hold(int id, double x1, double y1, double angle, double x2, double y2) {
-    printf("id = %d, (%f, %f) < %f, (%f, %f)\n", id, x1, y1, angle, x2, y2); 
+    printf("HOLD: id = %d, (%f, %f) < %f, (%f, %f)\n", id, x1, y1, angle, x2, y2); 
     vector<Action> res; 
     double orient = get_angle_to_point(x1, y1, x2, y2); 
     int direction = 0; // l => 0 and r => 1
@@ -105,7 +105,7 @@ vector<Action> hold(int id, double x1, double y1, double angle, double x2, doubl
 
 // Currently at (x1, y1). Hold the ball which is at (x2, y2). 
 vector<Action> defend(int id, double x1, double y1, double angle, double x2, double y2) {
-    printf("Defend: id = %d, (%f, %f) < %f, (%f, %f)\n", id, x1, y1, angle, x2, y2); 
+    printf("DEFEND: id = %d, (%f, %f) < %f, (%f, %f)\n", id, x1, y1, angle, x2, y2); 
     vector<Action> res; 
     double distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); 
     if (distance <= 1) {
@@ -152,7 +152,6 @@ bool have_the_ball(int id){
 std::vector<Action> attack(int id) {
     // Do I have the ball? 
     if (have_the_ball(id)) {
-        keyboard_interrupt(); 
         return hold(id, bot[id].x, bot[id].y, bot[id].angle, 110, 0); 
     }
 
