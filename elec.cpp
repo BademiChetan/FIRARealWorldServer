@@ -30,6 +30,8 @@
 #define NO_TIMEOUT_4_WAIT	200
 #define NO_TIMEOUT_2_KILL   10	
 #define F_THRESH            35                                  // The threshold for the 'F' to convert into 'f'
+#define MAX_CHECKS          200                                 // The maximum no. of checks we need to do before declaring the
+                                                                // bot dead. One of the log files took 100 reads so...200.
 //bool update_table=1;                                          // Updates the table with the newly read values of the enc/battery
 
 #include "iostream"
@@ -65,6 +67,7 @@ int ENSURE_TIMEOUT=5;                                           // No. of tries 
 bool enforce_cmd=0;                                             // Enforces the command in the event of ack fail
 bool ensure_cmd=1;                                              // In cases of error, the bot is made free
 bool auto_correct=0;                                            // Auto correction,i.e, in the event of error. The bot is 
+unsigned char check_bot_free_count[]={0,0,0,0,0};
 /************************************************************************************
  * Bot_code matrix has the following info for each bot and are mapped to their botID:
  * Connection status:   'x' -> Connected
@@ -1210,6 +1213,7 @@ bool is_bot_free(int id) {
         return true;
     return false; 
 }
+
 /*************************************************
  * FUNCTION NAME: check_bot_free()
  * ARGUMENTS    : int botID     => Bot no. to be checked
@@ -1219,11 +1223,13 @@ bool is_bot_free(int id) {
  ************************************************/
 bool check_bot_free(int botID)
 {
+    check_bot_free_count[botID]++;
     if(bot_code[botID][1]=='b')
     {
         sendenccmd(botID,'R');
         if(bot_code[botID][1]=='f')
         {
+            check_bot_free_count[botID]=0;
             if(STR_DEBUG)
                 cout<<"Bot made free\n"; 
         }
@@ -1232,6 +1238,11 @@ bool check_bot_free(int botID)
     }
     else if(STR_DEBUG)
         cout<<"Bot is already free\n";
+    if(check_bot_free_count[botID]==MAX_CHECKS)
+    {
+        check_bot_free_count[botID]=0;
+        bot_code[botID][1]='f';
+    }
     return 1;
 }
 
