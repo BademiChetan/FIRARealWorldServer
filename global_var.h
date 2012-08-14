@@ -1,14 +1,19 @@
 #pragma once
 
+#include <cv.h>
+#include <highgui.h>
+
 #define THRESH_AREA 50
 
 #define OUR_JERSEY_COLOR 'b'
 
 #define OPP_JERSEY_COLOR 'y'
 
-#define NUM_OF_OUR_BOTS 1
+#define NUM_OF_OUR_BOTS 5
 
-#define NUM_OF_OPP_BOTS 2
+#define NUM_OF_OPP_BOTS 5
+
+#define LEFT_GOAL_COLOR 'b'
 
 #define BOT0_COLOR 'r'
 #define BOT1_COLOR 'p'

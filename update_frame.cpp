@@ -10,6 +10,7 @@
 #include "opp_bot.h"
 #include "global_var.h"
 #include "ball.h"
+#include "visualization.h"
 
 using namespace cv;
 using namespace std;
@@ -55,7 +56,7 @@ void updateframe(){
     img = cvQueryFrame( capture );
 
     int i;
-    
+
     for(i=0;i<NUM_OF_OPP_BOTS;i++) {
         cvSetImageROI(img,o_bot[i].location);
         cvSetImageROI(hsv,o_bot[i].location);
@@ -64,9 +65,9 @@ void updateframe(){
         cvResetImageROI(hsv);
     }
 
-   boost::thread our_bot_thread(update_opp_bot); 
-   
-       for(i=0;i<NUM_OF_OUR_BOTS;i++) {
+    boost::thread our_bot_thread(update_opp_bot); 
+
+    for(i=0;i<NUM_OF_OUR_BOTS;i++) {
         cvSetImageROI(img,bot[i].location);
         cvSetImageROI(hsv,bot[i].location);
         cvCvtColor( img, hsv, CV_BGR2HSV );
@@ -84,6 +85,8 @@ void updateframe(){
 
     our_bot_thread.join(); 
 
+    //boost::thread ogl_thread(DrawScene); 
+    //DrawScene();
 
     //Not rendering all the frames to decrease the code execution time.
     if( FrameCount % 5 == 0 )
@@ -106,8 +109,9 @@ void updateframe(){
                     cvScalar( 0, 0, 255, 0 ), 1, 4, 0 );
         }
 
-        cvShowImage( "SAHAS", img);
+        //cvShowImage( "SAHAS", img);
 
-        c = cvWaitKey( 1 );
+        //c = cvWaitKey( 1 );
+    //ogl_thread.join();
     }
 }
