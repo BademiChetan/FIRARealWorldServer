@@ -10,7 +10,7 @@
  *              KNOWN ISSUES
  * 1. Lacks backward compatibility as now the is_enc_cmd in AP returns 5 not 1
  * *********************************************/
-#define PLAYERS 3
+#define PLAYERS 1
 
 #define STR_DEBUG 1
 #define TIMER 0
@@ -32,6 +32,8 @@
 #define F_THRESH            35                                  // The threshold for the 'F' to convert into 'f'
 #define MAX_CHECKS          200                                 // The maximum no. of checks we need to do before declaring the
                                                                 // bot dead. One of the log files took 100 reads so...200.
+#define SERIAL_WAIT         5
+#define SERIAL_WAIT_4_TIME  100
 //bool update_table=1;                                          // Updates the table with the newly read values of the enc/battery
 
 #include "iostream"
@@ -97,6 +99,7 @@ bool check_bot_free(int botID);
 bool make_bot_free(int botID);
 void ensure_bot_free(int botID);
 bool wait_4_bot(int botID);
+bool serialwait();
 /************************************************/
 
 
@@ -337,23 +340,27 @@ bool rxstring(char *cstr, unsigned int len, bool print_str)
     int i=0;
     while(temp!='\n')
     {
-        try
+        if(serialwait())
         {
-            temp=pu->ReadByte(len);
+            try
+            {
+                temp=pu->ReadByte(len);
+            }
+            catch(SerialPort::ReadTimeout &e)
+            {
+                read_timeout++;
+                if(SHOW_TIMEOUT)
+                    cout<<"Read Timeout "<<read_timeout<<endl;
+                return 1;
+            }
+            if((temp!='\n')&&(temp!=0)&&(temp!=' '))
+            {
+                cstr[i]=temp;
+                ++i;
+            }
         }
-        catch(SerialPort::ReadTimeout &e)
-        {
-            read_timeout++;
-            if(SHOW_TIMEOUT)
-                cout<<"Read Timeout "<<read_timeout<<endl;
+        else
             return 1;
-        }
-        if((temp!='\n')&&(temp!=0)&&(temp!=' '))
-        {
-            cstr[i]=temp;
-            ++i;
-            //cout<<i++<<temp<<'x'<<endl;
-        }
     }
     cstr[i]='\0';
     if(print_str)
@@ -530,17 +537,21 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
         while(!((temp>='0')&&(temp<='4')))
         {
             pu->WriteByte(botID+48);
-            try
+            if(serialwait())
             {
-                temp=pu->ReadByte(TIMEOUT_READ);
-                if(STR_DEBUG)
-                    cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
-                    //cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
+                try
+                {
+                    temp=pu->ReadByte(TIMEOUT_READ);
+                    if(STR_DEBUG)
+                        cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                }
+                catch(SerialPort::ReadTimeout &e)
+                {
+                    cout<<"Failed to see a byte coming";
+                }
             }
-            catch(SerialPort::ReadTimeout &e)
-            {
-                cout<<"nope";
-            }
+            else
+                cout<<"Still waiting..."<<endl;
         }
         pu->WriteByte(action);
         timecount=0;
@@ -676,17 +687,21 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             while(!((temp>='0')&&(temp<='4')))
             {
                 pu->WriteByte(botID+48);
-                try
+                if(serialwait())
                 {
-                    temp=pu->ReadByte(TIMEOUT_READ);
-                    if(STR_DEBUG)
-                        cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
-                       // cout<<"Trying to link to bot "<<botID<<". It spat out the character"<<(int)temp<<endl;
+                    try
+                    {
+                        temp=pu->ReadByte(TIMEOUT_READ);
+                        if(STR_DEBUG)
+                            cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                    }
+                    catch(SerialPort::ReadTimeout &e)
+                    {
+                        cout<<"Failed to see a byte coming";
+                    }
                 }
-                catch(SerialPort::ReadTimeout &e)
-                {
-                    cout<<"nope";
-                }
+                else
+                    cout<<"Still waiting..."<<endl;
             }
             pu->WriteByte(action);
             timecount=0;
@@ -808,17 +823,21 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             while(!((temp>='0')&&(temp<='4')))
             {
                 pu->WriteByte(botID+48);
-                try
+                if(serialwait())
                 {
-                    temp=pu->ReadByte(TIMEOUT_READ);
-                    if(STR_DEBUG)
-                        cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
-                       //cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
+                    try
+                    {
+                        temp=pu->ReadByte(TIMEOUT_READ);
+                        if(STR_DEBUG)
+                            cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                    }
+                    catch(SerialPort::ReadTimeout &e)
+                    {
+                        cout<<"Failed to see a byte coming";
+                    }
                 }
-                catch(SerialPort::ReadTimeout &e)
-                {
-                    cout<<"nope";
-                }
+                else
+                    cout<<"Still waiting..."<<endl;
             }
             pu->WriteByte(action);
             string charval = conv_value_char(value);
@@ -933,17 +952,21 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
         while(!((temp>='0')&&(temp<='4')))
         {
             pu->WriteByte(botID+48);
-            try
+            if(serialwait())
             {
-                temp=pu->ReadByte(TIMEOUT_READ);
-                if(STR_DEBUG)
-                    cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
-                    //cout<<"Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
+                try
+                {
+                    temp=pu->ReadByte(TIMEOUT_READ);
+                    if(STR_DEBUG)
+                        cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                }
+                catch(SerialPort::ReadTimeout &e)
+                {
+                    cout<<"Failed to see a byte coming";
+                }
             }
-            catch(SerialPort::ReadTimeout &e)
-            {
-                cout<<"nope";
-            }
+            else
+                cout<<"Still waiting..."<<endl;
         }
         pu->WriteByte(action);
         while((strcmp(next,serial_buffer)||timedout)&&(timecount<NO_TIMEOUT))
@@ -987,17 +1010,21 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
         while(!((temp>='0')&&(temp<='4')))
         {
             pu->WriteByte(botID+48);
-            try
+            if(serialwait())
             {
-                temp=pu->ReadByte(TIMEOUT_READ);
-                if(STR_DEBUG)
-                    cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
-                    //cout<<" Trying to link to bot "<<botID<<". It spat out the character "<<(int)temp<<endl;
+                try
+                {
+                    temp=pu->ReadByte(TIMEOUT_READ);
+                    if(STR_DEBUG)
+                        cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                }
+                catch(SerialPort::ReadTimeout &e)
+                {
+                    cout<<"Failed to see a byte coming";
+                }
             }
-            catch(SerialPort::ReadTimeout &e)
-            {
-                cout<<"nope";
-            }
+            else
+                cout<<"Still waiting..."<<endl;
         }
         if(DTIMER)
         {
@@ -1423,11 +1450,29 @@ void test_dist(int botID)                   // 13 commands
     e_sendenccmd(botID,'F',50,160);
     wait_4_bot(botID);
 }
+
+/*************************************************
+ * FUNCTION NAME: wait_4_bot()
+ * ARGUMENTS    : int botID     => Bot no. to be checked
+ * DESCRIPTION  : Call check_bot_free till bot becomes free
+ * RETURN VALUES: NONE
+ ************************************************/
+bool serialwait()
+{
+    for(int i=0;i<SERIAL_WAIT;++i)
+    {
+        if(pu->IsDataAvailable())
+            return 1;
+        else
+            elecsleep(SERIAL_WAIT_4_TIME);
+    }
+    return 0;
+}
 #ifndef FINAL
 int main()
 {	
     Uinit();
-    int botID=0;
+    int botID=2;
     unsigned int i=0;
     //test_dist(botID);
     test_angles(botID);
