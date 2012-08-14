@@ -1,88 +1,145 @@
-#include <cstdio>
-#include <cmath> 
+#pragma once
 #include <cv.h>
 #include <highgui.h>
-#include <SerialStream.h>
-
+#include <ctime> 
+#include <boost/thread.hpp>
+#include "SerialStream.h"
+#include "select_arena.h"
+#include"process_image.h"
 #include "elec.h"
+#include "contours.h"
+#include "colors.h"
 #include "our_bot.h"
-#include "ball.h"
 #include "opp_bot.h"
+#include "ball.h"
+#include "update_frame.h"
 #include "global_var.h"
+#include "bot_actions.h"
+#include "kick_off_calibration.h"
+#include "algo.h" 
+using namespace cv;
+using namespace std;
 
-/*
-   All the coordinates are from the center of the field. 
-   The opponent's goal ranges from (110,-30) to (110,30). 
-   Our goal ranges from (-110,-30) to (-110,30). 
+queue<Action> bot_queue[5]; 
 
- */
+void algo(int id) {
+
+    double x = bot[id].x; 
+    double y = bot[id].y; 
+    double angle = bot[id].angle; 
+    double bx, by; 
+    Ball.getCenter(bx, by); 
+    vector<Action> res; 
+
+    // Hold Stuff Starts Here {
+
+   // // Try to go behind the ball from the goal. 
+   // double gx = -100; 
+   // double gy = 0; 
+   // double theta = get_angle_to_point(bx, by, gx, gy); 
+   // cout << "Theta in degrees: " << theta << endl; 
+   // theta *= PI / 180; 
+
+   // // Get the point on the line from goal to ball 5cm behind it
+   // double goto_x = bx - 5 * cos(theta); 
+   // double goto_y = by - 5 * sin(theta); 
+
+   // // Check if it lies in the arena
+   // if (goto_x < -90 || goto_x > 90 || goto_y < -90 || goto_y > 90) {
+   //     goto_x = bx; 
+   //     goto_y = by; 
+   // }
 
 
+   // printf("Will hold (%f, %f). Ball is at (%f, %f).\n", goto_x, goto_y, bx, by); 
+   // vector<Action> res = hold(id, x, y, angle, goto_x, goto_y); 
+   // for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
+   //     bot_queue[id].push(*it); 
+   // }
+
+    // Hold stuff ends here }
 
 
-// Pushes a ball to the goal
+    // Goalie and defender starts here {
+    double theta1 = get_angle_to_point(bx, by, +110, -25, true); 
+    double theta2 = get_angle_to_point(bx, by, +110, 0, true); 
+    double theta3 = get_angle_to_point(bx, by, +110, +25, true); 
+    if (id == 0) {
+        // Goalie
+        double goalie_x = +110 - 7.5; 
+        double goalie_dx = goalie_x - bx; 
+        double goalie_y = by + goalie_dx * ( tan(theta1) + tan(theta2) ) / 2; 
+        res = defend(id, x, y, angle, goalie_x, goalie_y); 
 
-double distance(double x1,double y1,double x2,double y2){
-    return sqrt( ( x2 -x1 ) * ( x2 - x1 ) + ( y2 - y1 ) * ( y2 - y1 )  ) ; 
+    } else if (id == 1) {
+        // Defender 1
+        double defender_x = +110 - 25; 
+        double defender_dx = defender_x - bx; 
+        double defender_y = by + defender_dx * ( tan(theta3) + tan(theta2) ) / 2; 
+        res = defend(id, x, y, angle, defender_x, defender_y); 
+    }
+
+
+    // Goalie and defender end here }
+
+
+    // Attacker stuff starts here {
+    else if (id == 2) {
+        res = attack(id); 
+    }
+    // Attacker stuff ends here } 
+
+
+    for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
+        bot_queue[id].push(*it); 
+    }
+
 }
-
-void goal(){
-    /* // Assume we're shooting to the centre of the goal to maximize probability. 
-    // Are we in contact with the ball? 
-    double bx,by;
-
-    bx = (Ball.center.x-arena_center.x)*250/pitch.width;
-    by = (Ball.center.y-arena_center.y)*250/pitch.width;
-
-    double botx,boty;
-    botx = (bot[0].bot_center.x-arena_center.x)*250/pitch.width;
-    boty = (bot[0].bot_center.y-arena_center.y)*250/pitch.width;
-
-    //botx = boty = 0 ; 
-    //bx = by = 1 ; 
-    if ( distance(bx,by,botx,boty) <= 4 + 1.5 ){
-    // We're in contact with the ball, guys! Keep going strong! :D
-
-
-
-    // Find the different line of sights. 
-    double los1 = atan( ( 110 - by)  / ( - bx ) ) ; 
-    los1 = los1 * 180 / PI ; 
-    double los2 = atan( ( 110 - boty ) / ( -botx ) ) ; 
-    los2 = los2 * 180 / PI ; 
-
-    // The bot and the ball are not aligned towards the goal! Turn the bot appropriately! 
-    if ( fabs( los1 - los2 ) >= 2.0 ){
-    if ( los2 > los1 ){
-    turn(1, (int)(los2 - los1 + 0.5 ) ) ; 
-    }
-    else{
-    turn( 1, (int)(los1 - los2 + 0.5 ) ) ; 
-    }
+void main_algo() {
+    cout << "Doing algo stuff here\n"; 
+    for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+        if (bot_queue[i].empty()) {
+           // if (still_count[i] <= 10) {
+           //     still_count[i] ++; 
+           //     continue; 
+           // }
+           // still_count[i] = 0; 
+            algo(i); 
+        }
     }
 
-    // Now that we're aligned, push it by some amount. 
-    move_forward(1,(int)( normal_velocity / frame_rate ) ) ; 
-
-    }else{
-    // We're not yet in contact with the ball. We have some work to do. 
-
-    // Let's move to the ball. 
-    double los1 = atan( ( by- boty ) / ( bx - botx ) ) ; 
-    double los2;
-    los2 = bot[0].orientation();
-
-    if ( fabs( los2 - los1 ) >= 2.0  ){
-    if ( los2 > los1 ){
-    turn(1, (int)(los2 - los1 + 0.5 ) ) ; 
+    for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+        printf("Size of queue for %d is %d\n", i, bot_queue[i].size()); 
+        if (bot_queue[i].empty())
+            continue; 
+        if (check_bot_free(i)) {
+            Action curr = bot_queue[i].front(); 
+            // Required for the "cool" hold
+            if (curr.speed == 0) {
+                cout << "Turn " << curr.magnitude << ' ' ; 
+                curr.do_action(); 
+                bot_status(); 
+                cout << "Turn " << curr.magnitude << ' ' ; 
+            } else if (curr.speed == -1) {
+                double dist = get_distance_to_point(bot[i].x, bot[i].y, 
+                        curr.x, curr.y); 
+                cout << "Orient " << dist << ' ' ; 
+                if ( dist < 2) {
+                    curr.do_action(); 
+                }
+                bot_status(); 
+                cout << "Orient " << dist << ' ' ; 
+            } else {
+                double diff = get_angle_to_point(bot[i].x, bot[i].y, 
+                        curr.x, curr.y, false) - bot[i].angle; 
+                cout << "Forward "  << fabs(diff) << ' ' ; 
+                if (fabs(diff) < 15) {
+                    curr.do_action();
+                }
+                bot_status(); 
+                cout << "Forward "  << fabs(diff) << ' ' ; 
+            }
+            bot_queue[i].pop(); 
+        }
     }
-    else{
-    turn( 1, (int)(los1 - los2 + 0.5 ) ) ; 
-    }
-    }
-
-    move_forward(1, (int)(normal_velocity / frame_rate ) ); 
-
-    }
-     */
 }

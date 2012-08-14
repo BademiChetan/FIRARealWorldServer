@@ -2,7 +2,7 @@
 #include <cv.h>
 #include <highgui.h>
 
-#define THRESH_AREA 50
+#define THRESH_AREA 200
 
 #define OUR_JERSEY_COLOR 'b'
 

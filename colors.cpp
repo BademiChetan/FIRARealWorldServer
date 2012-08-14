@@ -29,7 +29,7 @@ inline bool check_orange(uchar *ptr,int x)
 //Golf ball orange (very close to Red)
 inline bool check_orange(uchar *ptr,int x)
 {
-	if((ptr[3*x]>0&&ptr[3*x]<8)&&ptr[3*x+1]>100&&ptr[3*x+1]<=240&&ptr[3*x+2]>50&&ptr[3*x+2]<225)
+	if((ptr[3*x]>0&&ptr[3*x]<8)&&ptr[3*x+1]>100&&ptr[3*x+1]<=240&&ptr[3*x+2]>80&&ptr[3*x+2]<225)
 		return true;
 	else
 		return false;
@@ -47,7 +47,7 @@ inline bool check_yellow(uchar *ptr,int x)
 
 inline bool check_blue(uchar *ptr,int x)
 {	
-    if((ptr[3*x]>90&&ptr[3*x]<115)&&(ptr[3*x+1]>100&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>100&&ptr[3*x+2]<230))
+    if((ptr[3*x]>90&&ptr[3*x]<115)&&(ptr[3*x+1]>50&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>50&&ptr[3*x+2]<230))
         return true;
     else
         return false;
@@ -71,7 +71,7 @@ inline bool check_lgreen(uchar *ptr,int x)
 
 inline bool check_violet(uchar *ptr,int x)
 {
-    if((ptr[3*x]>125&&ptr[3*x]<150)&&(ptr[3*x+1]>50&&ptr[3*x+1]<230)&&(ptr[3*x+2]>50&&ptr[3*x+2]<=230))
+    if((ptr[3*x]>135&&ptr[3*x]<150)&&(ptr[3*x+1]>50&&ptr[3*x+1]<180)&&(ptr[3*x+2]>50&&ptr[3*x+2]<=180))
         return true;
     else
         return false;
@@ -79,7 +79,7 @@ inline bool check_violet(uchar *ptr,int x)
 
 inline bool check_pink(uchar *ptr,int x)
 {
-    if((ptr[3*x]>160&&ptr[3*x]<180)&&(ptr[3*x+1]>120&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>120&&ptr[3*x+2]<=230))
+    if((ptr[3*x]>160&&ptr[3*x]<180)&&(ptr[3*x+1]>100&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>50&&ptr[3*x+2]<=230))
         return true;
     else
         return false;
