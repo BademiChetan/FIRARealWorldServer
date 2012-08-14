@@ -2,15 +2,30 @@
 #include <cv.h>
 #include <highgui.h>
 
+<<<<<<< HEAD
 #define THRESH_AREA 200
+=======
+#include <cv.h>
+#include <highgui.h>
+
+#define THRESH_AREA 50
+>>>>>>> a6b315ce05b639b962679ae9336f613166358679
 
 #define OUR_JERSEY_COLOR 'b'
 
 #define OPP_JERSEY_COLOR 'y'
 
+<<<<<<< HEAD
 #define NUM_OF_OUR_BOTS 3
 
 #define NUM_OF_OPP_BOTS 0
+=======
+#define NUM_OF_OUR_BOTS 5
+
+#define NUM_OF_OPP_BOTS 5
+
+#define LEFT_GOAL_COLOR 'b'
+>>>>>>> a6b315ce05b639b962679ae9336f613166358679
 
 #define BOT0_COLOR 'd'
 #define BOT1_COLOR 'p'

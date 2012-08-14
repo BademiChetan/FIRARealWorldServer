@@ -4,7 +4,8 @@
 CC = g++
 # Compilation flags
 # '-g' turns debugging flags on.
-CFLAGS = `pkg-config opencv libserial --cflags --libs` -lboost_thread -lpthread
+CFLAGS = `pkg-config opencv libserial --cflags --libs` -lboost_thread -lpthread \
+         -lglut -lGL -lGLU
 
 # Linker flags
 # When you need to add a library
@@ -16,7 +17,12 @@ all: main
 
 
 # The main program depends on the complex number library, and the main file
+<<<<<<< HEAD
 main: main.o  kick_off_calibration.o select_arena.o colors.o our_bot.o opp_bot.o ball.o update_frame.o process_image.o elec.o contours.o algo.o bot_actions.o 
+=======
+main: main.o kick_off_calibration.o select_arena.o colors.o our_bot.o  \
+    opp_bot.o ball.o update_frame.o process_image.o elec.o contours.o visualization.o algo.o
+>>>>>>> a6b315ce05b639b962679ae9336f613166358679
 	$(CC) -g -o $@ $^ $(CFLAGS)
 
 main.o : main.cpp global_var.h
@@ -49,13 +55,19 @@ opp_bot.o : opp_bot.cpp process_image.o colors.o contours.o global_var.h
 ball.o : ball.cpp process_image.o colors.o contours.o global_var.h
 	$(CC) -g -c $< $(CFLAGS)
 
-update_frame.o: update_frame.cpp process_image.o our_bot.o opp_bot.o ball.o global_var.h
+update_frame.o: update_frame.cpp visualization.o process_image.o our_bot.o \
+        opp_bot.o ball.o global_var.h
 	$(CC) -g -c $< $(CFLAGS) 
 
-algo.o: algo.cpp elec.cpp our_bot.cpp ball.cpp opp_bot.cpp global_var.h
+algo.o: algo.cpp elec.o our_bot.o ball.o opp_bot.o global_var.h
 	$(CC) -g -c $< $(CFLAGS)
 
-kick_off_calibration.o: kick_off_calibration.cpp elec.cpp our_bot.cpp process_image.cpp update_frame.cpp global_var.h
+kick_off_calibration.o: kick_off_calibration.cpp elec.o our_bot.o \
+    process_image.o update_frame.o global_var.h
+	$(CC) -g -c $< $(CFLAGS)
+
+visualization.o : visualization.cpp our_bot.o opp_bot.o \
+        ball.o global_var.h visualization.h
 	$(CC) -g -c $< $(CFLAGS)
 
 # .PHONY tells make that 'all' or 'clean' aren't _actually_ files, and always

@@ -20,11 +20,8 @@ opp_bot::opp_bot(){
     color = OPP_JERSEY_COLOR;
     center = cvPoint( 0, 0 );
     location = cvRect( 0, 0, 0, 0 );
-    img = cvQueryFrame(capture);
-   // cvShowImage("test",img);
     mask = cvCreateImage( cvSize(640,480), IPL_DEPTH_8U, 1 );
 }
-
 
 void opp_bot::FindCenter( CvPoint &cen ){	
     vector <CvPoint> vector_cen = FindAllCenter( mask );
@@ -34,7 +31,8 @@ void opp_bot::FindCenter( CvPoint &cen ){
     for( int i = 0 ; i < vector_cen.size() ; i++ ){
         count = 0;
         for( int j = 0 ; j < OBJECT_NUM ; j++ ){
-            if( (vector_cen[i].x + this->location.x != o_bot[j].center.x) || (vector_cen[i].y + this->location.y != o_bot[j].center.y)){
+            if( (vector_cen[i].x + this->location.x != o_bot[j].center.x)
+                || (vector_cen[i].y + this->location.y != o_bot[j].center.y)){
                 count++;
             }
         }
@@ -66,4 +64,6 @@ void opp_bot::update(){
 
     limit_location_within_arena( location );
 
+    x = ( ( center.x - arena_center.x ) *250 ) / goal_rect.width;		//center wrt the arena center.
+    y = -1*((center.y-arena_center.y)*250)/goal_rect.width;
 }

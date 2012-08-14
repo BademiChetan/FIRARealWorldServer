@@ -22,9 +22,10 @@ using namespace std;
 #include "bot_actions.h"
 #include "kick_off_calibration.h"
 #include "algo.h"
+#include "visualization.h"
 
-CvCapture *capture = cvCreateCameraCapture(1);
-// CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
+//CvCapture *capture = cvCreateCameraCapture(1);
+CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
 IplImage *hsv = cvCreateImage( cvSize( 640, 480), IPL_DEPTH_8U, 3 );
@@ -68,7 +69,7 @@ void image_processing() {
     bot[2].color = BOT2_COLOR;
     bot[3].color = BOT3_COLOR;
     bot[4].color = BOT4_COLOR;
-
+    for(int i=0; i<15; i++)
     img = cvQueryFrame( capture );
     //This is selecting the arena part.
     goal_rect = select_rect( capture );
@@ -123,6 +124,32 @@ int main( int argc, char** argv ){
     Uinit();
 #endif
 
+    //OpenGL stuff starts here { 
+    glutInit(&argc, argv);  
+    /* Select type of Display mode:   
+       Double buffer 
+       RGBA color
+       Alpha components supported 
+       Depth buffer */  
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);  
+    glutInitWindowSize(ARENA_WIDTH*3,ARENA_HEIGHT*3);  
+    /* the window starts at the upper left corner of the screen */
+    glutInitWindowPosition(50, 20);  
+    /* Open a window */  
+    window = glutCreateWindow("SahaS");  
+    /* Register the function to do all our OpenGL drawing. */
+    glutDisplayFunc(&DrawScene);  
+    InitGL(ARENA_WIDTH+20, ARENA_HEIGHT+20);
+    /* Even if there are no events, redraw our gl scene. */
+    glutIdleFunc(&DrawScene);
+    /* Register the function called when our window is resized. */
+    glutReshapeFunc(&ReSizeGLScene);
+    /* Register the function called when the keyboard is pressed. */
+    glutKeyboardFunc(&keyPressed);
+    boost::thread opengl_thread(DrawScene); 
+    // OpenGL stuff ends here } 
+
+
     // Fork off thread for IP. 
     boost::thread ip_thread(image_processing); 
     // Wait for IP to finish
@@ -135,9 +162,6 @@ int main( int argc, char** argv ){
         main_algo(); 
     }
 
-    while( c != 27 ){
-    }
-
 
 #ifdef ELEC
     Uend();
@@ -146,4 +170,5 @@ int main( int argc, char** argv ){
     // Algo stuff ends here } 
 
     ip_thread.join(); 
+    opengl_thread.join();
 }
