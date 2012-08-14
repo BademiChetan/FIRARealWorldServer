@@ -27,10 +27,10 @@
 #define ANGLE_TOL       	10
 #define X_TOL           	10
 #define Y_TOL           	10
-#define NO_TIMEOUT_4_WAIT	200
+#define NO_TIMEOUT_4_WAIT	10
 #define NO_TIMEOUT_2_KILL   10	
 #define F_THRESH            35                                  // The threshold for the 'F' to convert into 'f'
-#define MAX_CHECKS          200                                 // The maximum no. of checks we need to do before declaring the
+#define MAX_CHECKS          150                                 // The maximum no. of checks we need to do before declaring the
                                                                 // bot dead. One of the log files took 100 reads so...200.
 #define SERIAL_WAIT         5
 #define SERIAL_WAIT_4_TIME  100
@@ -251,6 +251,7 @@ void extract()
         cout<<"The bot ID is "<<botID<<endl;
         if(index<PLAYERS)
             cout<<"\nWaiting for the next bot"<<endl<<endl;
+        check_bot_free(botID);
     }while(index<PLAYERS);
     while(strcmp(C2b,serial_buffer)||timedout)               
     {
@@ -543,7 +544,7 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 {
                     temp=pu->ReadByte(TIMEOUT_READ);
                     if(STR_DEBUG)
-                        cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                        cout<<"Linking...But the buffer already had "<<(int)temp<<endl;
                 }
                 catch(SerialPort::ReadTimeout &e)
                 {
@@ -693,7 +694,7 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                     {
                         temp=pu->ReadByte(TIMEOUT_READ);
                         if(STR_DEBUG)
-                            cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                            cout<<"Linking...But the buffer already had "<<(int)temp<<endl;
                     }
                     catch(SerialPort::ReadTimeout &e)
                     {
@@ -829,7 +830,7 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                     {
                         temp=pu->ReadByte(TIMEOUT_READ);
                         if(STR_DEBUG)
-                            cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                            cout<<"Linking...But the buffer already had "<<(int)temp<<endl;
                     }
                     catch(SerialPort::ReadTimeout &e)
                     {
@@ -958,7 +959,7 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 {
                     temp=pu->ReadByte(TIMEOUT_READ);
                     if(STR_DEBUG)
-                        cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                        cout<<"Linking...But the buffer already had "<<(int)temp<<endl;
                 }
                 catch(SerialPort::ReadTimeout &e)
                 {
@@ -999,12 +1000,12 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
         {
             gettimeofday(&begin,NULL);
         }
+        bot_code[botID][1]='b';
         if(action=='s')
             bypass_normal_protocol=1;                                         // We are going to interrupt and hence no mirror
         else
         {
             bypass_normal_protocol=0;
-            bot_code[botID][1]='b';
         }
         cout<<"NFS style:"<<botID<<action<<endl;
         while(!((temp>='0')&&(temp<='4')))
@@ -1016,7 +1017,7 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 {
                     temp=pu->ReadByte(TIMEOUT_READ);
                     if(STR_DEBUG)
-                        cout<<"Linking...But the buffer already had"<<(int)temp<<endl;
+                        cout<<"Linking...But the buffer already had "<<(int)temp<<endl;
                 }
                 catch(SerialPort::ReadTimeout &e)
                 {
@@ -1338,7 +1339,7 @@ void ensure_bot_free(int botID)
  ************************************************/
 bool wait_4_bot(int botID)
 {
-    unsigned char wait_timeout=0;
+    int wait_timeout=0;
     if(STR_DEBUG)
         cout<<"\nWaiting for the bot "<<botID<<endl;
     while(!check_bot_free(botID))
@@ -1346,10 +1347,12 @@ bool wait_4_bot(int botID)
         if(wait_timeout>NO_TIMEOUT_4_WAIT)
         {
             cout<<"URGENT!!! Report to Bazooka that we need to change the NO_TIMEOUT_4_WAIT"<<endl;
-            cout<<"Press any key to continue the program...The command under execution will be interrupted for you. :)"<<endl;
-            ensure_bot_free(botID);
+            make_bot_free(botID);
+            if(!check_bot_free(botID))
+            {
+                bot_code[botID][1]='f';
+            }
             return 1;
-            break;
         }
         wait_timeout++;
     }
@@ -1472,10 +1475,30 @@ bool serialwait()
 int main()
 {	
     Uinit();
-    int botID=2;
-    unsigned int i=0;
-    //test_dist(botID);
-    test_angles(botID);
+    int i=2;
+    while(1)
+    {
+/*        for(i=0;i<3;++i)
+        {
+            e_sendenccmd(i,'F',40,200);
+        }
+        for(i=0;i<3;++i)
+        {
+            wait_4_bot(i);
+        }
+        for(i=0;i<3;++i)
+        {
+            e_sendenccmd(i,'r',90);
+        }
+        for(i=0;i<3;++i)
+        {
+            wait_4_bot(i);
+        }*/
+        e_sendenccmd(i,'r',90);
+        wait_4_bot(i);
+        e_sendenccmd(i,'F',60,80);
+        wait_4_bot(i);
+    }
     Uend();
 }
 #endif
