@@ -1,3 +1,4 @@
+#pragma once
 #include <cv.h>
 
 class opp_bot{

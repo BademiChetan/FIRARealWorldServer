@@ -18,11 +18,11 @@ using namespace std;
 #include "opp_bot.h"
 #include "ball.h"
 #include "update_frame.h"
+#include "visualization.h"
 #include "global_var.h"
+#include "algo.h"
 #include "bot_actions.h"
 #include "kick_off_calibration.h"
-#include "algo.h"
-#include "visualization.h"
 
 //CvCapture *capture = cvCreateCameraCapture(1);
 CvCapture *capture = cvCreateFileCapture( "multibot.avi" );

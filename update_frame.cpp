@@ -107,20 +107,7 @@ void updateframe(){
             cvCircle( img, o_bot[i].center, 2, CV_RGB( 255, 255, 255 ), -1, 8, 0 );
             cvRectangle( img, cvPoint( o_bot[i].location.x, o_bot[i].location.y ),
                     cvPoint( o_bot[i].location.x + o_bot[i].location.width, o_bot[i].location.y + o_bot[i].location.height ),
-<<<<<<< HEAD
                     cvScalar( 0, 0, 255, 0 ), 1, 4, 0 );	
-
         }
-       // cvShowImage( "SAHAS", img);
-       // c = cvWaitKey(1); 
-=======
-                    cvScalar( 0, 0, 255, 0 ), 1, 4, 0 );
-        }
-
-        //cvShowImage( "SAHAS", img);
-
-        //c = cvWaitKey( 1 );
-    //ogl_thread.join();
->>>>>>> a6b315ce05b639b962679ae9336f613166358679
     }
 }

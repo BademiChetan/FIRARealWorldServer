@@ -17,12 +17,8 @@ all: main
 
 
 # The main program depends on the complex number library, and the main file
-<<<<<<< HEAD
-main: main.o  kick_off_calibration.o select_arena.o colors.o our_bot.o opp_bot.o ball.o update_frame.o process_image.o elec.o contours.o algo.o bot_actions.o 
-=======
 main: main.o kick_off_calibration.o select_arena.o colors.o our_bot.o  \
-    opp_bot.o ball.o update_frame.o process_image.o elec.o contours.o visualization.o algo.o
->>>>>>> a6b315ce05b639b962679ae9336f613166358679
+    opp_bot.o ball.o update_frame.o process_image.o elec.o bot_actions.o contours.o visualization.o algo.o
 	$(CC) -g -o $@ $^ $(CFLAGS)
 
 main.o : main.cpp global_var.h
@@ -59,7 +55,7 @@ update_frame.o: update_frame.cpp visualization.o process_image.o our_bot.o \
         opp_bot.o ball.o global_var.h
 	$(CC) -g -c $< $(CFLAGS) 
 
-algo.o: algo.cpp elec.o our_bot.o ball.o opp_bot.o global_var.h
+algo.o: algo.cpp elec.o our_bot.o ball.o opp_bot.o bot_actions.o global_var.h
 	$(CC) -g -c $< $(CFLAGS)
 
 kick_off_calibration.o: kick_off_calibration.cpp elec.o our_bot.o \

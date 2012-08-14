@@ -1,3 +1,4 @@
+#pragma once
 extern void Uinit();
 
 extern void Uend();

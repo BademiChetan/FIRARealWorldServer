@@ -1,3 +1,4 @@
+#pragma once
 #include <boost/thread.hpp> 
 class our_bot{
 

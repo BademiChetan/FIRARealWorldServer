@@ -58,16 +58,16 @@ double get_distance_to_point(double x1, double y1, double x2, double y2) {
 double angle_from_bot_to_ball(int id) {
     double x = bot[id].x; 
     double y = bot[id].y; 
-    double bx, by; 
-    Ball.getCenter(bx, by); 
+    double bx = Ball.x; 
+    double by = Ball.y; 
     return get_angle_to_point(x, y, bx, by); 
 }
 
 double distance_from_bot_to_ball(int id) {
     double x = bot[id].x; 
     double y = bot[id].y; 
-    double bx, by; 
-    Ball.getCenter(bx, by); 
+    double bx = Ball.x; 
+    double by = Ball.y; 
     return get_distance_to_point(x, y, bx, by); 
 }
 void Action::do_action() {
@@ -158,8 +158,8 @@ std::vector<Action> attack(int id) {
     double x = bot[id].x; 
     double y = bot[id].y; 
     double angle = bot[id].angle; 
-    double bx, by; 
-    Ball.getCenter(bx, by); 
+    double bx = Ball.x; 
+    double by = Ball.y; 
 
     // Try to go behind the ball from the goal. 
     double gx = +110; 

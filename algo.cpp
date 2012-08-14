@@ -1,4 +1,3 @@
-#pragma once
 #include <cv.h>
 #include <highgui.h>
 #include <ctime> 
@@ -14,8 +13,8 @@
 #include "ball.h"
 #include "update_frame.h"
 #include "global_var.h"
-#include "bot_actions.h"
 #include "kick_off_calibration.h"
+#include "bot_actions.h"
 #include "algo.h" 
 using namespace cv;
 using namespace std;
@@ -27,8 +26,8 @@ void algo(int id) {
     double x = bot[id].x; 
     double y = bot[id].y; 
     double angle = bot[id].angle; 
-    double bx, by; 
-    Ball.getCenter(bx, by); 
+    double bx = Ball.x; 
+    double by = Ball.y; 
     vector<Action> res; 
 
     // Hold Stuff Starts Here {
