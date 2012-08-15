@@ -1280,6 +1280,11 @@ bool is_bot_free(int id) {
 bool check_bot_free(int botID)
 {
     check_bot_free_count[botID]++;
+    if(check_bot_free_count[botID]==MAX_CHECKS)
+    {
+        check_bot_free_count[botID]=0;
+        bot_code[botID][1]='f';
+    }
     if(bot_code[botID][1]=='b')
     {
         sendenccmd(botID,'R');
@@ -1294,11 +1299,6 @@ bool check_bot_free(int botID)
     }
     else if(STR_DEBUG)
         cout<<"Bot is already free\n";
-    if(check_bot_free_count[botID]==MAX_CHECKS)
-    {
-        check_bot_free_count[botID]=0;
-        bot_code[botID][1]='f';
-    }
     return 1;
 }
 
