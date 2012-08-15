@@ -277,13 +277,27 @@ void prelude()
     elecsleep(1000);
     do
     {
-        pu->WriteByte('c');
+        try
+        {
+            pu->WriteByte('c');
+        }
+        catch(std::runtime_error &e)
+        {
+            cout<<"Yes!!! I caught the error finally!!!"<<endl;
+        }
         timedout=rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG);
         cout<<(int)serial_buffer[0]<<endl;
         if(*serial_buffer=='P')
         {
             cout<<"Communication working"<<endl;
-            pu->WriteByte('s');
+            try
+            {
+                pu->WriteByte('s');
+            }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
         }
     }while((*serial_buffer=='P')||timedout);
     timedout=0;
@@ -545,7 +559,14 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
         bot_code[botID][1]='b';
         while(!((temp>='0')&&(temp<='4')))
         {
-            pu->WriteByte(botID+48);
+            try
+            {
+                pu->WriteByte(botID+48);
+            }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
             if(serialwait())
             {
                 try
@@ -566,7 +587,14 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             else
                 cout<<"No pkt received!!!"<<endl;
         }
-        pu->WriteByte(action);
+        try
+        {
+            pu->WriteByte(action);
+        }
+        catch(std::runtime_error &e)
+        {
+            cout<<"Yes!!! I caught the error finally!!!"<<endl;
+        }
         timecount=0;
         while(((serial_buffer[0]!=recv)||(timedout))&&(timecount<NO_TIMEOUT))
         {
@@ -699,7 +727,14 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             }
             while(!((temp>='0')&&(temp<='4')))
             {
-                pu->WriteByte(botID+48);
+                try
+                {
+                    pu->WriteByte(botID+48);
+                }
+                catch(std::runtime_error &e)
+                {
+                    cout<<"Yes!!! I caught the error finally!!!"<<endl;
+                }
                 if(serialwait())
                 {
                     try
@@ -720,7 +755,14 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 else
                     cout<<"No pkt received!!!"<<endl;
             }
-            pu->WriteByte(action);
+            try
+            {
+                pu->WriteByte(action);
+            }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
             timecount=0;
             do
             {
@@ -744,8 +786,22 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 }
                 return 1;                                                    // If no mirrored command then time out 
             }
-            pu->WriteByte(dist);
-            pu->WriteByte(speed);
+            try
+            {
+                pu->WriteByte(dist);
+            }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
+            try
+            {
+                pu->WriteByte(speed);
+            }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
             cout<<"Next cmd sent"<<endl;
             timecount=0;
 #ifdef SEC
@@ -839,7 +895,14 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             int val=0;
             while(!((temp>='0')&&(temp<='4')))
             {
-                pu->WriteByte(botID+48);
+                try
+                {
+                    pu->WriteByte(botID+48);
+                }
+                catch(std::runtime_error &e)
+                {
+                    cout<<"Yes!!! I caught the error finally!!!"<<endl;
+                }
                 if(serialwait())
                 {
                     try
@@ -860,7 +923,14 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 else
                     cout<<"No pkt received!!!"<<endl;
             }
-            pu->WriteByte(action);
+            try
+            {
+                pu->WriteByte(action);
+            }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
             string charval = conv_value_char(value);
             do
             {
@@ -885,9 +955,30 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 }
                 return 1;                                                    // If no mirrored command then time out 
             }
-            pu->WriteByte(charval[0]);
-            pu->WriteByte(charval[1]);
-            pu->WriteByte(charval[2]);
+            try
+            {
+                pu->WriteByte(charval[0]);
+            }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
+            try
+            {
+                pu->WriteByte(charval[1]);
+            }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
+            try
+            {
+                pu->WriteByte(charval[2]);
+            }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
             cout<<"Next cmd sent"<<endl;
             timecount=0;
 #ifdef SEC
@@ -972,7 +1063,14 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
     {
         while(!((temp>='0')&&(temp<='4')))
         {
-            pu->WriteByte(botID+48);
+            try
+            {
+                pu->WriteByte(botID+48);
+            }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
             if(serialwait())
             {
                 try
@@ -993,7 +1091,14 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             else
                 cout<<"No pkt received!!!"<<endl;
         }
-        pu->WriteByte(action);
+        try
+        {
+            pu->WriteByte(action);
+        }
+        catch(std::runtime_error &e)
+        {
+            cout<<"Yes!!! I caught the error finally!!!"<<endl;
+        }
         while((strcmp(next,serial_buffer)||timedout)&&(timecount<NO_TIMEOUT))
         {
             timedout=rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG);                               // Waiting for 'N' 
@@ -1034,7 +1139,14 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
         cout<<"NFS style:"<<botID<<action<<endl;
         while(!((temp>='0')&&(temp<='4')))
         {
-            pu->WriteByte(botID+48);
+            try
+            {
+                pu->WriteByte(botID+48);
+            }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
             if(serialwait())
             {
                 try
@@ -1064,7 +1176,14 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
             cout<<"Time taken for linking up: "<<diff<<" us"<<endl;
             begin=end;
         }
-        pu->WriteByte(action);
+        try
+        {
+            pu->WriteByte(action);
+        }
+        catch(std::runtime_error &e)
+        {
+            cout<<"Yes!!! I caught the error finally!!!"<<endl;
+        }
         cout<<"Next cmd sent"<<endl;
         timecount=0;
 #ifdef SEC

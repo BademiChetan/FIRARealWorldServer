@@ -50,6 +50,9 @@
 #define BOT_LENGTH      8
 #define BALL_DIAMETER   3
 #define PI              3.14159265
+#define MAX_SPEED       140
+#define MIN_DIST        100
+#define EPSILON         1e-6
 
 /**********************
   co-ordinates :

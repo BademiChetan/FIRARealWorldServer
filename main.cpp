@@ -1,5 +1,5 @@
 #pragma once
-#define xELEC // Remove x corruption to add elec stuff
+#define ELEC // Remove x corruption to add elec stuff
 #include <cv.h>
 #include <highgui.h>
 #include <ctime> 
@@ -147,7 +147,7 @@ int main( int argc, char** argv ){
     glutReshapeFunc(&ReSizeGLScene);
     /* Register the function called when the keyboard is pressed. */
     glutKeyboardFunc(&keyPressed);
-    boost::thread opengl_thread(DrawScene); 
+    // boost::thread opengl_thread(DrawScene); 
     // OpenGL stuff ends here } 
 
 
@@ -159,9 +159,9 @@ int main( int argc, char** argv ){
 
     // Algo stuff starts here {
 
-   // while (true) {
-   //     main_algo(); 
-   // }
+    while (true) {
+        main_algo(); 
+    }
 
 
 #ifdef ELEC
@@ -171,5 +171,5 @@ int main( int argc, char** argv ){
     // Algo stuff ends here } 
 
     ip_thread.join(); 
-    opengl_thread.join();
+    // opengl_thread.join();
 }

@@ -1,3 +1,4 @@
+#include "global_var.h"
 #include "cv.h"
 #include "bot_actions.h"
 #include "our_bot.h"
@@ -5,8 +6,6 @@
 #include "update_frame.h"
 #include "elec.h"
 #include <ctime> 
-#define EPSILON 1e-6
-#define PI      3.141592653589793238
 using namespace std; 
 using namespace cv; 
 
@@ -98,7 +97,7 @@ vector<Action> hold(int id, double x1, double y1, double angle, double x2, doubl
     Action turn(id, turn_by, direction ? 'l' : 'r'); 
     res.push_back(turn); 
     double distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); 
-    Action run(id, min((int)(distance), 40), 'F', 80, x2, y2); 
+    Action run(id, min((int)(distance), MIN_DIST), 'F', MAX_SPEED, x2, y2); 
     res.push_back(run); 
     return res; 
 }
@@ -125,7 +124,7 @@ vector<Action> defend(int id, double x1, double y1, double angle, double x2, dou
     Action turn1(id, turn_by, direction ? 'l' : 'r'); 
     res.push_back(turn1); 
     // Move towards the point
-    Action run(id, min((int)(distance), 10), 'F', 80, x2, y2); 
+    Action run(id, min((int)(distance), MIN_DIST), 'F', MAX_SPEED, x2, y2); 
     res.push_back(run); 
     // Orient ourselves back
     direction = 0; // l => 1 and r => 0
