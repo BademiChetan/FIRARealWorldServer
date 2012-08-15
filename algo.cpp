@@ -91,11 +91,11 @@ void main_algo() {
     cout << "Doing algo stuff here\n"; 
     for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
         if (bot_queue[i].empty()) {
-            if (still_count[i] <= 10) {
-                still_count[i] ++; 
-                continue; 
-            }
-            still_count[i] = 0; 
+           // if (still_count[i] <= 10) {
+           //     still_count[i] ++; 
+           //     continue; 
+           // }
+           // still_count[i] = 0; 
             algo(i); 
         }
     }
