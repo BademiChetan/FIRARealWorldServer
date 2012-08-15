@@ -44,6 +44,8 @@ double get_angle_to_point(double x1, double y1, double x2, double y2, bool
         else if (dx > 0 && dy < 0)
             res = 2 * PI - res; 
     }
+    if (res < 0)
+        res += 2 * PI; 
     if (!radian) {
         res *= 180; 
         res /= PI; 
@@ -88,9 +90,12 @@ vector<Action> hold(int id, double x1, double y1, double angle, double x2, doubl
     printf("HOLD: id = %d, (%f, %f) < %f, (%f, %f)\n", id, x1, y1, angle, x2, y2); 
     vector<Action> res; 
     double orient = get_angle_to_point(x1, y1, x2, y2); 
+    assert(orient >= 0.0 && orient <= 360.0); 
+    assert(angle >= 0.0 && angle <= 360.0); 
     int direction = 0; // l => 0 and r => 1
     direction = orient > angle ? 1 : 0; 
-    int turn_by = fabs(orient - angle); if (turn_by > 180) {
+    int turn_by = fabs(orient - angle); 
+    if (turn_by > 180) {
         turn_by = 360 - turn_by; 
         direction ^= 1; 
     }

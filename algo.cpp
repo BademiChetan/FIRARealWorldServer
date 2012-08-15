@@ -5,6 +5,30 @@ using namespace std;
 queue<Action> bot_queue[5]; 
 int still_count[5]; 
 
+void interrupt_near_arena() {
+    for (int id = 0; id < NUM_OF_OUR_BOTS; id ++) {
+        double x = bot[id].x; 
+        double y = bot[id].y; 
+        double angle = bot[id].angle; 
+        printf("Bot %d at (%f, %f) at an angle %f\n", id, x, y, angle); 
+        // If it's colliding with the arena, stop the bot. 
+        // FIXME: Use global variables. 
+
+        if (    (x > 110 - 6 && angle >= 270 && angle <= 90)    ||
+                (x < - 110 + 6 && angle >= 90 && angle <= 270)  ||
+                (y > 90 - 6 && angle >= 0 && angle <= 180)      ||
+                (y < - 90 + 6 && angle >= 180 && angle <= 360)  ||
+                (y > 110 || y < -100)){
+
+            printf("Interruping bot %d\n", id); 
+#ifdef ELEC
+            e_sendenccmd(id, 's'); 
+#endif
+        }
+
+    }
+}
+
 void algo(int id) {
 
     double x = bot[id].x; 
@@ -49,18 +73,18 @@ void algo(int id) {
     double theta3 = get_angle_to_point(bx, by, +110, +25, true); 
     if (id == 0) {
         // Goalie
-        double goalie_x = +110 - 7.5; 
+        double goalie_x = +110 - 6; 
         double goalie_dx = goalie_x - bx; 
         double goalie_y = by + goalie_dx * ( tan(theta1) + tan(theta2) ) / 2; 
         if (goalie_y< 0)
-            goalie_y = std::max(goalie_y, - 40.0); 
+            goalie_y = std::max(goalie_y, - 25.0); 
         else
-            goalie_y = std::min(goalie_y, + 40.0); 
+            goalie_y = std::min(goalie_y, + 25.0); 
         res = defend(id, x, y, angle, goalie_x, goalie_y); 
 
     } else if (id == 1) {
         // Defender 1
-        double defender_x = +110 - 25; 
+        double defender_x = +110 - 15 - 6; 
         double defender_dx = defender_x - bx; 
         double defender_y = by + defender_dx * ( tan(theta3) + tan(theta2) ) / 2; 
         if (defender_y < 0)
@@ -77,7 +101,7 @@ void algo(int id) {
 
     // Attacker stuff starts here {
     else if (id == 2) {
-        res = attack(id); 
+        // res = attack(id); 
     }
     // Attacker stuff ends here } 
 
@@ -88,14 +112,17 @@ void algo(int id) {
 
 }
 void main_algo() {
+
+    // If any bot is too close to the arena, interrupt. 
+    interrupt_near_arena(); 
     cout << "Doing algo stuff here\n"; 
     for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
         if (bot_queue[i].empty()) {
-           // if (still_count[i] <= 10) {
-           //     still_count[i] ++; 
-           //     continue; 
-           // }
-           // still_count[i] = 0; 
+            if (still_count[i] <= 1) {
+                still_count[i] ++; 
+                continue; 
+            }
+            still_count[i] = 0; 
             algo(i); 
         }
     }

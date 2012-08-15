@@ -1,5 +1,6 @@
 #pragma once
-#define ELEC // Remove x corruption to add elec stuff
+#define xELEC // Remove x corruption to add elec stuff
+#define IP_DEBUG
 #include <cv.h>
 #include <highgui.h>
 #include <ctime> 
@@ -38,23 +39,6 @@ CvPoint arena_center;
 double prev_x[5][10]; 
 double prev_y[5][10]; 
 double prev_angle[5][10]; 
-
-void interrupt_near_arena() {
-    for (int id = 0; id < NUM_OF_OUR_BOTS; id ++) {
-        double x = bot[id].x; 
-        double y = bot[id].y; 
-        printf("Bot at (%f, %f)\n", x, y); 
-        // If it's colliding with the arena, stop the bot. 
-        // FIXME: Use global variables. 
-        if (x > 215 || x < -215 || y > 175 || y < -175 ) {
-        cout << "Interrupting.\n"; 
-#ifdef ELEC
-            e_sendenccmd(id, 's'); 
-#endif
-        }
-    }
-
-}
 
 void update_locations() {
     for(int i = 0; i < NUM_OF_OUR_BOTS; i++) {
@@ -97,9 +81,10 @@ void image_processing() {
         ++ FrameCount; 
         updateframe(); 
         update_locations(); 
-        // interrupt_near_arena(); 
         cout << '!' ; 
+#ifdef IP_DEBUG
         cout << "Frame Count = " << FrameCount << endl;
+#endif 
     }
 }
 
@@ -160,8 +145,15 @@ int main( int argc, char** argv ){
     // Algo stuff starts here {
 
     while (true) {
-        main_algo(); 
+        cout << "Waiting for you input...\n"; 
+        char ch; 
+        do { ch = getchar(); } while( ch != 'y'); 
+        interrupt_near_arena(); 
     }
+
+   // while (true) {
+   //     main_algo(); 
+   // }
 
 
 #ifdef ELEC
