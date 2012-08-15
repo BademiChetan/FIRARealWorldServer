@@ -30,7 +30,7 @@ void ball::update(){
     cvSetImageROI( mask, location );
     CvPoint cen;
 
-    pick_color( &mask, location, color );
+    pick_basecolor( mask, location, color );
     FindCenter( cen );
     cvShowImage("ball",mask);
     cvResetImageROI( mask );

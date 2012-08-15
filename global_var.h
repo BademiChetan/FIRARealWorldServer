@@ -12,7 +12,9 @@
 
 #define OPP_JERSEY_COLOR 'y'
 
-#define NUM_OF_OUR_BOTS 4
+#define LEFT_GOAL_COLOR 'y'
+
+#define NUM_OF_OUR_BOTS 3
 
 #define NUM_OF_OPP_BOTS 0
 
@@ -41,8 +43,8 @@
 #define BOUND_RECT 30
 #define BOT_WIDTH 20
 
-#define ARENA_LENGTH    220
-#define ARENA_WIDTH     180
+#define ARENA_WIDTH     250
+#define ARENA_HEIGHT    180
 #define GOAL_LENGTH     30
 #define GOAL_WIDTH      15
 #define BOT_LENGTH      8

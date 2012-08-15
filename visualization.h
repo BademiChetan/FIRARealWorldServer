@@ -2,9 +2,8 @@
 #include <GL/glut.h>
 #include <GL/glu.h>
 #include <unistd.h>
+#include "global_var.h"
 
-#define ARENA_WIDTH 250.0
-#define ARENA_HEIGHT 180.0
 
 /* The number of our GLUT window */
 extern int window;
