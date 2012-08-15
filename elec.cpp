@@ -1,5 +1,5 @@
 #pragma once
-#define FINAL                                                   // Remove the IP based commands by x corrupting it
+#define xFINAL                                                   // Remove the IP based commands by x corrupting it
 #define xHIGHS                                                  // Remove the x corruption to get 115200 bps speed
 #define REMOVE_TIMEOUT                                          // Removes the elec sleep thing. 
 /**************Left to do************************
@@ -354,6 +354,10 @@ bool rxstring(char *cstr, unsigned int len, bool print_str)
                     cout<<"Read Timeout "<<read_timeout<<endl;
                 return 1;
             }
+            catch(std::runtime_error &e)
+            {
+                cout<<"Yes!!! I caught the error finally!!!"<<endl;
+            }
             if((temp!='\n')&&(temp!=0)&&(temp!=' '))
             {
                 cstr[i]=temp;
@@ -361,7 +365,11 @@ bool rxstring(char *cstr, unsigned int len, bool print_str)
             }
         }
         else
+        {
+            cout<<"No data available\r";
+            cout<<endl;
             return 1;
+        }
     }
     cstr[i]='\0';
     if(print_str)
@@ -550,9 +558,13 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 {
                     cout<<"Failed to see a byte coming";
                 }
+                catch(std::runtime_error &e)
+                {
+                    cout<<"Yes!!! I caught the error finally!!!"<<endl;
+                }
             }
             else
-                cout<<"Still waiting..."<<endl;
+                cout<<"No pkt received!!!"<<endl;
         }
         pu->WriteByte(action);
         timecount=0;
@@ -700,9 +712,13 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                     {
                         cout<<"Failed to see a byte coming";
                     }
+                    catch(std::runtime_error &e)
+                    {
+                        cout<<"Yes!!! I caught the error finally!!!"<<endl;
+                    }
                 }
                 else
-                    cout<<"Still waiting..."<<endl;
+                    cout<<"No pkt received!!!"<<endl;
             }
             pu->WriteByte(action);
             timecount=0;
@@ -836,9 +852,13 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                     {
                         cout<<"Failed to see a byte coming";
                     }
+                    catch(std::runtime_error &e)
+                    {
+                        cout<<"Yes!!! I caught the error finally!!!"<<endl;
+                    }
                 }
                 else
-                    cout<<"Still waiting..."<<endl;
+                    cout<<"No pkt received!!!"<<endl;
             }
             pu->WriteByte(action);
             string charval = conv_value_char(value);
@@ -965,9 +985,13 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 {
                     cout<<"Failed to see a byte coming";
                 }
+                catch(std::runtime_error &e)
+                {
+                    cout<<"Yes!!! I caught the error finally!!!"<<endl;
+                }
             }
             else
-                cout<<"Still waiting..."<<endl;
+                cout<<"No pkt received!!!"<<endl;
         }
         pu->WriteByte(action);
         while((strcmp(next,serial_buffer)||timedout)&&(timecount<NO_TIMEOUT))
@@ -1023,9 +1047,13 @@ int sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
                 {
                     cout<<"Failed to see a byte coming";
                 }
+                catch(std::runtime_error &e)
+                {
+                    cout<<"Yes!!! I caught the error finally!!!"<<endl;
+                }
             }
             else
-                cout<<"Still waiting..."<<endl;
+                cout<<"No pkt received!!!"<<endl;
         }
         if(DTIMER)
         {
@@ -1475,7 +1503,7 @@ bool serialwait()
 int main()
 {	
     Uinit();
-    int i=2;
+    int i=1;
     while(1)
     {
 /*        for(i=0;i<3;++i)
@@ -1494,9 +1522,25 @@ int main()
         {
             wait_4_bot(i);
         }*/
-        e_sendenccmd(i,'r',90);
+        e_sendenccmd(i,'F',60,85);
         wait_4_bot(i);
-        e_sendenccmd(i,'F',60,80);
+        e_sendenccmd(i,'B',60,85);
+        wait_4_bot(i);
+        e_sendenccmd(i,'F',60,125);
+        wait_4_bot(i);
+        e_sendenccmd(i,'B',60,125);
+        wait_4_bot(i);
+        e_sendenccmd(i,'F',60,165);
+        wait_4_bot(i);
+        e_sendenccmd(i,'B',60,165);
+        wait_4_bot(i);
+        e_sendenccmd(i,'F',60,205);
+        wait_4_bot(i);
+        e_sendenccmd(i,'B',60,205);
+        wait_4_bot(i);
+        e_sendenccmd(i,'F',60,245);
+        wait_4_bot(i);
+        e_sendenccmd(i,'B',60,245);
         wait_4_bot(i);
     }
     Uend();
