@@ -1,5 +1,5 @@
 #pragma once
-#define xELEC // Remove x corruption to add elec stuff
+#define ELEC // Remove x corruption to add elec stuff
 #define IP_DEBUG
 #include <cv.h>
 #include <highgui.h>
@@ -145,15 +145,8 @@ int main( int argc, char** argv ){
     // Algo stuff starts here {
 
     while (true) {
-        cout << "Waiting for you input...\n"; 
-        char ch; 
-        do { ch = getchar(); } while( ch != 'y'); 
-        interrupt_near_arena(); 
+        main_algo(); 
     }
-
-   // while (true) {
-   //     main_algo(); 
-   // }
 
 
 #ifdef ELEC
