@@ -99,6 +99,7 @@ void image_processing() {
         update_locations(); 
         // interrupt_near_arena(); 
         cout << '!' ; 
+        cout << "Frame Count = " << FrameCount << endl;
     }
 }
 

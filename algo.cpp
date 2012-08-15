@@ -53,9 +53,9 @@ void algo(int id) {
         double goalie_dx = goalie_x - bx; 
         double goalie_y = by + goalie_dx * ( tan(theta1) + tan(theta2) ) / 2; 
         if (goalie_y< 0)
-            goalie_y = max(goalie_y, -40); 
+            goalie_y = std::max(goalie_y, - 40.0); 
         else
-            goalie_y = min(goalie_y, +40); 
+            goalie_y = std::min(goalie_y, + 40.0); 
         res = defend(id, x, y, angle, goalie_x, goalie_y); 
 
     } else if (id == 1) {
@@ -64,9 +64,9 @@ void algo(int id) {
         double defender_dx = defender_x - bx; 
         double defender_y = by + defender_dx * ( tan(theta3) + tan(theta2) ) / 2; 
         if (defender_y < 0)
-            defender_y = max(defender_y, -40); 
+            defender_y = std::max(defender_y, - 40.0); 
         else
-            defender_y = min(defender_y, +40); 
+            defender_y = std::min(defender_y, + 40.0); 
 
         res = defend(id, x, y, angle, defender_x, defender_y); 
     }
