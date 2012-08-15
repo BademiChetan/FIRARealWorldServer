@@ -3,6 +3,7 @@ using namespace cv;
 using namespace std;
 
 queue<Action> bot_queue[5]; 
+int still_count[5]; 
 
 void algo(int id) {
 
@@ -51,6 +52,10 @@ void algo(int id) {
         double goalie_x = +110 - 7.5; 
         double goalie_dx = goalie_x - bx; 
         double goalie_y = by + goalie_dx * ( tan(theta1) + tan(theta2) ) / 2; 
+        if (goalie_y< 0)
+            goalie_y = max(goalie_y, -40); 
+        else
+            goalie_y = min(goalie_y, +40); 
         res = defend(id, x, y, angle, goalie_x, goalie_y); 
 
     } else if (id == 1) {
@@ -58,6 +63,11 @@ void algo(int id) {
         double defender_x = +110 - 25; 
         double defender_dx = defender_x - bx; 
         double defender_y = by + defender_dx * ( tan(theta3) + tan(theta2) ) / 2; 
+        if (defender_y < 0)
+            defender_y = max(defender_y, -40); 
+        else
+            defender_y = min(defender_y, +40); 
+
         res = defend(id, x, y, angle, defender_x, defender_y); 
     }
 
@@ -81,11 +91,11 @@ void main_algo() {
     cout << "Doing algo stuff here\n"; 
     for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
         if (bot_queue[i].empty()) {
-           // if (still_count[i] <= 10) {
-           //     still_count[i] ++; 
-           //     continue; 
-           // }
-           // still_count[i] = 0; 
+            if (still_count[i] <= 10) {
+                still_count[i] ++; 
+                continue; 
+            }
+            still_count[i] = 0; 
             algo(i); 
         }
     }

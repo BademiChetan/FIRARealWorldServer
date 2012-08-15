@@ -30,7 +30,7 @@
 #define NO_TIMEOUT_4_WAIT	10
 #define NO_TIMEOUT_2_KILL   10	
 #define F_THRESH            35                                  // The threshold for the 'F' to convert into 'f'
-#define MAX_CHECKS          150                                 // The maximum no. of checks we need to do before declaring the
+#define MAX_CHECKS          10                                  // The maximum no. of checks we need to do before declaring the
                                                                 // bot dead. One of the log files took 100 reads so...200.
 #define SERIAL_WAIT         5
 #define SERIAL_WAIT_4_TIME  100

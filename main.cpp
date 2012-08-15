@@ -38,7 +38,6 @@ CvPoint arena_center;
 double prev_x[5][10]; 
 double prev_y[5][10]; 
 double prev_angle[5][10]; 
-int still_count[5]; 
 
 void interrupt_near_arena() {
     for (int id = 0; id < NUM_OF_OUR_BOTS; id ++) {
