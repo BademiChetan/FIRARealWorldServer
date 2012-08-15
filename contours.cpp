@@ -15,13 +15,14 @@ char c=0;
 
 //CvCapture *capture= cvCreateCameraCapture(1);
 
-CvPoint ClosestFrontCenter( IplImage* frame, CvPoint closest_to ){
+CvPoint ClosestFrontCenter( IplImage* frame, CvPoint closest_to, int & AREA  ){
     CvSeq* contours = 0,*FrontContour = 0;
     CvMemStorage* str = cvCreateMemStorage(0);
     CvMemStorage* boxfromseq_str = cvCreateMemStorage(0);
     CvMemStorage* storage =  cvCreateMemStorage(0);    
     int a = 0, b = 0;
     int j = 0;
+    int area = 0;
     int min_dis = 10000;
     int dis = 0;
     CvPoint center = cvPoint( 0, 0 ), final_cen = cvPoint( 0, 0 );
@@ -32,12 +33,14 @@ CvPoint ClosestFrontCenter( IplImage* frame, CvPoint closest_to ){
     //cvDrawContours( img, contours, cvScalar( 255, 255, 255, 0 ), cvScalar( 255, 255, 255, 0 ) , 1, 5, 8, cvPoint( 0, 0 ) );
 
     for( CvSeq* con = contours; con != NULL; con = con->h_next ){
-        if( cvContourArea( con, CV_WHOLE_SEQ ) > THRESH_AREA ){
+	area = cvContourArea( con, CV_WHOLE_SEQ );
+        if( area > THRESH_AREA ){
             int b = con->total - 1;
 
             FrontContour = cvSeqSlice( con, cvSlice( 0, b ), str, 0 );
 
             if( FrontContour ){
+		AREA = area;
                 contour_box = cvMinAreaRect2( FrontContour, boxfromseq_str );
                 center = cvPoint( ( int ) contour_box.center.x, ( int ) contour_box.center.y );
                 dis = distanc( center, closest_to );
@@ -57,7 +60,7 @@ CvPoint ClosestFrontCenter( IplImage* frame, CvPoint closest_to ){
 }
 
 
-vector <CvPoint> FindAllCenter( IplImage* frame ){
+vector <CvPoint> FindAllCenter( IplImage* frame, vector <int> & AREA ){
 CvSeq *BackContour = 0;
 CvSeq* contours = 0;
 	CvMemStorage* str = cvCreateMemStorage(0);
@@ -81,6 +84,7 @@ CvSeq* contours = 0;
 			//cvDrawContours( img, BackContour, cvScalar( 255, 255, 0, 0 ), cvScalar( 255, 255, 255, 0 ), 1, 5, 8, cvPoint( 0, 0 ) );
 
 			if( BackContour ){
+				AREA.push_back(area);
 				contour_box = cvMinAreaRect2( BackContour, boxfromseq_str );
 				center.push_back( cvPoint( ( int ) contour_box.center.x, ( int ) contour_box.center.y ) );
 			}

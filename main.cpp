@@ -1,5 +1,5 @@
 #pragma once
-#define ELEC // Remove x corruption to add elec stuff
+#define xELEC // Remove x corruption to add elec stuff
 #include <cv.h>
 #include <highgui.h>
 #include <ctime> 
@@ -24,8 +24,8 @@ using namespace std;
 #include "bot_actions.h"
 #include "kick_off_calibration.h"
 
-//CvCapture *capture = cvCreateCameraCapture(1);
-CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
+CvCapture *capture = cvCreateCameraCapture(1);
+// CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
 
 IplImage *img = cvQueryFrame( capture );
 IplImage *hsv = cvCreateImage( cvSize( 640, 480), IPL_DEPTH_8U, 3 );
@@ -34,11 +34,77 @@ int FrameCount = 0;
 CvRect goal_rect = cvRect( 0, 0, 0, 0 );
 CvRect pitch;
 CvPoint arena_center;
+queue<Action> bot_queue[5]; 
 
 double prev_x[5][10]; 
 double prev_y[5][10]; 
 double prev_angle[5][10]; 
+int still_count[5]; 
 
+void algo(int id) {
+
+    double x = bot[id].x; 
+    double y = bot[id].y; 
+    double angle = bot[id].angle; 
+    double bx, by; 
+    Ball.getCenter(bx, by); 
+
+    // Hold Stuff Starts Here {
+
+   // // Try to go behind the ball from the goal. 
+   // double gx = -100; 
+   // double gy = 0; 
+   // double theta = get_angle_to_point(bx, by, gx, gy); 
+   // cout << "Theta in degrees: " << theta << endl; 
+   // theta *= PI / 180; 
+
+   // // Get the point on the line from goal to ball 5cm behind it
+   // double goto_x = bx - 5 * cos(theta); 
+   // double goto_y = by - 5 * sin(theta); 
+
+   // // Check if it lies in the arena
+   // if (goto_x < -90 || goto_x > 90 || goto_y < -90 || goto_y > 90) {
+   //     goto_x = bx; 
+   //     goto_y = by; 
+   // }
+
+
+   // printf("Will hold (%f, %f). Ball is at (%f, %f).\n", goto_x, goto_y, bx, by); 
+   // vector<Action> res = hold(id, x, y, angle, goto_x, goto_y); 
+   // for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
+   //     bot_queue[id].push(*it); 
+   // }
+
+    // Hold stuff ends here }
+
+
+    // Goalie and defender starts here {
+    double theta1 = get_angle_to_point(bx, by, +110, -25, true); 
+    double theta2 = get_angle_to_point(bx, by, +110, 0, true); 
+    double theta3 = get_angle_to_point(bx, by, +110, +25, true); 
+    vector<Action> res; 
+    if (id == 0) {
+        // Goalie
+        double goalie_x = +110 - 7.5; 
+        double goalie_dx = goalie_x - bx; 
+        double goalie_y = by + goalie_dx * ( tan(theta1) + tan(theta2) ) / 2; 
+        res = defend(id, x, y, angle, goalie_x, goalie_y); 
+
+    } else {
+        // Defender 1
+        double defender_x = +110 - 25; 
+        double defender_dx = defender_x - bx; 
+        double defender_y = by + defender_dx * ( tan(theta1) + tan(theta2) ) / 2; 
+        res = defend(id, x, y, angle, defender_x, defender_y); 
+    }
+
+    for (vector<Action>::iterator it = res.begin(); it != res.end(); it ++) {
+        bot_queue[id].push(*it); 
+    }
+
+    // Goalie and defender end here }
+
+}
 void interrupt_near_arena() {
     for (int id = 0; id < NUM_OF_OUR_BOTS; id ++) {
         double x = bot[id].x; 
@@ -53,6 +119,7 @@ void interrupt_near_arena() {
 #endif
         }
     }
+<<<<<<< HEAD
 
 }
 
@@ -70,6 +137,25 @@ void image_processing() {
     bot[3].color = BOT3_COLOR;
     bot[4].color = BOT4_COLOR;
     for(int i=0; i<15; i++)
+=======
+
+}
+
+void update_locations() {
+    for(int i = 0; i < NUM_OF_OUR_BOTS; i++) {
+        prev_x[i][FrameCount % 10] = bot[i].x; 
+        prev_y[i][FrameCount % 10] = bot[i].y; 
+        prev_angle[i][FrameCount % 10] = bot[i].angle; 
+    }
+}
+void image_processing() {
+    bot[0].basecolor = BOT0_BASECOLOR; bot[0].lcolor = BOT0_LCOLOR; bot[0].rcolor = BOT0_RCOLOR;
+    bot[1].basecolor = BOT1_BASECOLOR; bot[1].lcolor = BOT1_LCOLOR; bot[1].rcolor = BOT1_RCOLOR;
+    bot[2].basecolor = BOT2_BASECOLOR; bot[2].lcolor = BOT2_LCOLOR; bot[2].rcolor = BOT2_RCOLOR;
+    bot[3].basecolor = BOT3_BASECOLOR; bot[3].lcolor = BOT3_LCOLOR; bot[3].rcolor = BOT3_RCOLOR;
+    bot[4].basecolor = BOT4_BASECOLOR; bot[4].lcolor = BOT4_LCOLOR; bot[4].rcolor = BOT4_RCOLOR;
+
+>>>>>>> master
     img = cvQueryFrame( capture );
     //This is selecting the arena part.
     goal_rect = select_rect( capture );
@@ -85,10 +171,15 @@ void image_processing() {
 
     Ball.location = pitch;
 
+<<<<<<< HEAD
     for (int i = 0; i < 10; i ++){
         updateframe(); 
         update_locations(); 
     }
+=======
+    updateframe(); 
+    update_locations(); 
+>>>>>>> master
 
 
     ip_done = true; 

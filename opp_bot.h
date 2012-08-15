@@ -7,7 +7,6 @@ class opp_bot{
         IplImage *mask;
         CvRect location;
         CvPoint center;
-        double x,y,angle;
         char color;
         void update();
         void FindCenter(CvPoint &cen);

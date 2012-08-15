@@ -3,7 +3,9 @@
 class our_bot{
 
     public:
-        char color;
+        char basecolor;
+	char lcolor;
+	char rcolor;
         IplImage **mask;
         CvRect location;
         CvPoint front_center, back_center, bot_center;
