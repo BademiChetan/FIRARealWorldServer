@@ -22,7 +22,9 @@ our_bot::our_bot(){
             2* BOUND_RECT, 2 * BOUND_RECT);
     mask[0] = cvCreateImage( cvSize(640,480), IPL_DEPTH_8U, 1 );
     mask[1] = cvCreateImage( cvSize(640,480), IPL_DEPTH_8U, 1 );
-}
+    mask[2] = cvCreateImage( cvSize(640,480), IPL_DEPTH_8U, 1 );
+
+}	
 
 our_bot::~our_bot(){
     cvReleaseImage( mask );
@@ -56,19 +58,40 @@ double our_bot::orientation(){
 
 
 void our_bot::FindCenter(){
-    vector <CvPoint> BackCenter = FindAllCenter( mask[1] );
 
-    front_center = cvPoint( 0, 0 );
+    vector <int> Area_base;
+    int Area_frontl=0;
+    int Area_frontr=0;	
+    vector <CvPoint> BaseCenter = FindAllCenter( mask[0], Area_base );
+
+    CvPoint frontl_center = cvPoint( 0, 0 );
+    CvPoint frontr_center = cvPoint( 0, 0 );
+    CvPoint c1 = cvPoint( 0 ,0 );
+    CvPoint c2 = cvPoint( 0 ,0 );
     back_center = cvPoint( 0, 0 );
 
-    for( int i = 0; i < BackCenter.size(); i++ ){
-        front_center = ClosestFrontCenter( mask[0], BackCenter[i] );
-        if( front_center.x != 0 ){
-            back_center = BackCenter[i];
-            break;
-        }
+    for( int i = 0; i < BaseCenter.size(); i++ ){
 
+	printf(" Area of base %d ",Area_base[i]);        //FOR Debugging AREA threshold
+
+	if(Area_base[i] > BASE_AREA_THRESH) {
+        c1 = ClosestFrontCenter( mask[1], BaseCenter[i], Area_frontl );
+	c2 = ClosestFrontCenter( mask[2], BaseCenter[i], Area_frontr );
+      
+	if( c1.x != 0 && c2.x !=0 ){
+
+			if(angl(c1,BaseCenter[i],c2) > 0)
+			{back_center = BaseCenter[i];
+			frontl_center = c1;
+			frontr_center = c2;
+
+			break;
+			}	
+      
+      }
     }
+}
+ front_center = cvPoint( ( frontl_center.x + frontr_center.x ) / 2, ( frontl_center.y + frontr_center.y ) / 2 );
 
 }
 
@@ -77,17 +100,22 @@ void our_bot::update(){
     //Setting the tracking box as the region of interest.
     cvSetImageROI( mask[0], location );
     cvSetImageROI( mask[1], location );
+    cvSetImageROI( mask[2], location );
 
-    pick_color( mask, location, color );
+    pick_basecolor( mask[0], location, basecolor );
+    pick_frontcolor( mask[1], location, lcolor );
+    pick_frontcolor( mask[2], location, rcolor );
 
     //The cvShowImage lines are for debuging.
     //cvShowImage( "back_center", mask[0] );
-    //cvShowImage( "front_center", mask[1] );
+    //cvShowImage( "front_center_left", mask[1] );
+    //cvShowImage( "front_center_right", mask[2]);
 
     FindCenter();
 
     cvResetImageROI( mask[0] );
     cvResetImageROI( mask[1] );
+    cvResetImageROI( mask[2] );
 
     if( front_center.x != 0 && back_center.x != 0 ){
         //Taking care for the relative position changes due to ROI.

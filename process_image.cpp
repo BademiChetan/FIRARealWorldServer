@@ -5,7 +5,7 @@
 
 
 void threshold( IplImage* src, IplImage* dst ){
-    cvDilate( src, dst, NULL, 5 );
+    cvDilate( src, dst, NULL, 1 );
     cvSmooth( dst, dst, CV_MEDIAN, 3, 0, 0, 0 );
 }
 
@@ -40,7 +40,7 @@ int angl( CvPoint dst, CvPoint cen, CvPoint front ){
         else if( cen.y > front.y )
             angle = 0;
         else
-            printf( "angl(): The three input points are not unique\n" );
+            printf( " < " );
     }
     return angle;
 }
