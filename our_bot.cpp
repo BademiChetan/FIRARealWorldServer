@@ -72,7 +72,7 @@ void our_bot::FindCenter(){
 
     for( int i = 0; i < BaseCenter.size(); i++ ){
 
-	printf(" Area of base %d ",Area_base[i]);        //FOR Debugging AREA threshold
+//	printf(" Area of base %d ",Area_base[i]);        //FOR Debugging AREA threshold
 
 	if(Area_base[i] > BASE_AREA_THRESH) {
         c1 = ClosestFrontCenter( mask[1], BaseCenter[i], Area_frontl );
@@ -129,6 +129,7 @@ void our_bot::update(){
     }
 
     limit_location_within_arena( location );
-    pos();
-    orientation();
+    x = ( ( bot_center.x - arena_center.x ) *250 ) / goal_rect.width;		//center wrt the arena center.
+    y = -1*((bot_center.y-arena_center.y)*250)/goal_rect.width;
+orientation();
 }
