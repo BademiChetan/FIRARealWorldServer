@@ -286,7 +286,6 @@ void prelude()
             cout<<"Yes!!! I caught the error finally!!!"<<endl;
         }
         timedout=rxstring(serial_buffer,TIMEOUT_VAL,STR_DEBUG);
-        cout<<(int)serial_buffer[0]<<endl;
         if(*serial_buffer=='P')
         {
             cout<<"Communication working"<<endl;
@@ -353,6 +352,7 @@ bool rxstring(char *cstr, unsigned int len, bool print_str)
 {
     char temp=0;
     int i=0;
+    bool flp=0;
     while(temp!='\n')
     {
         if(serialwait())
@@ -380,8 +380,9 @@ bool rxstring(char *cstr, unsigned int len, bool print_str)
         }
         else
         {
-            cout<<"No data available\r";
-            cout<<endl;
+            if(!flp)
+                cout<<"No data available"<<endl;
+            flp=1;
             return 1;
         }
     }
@@ -486,9 +487,11 @@ int is_enc_cmd(char action)
                      return 5;
                  }
         case 'F':
-        case 'B':
-        case 'V':{
+        case 'B':{
                      return 4;
+                 }
+        case 'V':{
+                     return 6;
                  }
         case 'R':{
                      return 1;
@@ -1623,9 +1626,9 @@ int main()
 {	
     Uinit();
     int i=1;
-    while(1)
+/*  while(1)
     {
-/*        for(i=0;i<3;++i)
+        for(i=0;i<3;++i)
         {
             e_sendenccmd(i,'F',40,200);
         }
@@ -1640,7 +1643,7 @@ int main()
         for(i=0;i<3;++i)
         {
             wait_4_bot(i);
-        }*/
+        }
         e_sendenccmd(i,'F',60,85);
         wait_4_bot(i);
         e_sendenccmd(i,'B',60,85);
@@ -1661,7 +1664,7 @@ int main()
         wait_4_bot(i);
         e_sendenccmd(i,'B',60,245);
         wait_4_bot(i);
-    }
+    }*/
     Uend();
 }
 #endif
