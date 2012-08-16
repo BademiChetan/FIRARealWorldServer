@@ -21,11 +21,26 @@ void main_algo();
 void algo(int); 
 
 class Line {
-    double m, c; 
-    Line(double a, double b) {
-        m = a; 
-        c = b; 
-    }
+    public:
+        double a, b, c;
+        // Line passing through two points
+        Line(double x1, double y1, double x2, double y2) {
+            a = y2 - y1; 
+            b = x1 - x2; 
+            c = a * x1 - b * y1; 
+        }
+        // Line passing through a point and parallel to a line
+        Line(double x1, double y1, Line &line) {
+            a = line.a; 
+            b = line.b; 
+            c = - a * x1 - b * y1; 
+        }
+        // Line parallel to a given line, with dist above and below
+        Line(double dist, Line &line) {
+            a = line.a; 
+            b = line.b; 
+            c = line.c + dist * sqrt(line.a * line.a + line.b * line.b); 
+        }
 };
 
 class Circle {
@@ -37,4 +52,5 @@ class Circle {
     }
 };
 
+//double distance_to_line(double x, double y, Line &line); 
 

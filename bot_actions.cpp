@@ -5,6 +5,7 @@
 #include "ball.h"
 #include "update_frame.h"
 #include "elec.h"
+#include "algo.h"
 #include <ctime> 
 using namespace std; 
 using namespace cv; 
@@ -147,12 +148,19 @@ vector<Action> defend(int id, double x1, double y1, double angle, double x2, dou
 bool have_the_ball(int id){
     // have the ball with me
     if (distance_from_bot_to_ball(id) <= 8 &&
-            angle_from_bot_to_ball(id) <= 20 )
+            angle_from_bot_to_ball(id) <= 30 )
         return true;
     return false; 
 }
 
-Coordinate getPathWithoutObstacle(int id, double x, double y) {
+Coordinate getPathWithoutObstacle(int id, double x2, double y2) {
+    return Coordinate(x2, y2); 
+   // double x1 = bot[id].x; 
+   // double y1 = bot[id].y; 
+   // // find line to the ball
+   // Line to_ball(x1, y1, x2, y2); 
+   // Line above(BOT_RADIUS, to_ball); 
+   // Line below(-BOT_RADIUS, to_ball); 
 
 }
 

@@ -53,6 +53,7 @@
 #define MAX_SPEED       140
 #define MIN_DIST        100
 #define EPSILON         1e-6
+#define BOT_RADIUS      6.0 
 
 /**********************
   co-ordinates :

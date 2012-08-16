@@ -6,6 +6,11 @@ queue<Action> bot_queue[5];
 int still_count[5]; 
 
 
+//double distance_to_line(double x, double y, Line &line) {
+//    return (line.a * x + line.b * y + line.c) / 
+//        sqrt(line.a * line.a + line.b * line.b); 
+//}
+
 void interrupt_near_arena() {
     for (int id = 0; id < NUM_OF_OUR_BOTS; id ++) {
         double x = bot[id].x; 
