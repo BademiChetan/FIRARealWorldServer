@@ -167,6 +167,18 @@ Coordinate getPathWithoutObstacle(int id, double x2, double y2) {
 
 }
 
+void reflect_from_arena(double &x, double &y) {
+    // MAX_X - BOT_RADIUS and MAX_Y - BOT_RADIUS
+    if (x < -104)
+        x = -104; 
+    if (x > 104)
+        x = 104; 
+    if (y < -84)
+        y = -84; 
+    if (y > 84)
+        y = 84; 
+}
+
 std::vector<Action> attack(int id) {
     // Do I have the ball? 
     if (have_the_ball(id)) {
@@ -190,12 +202,53 @@ std::vector<Action> attack(int id) {
     double goto_x = bx - 5 * cos(theta); 
     double goto_y = by - 5 * sin(theta); 
 
-    // Check if it lies in the arena
-    if (goto_x < -110 || goto_x > 110 || goto_y < -90 || goto_y > 90) {
-        goto_x = bx; 
-        goto_y = by; 
+
+    reflect_from_arena(goto_x, goto_y); 
+
+    // Fine line joining current position to the position behind the ball
+    Line to_point(x, y, goto_x, goto_y); 
+    Line below(-BOT_RADIUS, to_point); 
+    Line above(+BOT_RADIUS, to_point); 
+
+    if (above.distance_to_point(Ball.x, Ball.y) < BALL_RADIUS || 
+        below.distance_to_point(Ball.x, Ball.y) < BALL_RADIUS || 
+        to_point.distance_to_point(Ball.x, Ball.y) < BALL_RADIUS) {
+        // Point P is the point of intersection of transverse tangents
+        double px = BALL_RADIUS * x + BOT_RADIUS * Ball.x; 
+        px /= ( BALL_RADIUS + BOT_RADIUS); 
+        double py = BALL_RADIUS * y + BOT_RADIUS * Ball.y; 
+        py /= ( BALL_RADIUS + BOT_RADIUS); 
+
+        Line to_ball(x, y, Ball.x, Ball.y); 
+        double angle = get_angle_to_point(x, y, Ball.x, Ball.y); 
+        double angle_to_point = get_angle_to_point(x, y, goto_x, goto_y); 
+        double low = 0; 
+        double high = 89 * PI / 180.0; 
+        double mid; 
+        while (high - low > 0.01) {
+            mid = (high + low) / 2.0; 
+            Line temp(px, py, tan(angle + mid)); 
+            double dist = temp.distance_to_point(Ball.x, Ball.y); 
+            if (dist >= BALL_RADIUS) {
+                high = mid; 
+            } else {
+                low = mid; 
+            }
+        }
+        Line final; 
+        if (fabs(angle + mid - angle_to_point) < 
+                fabs(angle - mid - angle_to_point)) {
+            final = Line(px, py, tan(angle + mid)); 
+        } else {
+            final = Line(px, py, tan(angle - mid)); 
+        }
+        Line perpendicular(Ball.x, Ball.y, final, true); 
+        Coordinate ans = final.intersection_point(perpendicular); 
+        goto_x = ans.x; 
+        goto_x = ans.y; 
     }
 
+    reflect_from_arena(goto_x, goto_y); 
 
     printf("Will hold (%f, %f). Ball is at (%f, %f).\n", goto_x, goto_y, bx, by); 
     return hold(id, x, y, angle, goto_x, goto_y); 

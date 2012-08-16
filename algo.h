@@ -21,25 +21,52 @@ void main_algo();
 void algo(int); 
 
 class Line {
+    // ax + by + c = 0
     public:
         double a, b, c;
+        // Default constructor
+        Line() { }
         // Line passing through two points
         Line(double x1, double y1, double x2, double y2) {
             a = y2 - y1; 
             b = x1 - x2; 
-            c = a * x1 - b * y1; 
-        }
-        // Line passing through a point and parallel to a line
-        Line(double x1, double y1, Line &line) {
-            a = line.a; 
-            b = line.b; 
             c = - a * x1 - b * y1; 
+        }
+        // Line passing through a point and parallel/perpendicular to a line
+        Line(double x, double y, Line &line, bool parallel = true) {
+            if (parallel) {
+                a = line.a; 
+                b = line.b; 
+            } else {
+                a = line.b; 
+                b = - line.a; 
+            }
+            c = - a * x - b * y; 
         }
         // Line parallel to a given line, with dist above and below
         Line(double dist, Line &line) {
             a = line.a; 
             b = line.b; 
             c = line.c + dist * sqrt(line.a * line.a + line.b * line.b); 
+        }
+        // Line passing through a point and some slope
+        Line(double x, double y, double slope) {
+            b = -1 ; 
+            a = slope; 
+            c = y - slope * x; 
+        }
+
+        // Perpendicular distance of point from line
+        double distance_to_point(double x, double y) {
+            return (a * x + b * y + c) / sqrt(a * a + b * b); 
+        }
+
+        // Intersection of current line and given line
+        Coordinate intersection_point(Line &line) {
+            Coordinate res; 
+            res.x = (line.c * a - c * line.a) / (b * line.a - a * line.b); 
+            res.y = (line.c * b - c * line.b) / (a * line.b - b * line.a); 
+            return res; 
         }
 };
 
@@ -51,6 +78,3 @@ class Circle {
         r = c; 
     }
 };
-
-//double distance_to_line(double x, double y, Line &line); 
-

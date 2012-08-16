@@ -54,6 +54,7 @@
 #define MIN_DIST        100
 #define EPSILON         1e-6
 #define BOT_RADIUS      6.0 
+#define BALL_RADIUS     2.5
 #define SIGN            1 
 
 /**********************
