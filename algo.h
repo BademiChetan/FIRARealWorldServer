@@ -20,4 +20,21 @@
 void main_algo(); 
 void algo(int); 
 
+class Line {
+    double m, c; 
+    Line(double a, double b) {
+        m = a; 
+        c = b; 
+    }
+};
+
+class Circle {
+    double x, y, r; 
+    Circle(double a, double b, double c) {
+        x = a; 
+        y = b; 
+        r = c; 
+    }
+};
+
 

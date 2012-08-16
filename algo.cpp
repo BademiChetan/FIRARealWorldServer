@@ -5,6 +5,7 @@ using namespace std;
 queue<Action> bot_queue[5]; 
 int still_count[5]; 
 
+
 void interrupt_near_arena() {
     for (int id = 0; id < NUM_OF_OUR_BOTS; id ++) {
         double x = bot[id].x; 
@@ -92,7 +93,8 @@ void algo(int id) {
         else
             defender_y = std::min(defender_y, + 40.0); 
 
-        res = defend(id, x, y, angle, defender_x, defender_y); 
+        Coordinate fp = getPathWithoutObstacle(id, defender_x, defender_y); 
+        res = defend(id, x, y, angle, fp.x, fp.y); 
     }
 
 

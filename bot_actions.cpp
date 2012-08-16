@@ -152,11 +152,15 @@ bool have_the_ball(int id){
     return false; 
 }
 
+Coordinate getPathWithoutObstacle(int id, double x, double y) {
+
+}
 
 std::vector<Action> attack(int id) {
     // Do I have the ball? 
     if (have_the_ball(id)) {
-        return hold(id, bot[id].x, bot[id].y, bot[id].angle, 110, 0); 
+        Coordinate fp = getPathWithoutObstacle(id, 110, 0); 
+        return hold(id, bot[id].x, bot[id].y, bot[id].angle, fp.x, fp.y); 
     }
 
     double x = bot[id].x; 
