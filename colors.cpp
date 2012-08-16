@@ -38,7 +38,7 @@ inline bool check_orange(uchar *ptr,int x)
 
 inline bool check_yellow(uchar *ptr,int x)
 {
-    if((ptr[3*x]>25&&ptr[3*x]<35)&&(ptr[3*x+1]>160&&ptr[3*x+1]<=255)&&(ptr[3*x+2]>150&&ptr[3*x+2]<255))
+    if((ptr[3*x]>10&&ptr[3*x]<35)&&(ptr[3*x+1]>150&&ptr[3*x+1]<=255)&&(ptr[3*x+2]>150&&ptr[3*x+2]<255))
         return true;
     else
         return false;
@@ -56,7 +56,7 @@ inline bool check_blue(uchar *ptr,int x)
 
 inline bool check_green(uchar *ptr,int x)
 {
-    if((ptr[3*x]>40&&ptr[3*x]<65)&&(ptr[3*x+1]>50&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>50&&ptr[3*x+2]<=230))
+    if((ptr[3*x]>40&&ptr[3*x]<70)&&(ptr[3*x+1]>50&&ptr[3*x+1]<=230)&&(ptr[3*x+2]>50&&ptr[3*x+2]<=230))
         return true;
     else
         return false;
