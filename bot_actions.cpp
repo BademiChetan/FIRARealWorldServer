@@ -203,7 +203,9 @@ std::vector<Action> attack(int id) {
     double goto_y = by - 5 * sin(theta); 
 
 
+    printf("Before reflecting (%f, %f)\n", goto_x, goto_y); 
     reflect_from_arena(goto_x, goto_y); 
+    printf("After reflecting (%f, %f)\n", goto_x, goto_y); 
 
     // Fine line joining current position to the position behind the ball
     Line to_point(x, y, goto_x, goto_y); 
@@ -213,15 +215,19 @@ std::vector<Action> attack(int id) {
     if (above.distance_to_point(Ball.x, Ball.y) < BALL_RADIUS || 
         below.distance_to_point(Ball.x, Ball.y) < BALL_RADIUS || 
         to_point.distance_to_point(Ball.x, Ball.y) < BALL_RADIUS) {
+        cout << "OBSTACLE!\n"; 
         // Point P is the point of intersection of transverse tangents
         double px = BALL_RADIUS * x + BOT_RADIUS * Ball.x; 
         px /= ( BALL_RADIUS + BOT_RADIUS); 
         double py = BALL_RADIUS * y + BOT_RADIUS * Ball.y; 
         py /= ( BALL_RADIUS + BOT_RADIUS); 
 
+        printf("(px, py) = (%f, %f)\n", px, py); 
         Line to_ball(x, y, Ball.x, Ball.y); 
-        double angle = get_angle_to_point(x, y, Ball.x, Ball.y); 
-        double angle_to_point = get_angle_to_point(x, y, goto_x, goto_y); 
+        double angle = get_angle_to_point(x, y, Ball.x, Ball.y, true); 
+        double angle_to_point = get_angle_to_point(x, y, goto_x, goto_y, true); 
+        printf("Angle to the ball  = %f\n", angle * 180 / PI); 
+        printf("Angle to point = %f\n", angle_to_point * 180 / PI); 
         double low = 0; 
         double high = 89 * PI / 180.0; 
         double mid; 
@@ -235,11 +241,14 @@ std::vector<Action> attack(int id) {
                 low = mid; 
             }
         }
+        printf("Mid = %f\n", mid * 180 / PI); 
         Line final; 
         if (fabs(angle + mid - angle_to_point) < 
                 fabs(angle - mid - angle_to_point)) {
+            printf("Angle of tangent to X axis = %f\n", (angle + mid) * 180 / PI); 
             final = Line(px, py, tan(angle + mid)); 
         } else {
+            printf("Angle of tangent to X axis = %f\n", (angle - mid) * 180 / PI); 
             final = Line(px, py, tan(angle - mid)); 
         }
         Line perpendicular(Ball.x, Ball.y, final, true); 
@@ -247,9 +256,9 @@ std::vector<Action> attack(int id) {
         goto_x = ans.x; 
         goto_x = ans.y; 
     }
-
-    reflect_from_arena(goto_x, goto_y); 
+    printf("After obstacle stuff: (%f, %f)\n", goto_x, goto_y); 
 
     printf("Will hold (%f, %f). Ball is at (%f, %f).\n", goto_x, goto_y, bx, by); 
+    keyboard_interrupt(); 
     return hold(id, x, y, angle, goto_x, goto_y); 
 }
