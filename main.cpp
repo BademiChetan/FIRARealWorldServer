@@ -35,6 +35,7 @@ int FrameCount = 0;
 CvRect goal_rect = cvRect( 0, 0, 0, 0 );
 CvRect pitch;
 CvPoint arena_center;
+bool interrupt; 
 
 double prev_x[5][10]; 
 double prev_y[5][10]; 
@@ -88,22 +89,43 @@ void image_processing() {
     }
 }
 
-bool check_same_position(int id) {
-    bool ret = true; 
-    if (FrameCount < 3 )
-        return ret; 
-    for (int i = FrameCount - 3; i < FrameCount; i ++) {
-        // FIXME: Find least count for all this once openGL stuff is written. 
-        if ( !fabs(prev_x[id][FrameCount % 10] - prev_x[id][i % 10] ) < 5 ||
-                !fabs(prev_y[id][FrameCount % 10] - prev_y[id][i % 10] ) < 5 ||
-                !fabs(prev_angle[id][FrameCount % 10] - prev_angle[id][i % 60] ) < 10) {
-            ret = false; 
+void home() {
+
+}
+
+void free_kick() {
+
+}
+
+void penalty() {
+
+}
+void listen_for_interrupt() {
+    while (true) {
+        char ch; 
+        do {
+            ch = getchar(); 
+        } while(ch != 'g' || ch != 'f' || ch != 'p'); 
+
+        // interrupt all the bots
+        interrupt = true; 
+        for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+            e_sendenccmd(i, 's'); 
         }
+        if (ch == 'g') {
+            home(); 
+        } else if (ch == 'f') {
+            free_kick(); 
+        } else if (ch == 'p') {
+            penalty(); 
+        }
+        usleep(100000); 
+        interrupt = false; 
     }
-    return ret; 
 }
 
 int main( int argc, char** argv ){
+    interrupt = false; 
     ip_done = false; 
 
 #ifdef ELEC
@@ -136,6 +158,10 @@ int main( int argc, char** argv ){
     // OpenGL stuff ends here } 
 
 
+    // Thread which keeps listening for interrupt
+    boost::thread interrupt_thread(listen_for_interrupt); 
+
+
     // Fork off thread for IP. 
     boost::thread ip_thread(image_processing); 
     // Wait for IP to finish
@@ -157,4 +183,5 @@ int main( int argc, char** argv ){
 
     ip_thread.join(); 
     // opengl_thread.join();
+    interrupt_thread.join(); 
 }

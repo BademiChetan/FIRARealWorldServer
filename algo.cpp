@@ -120,6 +120,11 @@ void algo(int id) {
 }
 void main_algo() {
 
+    if (interrupt) {
+        usleep(100000); 
+        return; 
+    }
+
     // If any bot is too close to the arena, interrupt. 
     interrupt_near_arena(); 
     cout << "Doing algo stuff here\n"; 

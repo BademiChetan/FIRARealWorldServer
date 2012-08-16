@@ -71,3 +71,4 @@ extern IplImage *hsv;
 extern CvSeq* contours, *finalcon;
 extern int FrameCount; 
 extern int still_count[5]; 
+extern bool interrupt; 
