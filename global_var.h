@@ -54,6 +54,7 @@
 #define MIN_DIST        100
 #define EPSILON         1e-6
 #define BOT_RADIUS      6.0 
+#define SIGN            1 
 
 /**********************
   co-ordinates :
@@ -72,3 +73,4 @@ extern CvSeq* contours, *finalcon;
 extern int FrameCount; 
 extern int still_count[5]; 
 extern bool interrupt; 
+extern bool reset; 

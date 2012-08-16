@@ -36,10 +36,12 @@ CvRect goal_rect = cvRect( 0, 0, 0, 0 );
 CvRect pitch;
 CvPoint arena_center;
 bool interrupt; 
+bool reset; 
 
 double prev_x[5][10]; 
 double prev_y[5][10]; 
 double prev_angle[5][10]; 
+Coordinate home_positions[5]; 
 
 void update_locations() {
     for(int i = 0; i < NUM_OF_OUR_BOTS; i++) {
@@ -90,7 +92,17 @@ void image_processing() {
 }
 
 void home() {
-
+    vector<bool> done(5, false); 
+    int done_count = 0; 
+    while (done_count < 5) {
+        for (int i = 0; i < 5; i ++) {
+            if (get_distance_to_point(bot[i].x, bot[i].y, 
+                        home_positions[i].x, home_positions[i].y) > 2) {
+                hold(i, bot[i].x, bot[i].y, bot[i].angle, 
+                        home_positions[i].x, home_positions[i].y); 
+            }
+        }
+    }
 }
 
 void free_kick() {
@@ -112,6 +124,8 @@ void listen_for_interrupt() {
         for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
             e_sendenccmd(i, 's'); 
         }
+        interrupt = false; 
+        reset = true; 
         if (ch == 'g') {
             home(); 
         } else if (ch == 'f') {
@@ -119,14 +133,28 @@ void listen_for_interrupt() {
         } else if (ch == 'p') {
             penalty(); 
         }
+        reset = false; 
         usleep(100000); 
-        interrupt = false; 
     }
 }
 
 int main( int argc, char** argv ){
     interrupt = false; 
+    reset = false; 
     ip_done = false; 
+
+    // Calculate the home positions
+    home_positions[0] = Coordinate(SIGN * 94, 0); 
+    home_positions[1] = Coordinate(SIGN * 70,   SIGN * 60) ; 
+    home_positions[2] = Coordinate(SIGN * 70,   SIGN * - 60); 
+    home_positions[3] = Coordinate(SIGN * 30,   SIGN * 60); 
+    home_positions[4] = Coordinate(SIGN * 30,   SIGN * - 60); 
+
+    if (SIGN < 0) {
+        swap(home_positions[1], home_positions[2]); 
+        swap(home_positions[3], home_positions[4]); 
+    }
+
 
 #ifdef ELEC
     Uinit();

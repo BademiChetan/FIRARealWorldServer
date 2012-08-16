@@ -65,6 +65,9 @@ double angle_from_bot_to_ball(int id) {
     return get_angle_to_point(x, y, bx, by); 
 }
 
+double distance_from_bot_to_point(int id, double x, double y) {
+    return get_distance_to_point(bot[id].x, bot[id].y, x, y); 
+}
 double distance_from_bot_to_ball(int id) {
     double x = bot[id].x; 
     double y = bot[id].y; 
@@ -188,7 +191,7 @@ std::vector<Action> attack(int id) {
     double goto_y = by - 5 * sin(theta); 
 
     // Check if it lies in the arena
-    if (goto_x < -90 || goto_x > 90 || goto_y < -90 || goto_y > 90) {
+    if (goto_x < -110 || goto_x > 110 || goto_y < -90 || goto_y > 90) {
         goto_x = bx; 
         goto_y = by; 
     }

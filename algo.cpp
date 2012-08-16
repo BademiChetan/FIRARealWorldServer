@@ -129,7 +129,7 @@ void main_algo() {
     interrupt_near_arena(); 
     cout << "Doing algo stuff here\n"; 
     for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-        if (bot_queue[i].empty()) {
+        if (!reset && bot_queue[i].empty()) {
             if (still_count[i] <= 1) {
                 still_count[i] ++; 
                 continue; 
