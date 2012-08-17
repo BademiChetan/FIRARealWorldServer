@@ -28,7 +28,7 @@ void keyboard_interrupt() {
             break; 
     }
 }
-// Absolute angle of line going from (x1,y1) to (x2,y2)
+// Absolute angle of ray going from (x1,y1) to (x2,y2)
 double get_angle_to_point(double x1, double y1, double x2, double y2, bool
         radian = false) {
     double dy = y2 - y1; 
@@ -36,6 +36,8 @@ double get_angle_to_point(double x1, double y1, double x2, double y2, bool
     double res = 0; 
     if (fabs(dx) < EPSILON) {
         res = dy > 0 ? PI / 2 : - PI / 2; 
+    } else if (fabs(dy) < EPSILON) {
+        res = dx > 0 ? 0 : PI; 
     } else {
         res = atan(fabs(dy / dx)); 
         if (dx < 0 && dy < 0) 
@@ -80,6 +82,7 @@ void Action::do_action() {
     printf("Pos: (%f, %f)\n", bot[id].x, bot[id].y); 
 
 
+#ifdef ELEC
     if (speed == 0) {
         cout << "Sending turn\n"; 
         e_sendenccmd(id, direction, magnitude); 
@@ -87,6 +90,7 @@ void Action::do_action() {
         cout << "Sending forward\n"; 
         e_sendenccmd(id, direction, magnitude, speed); 
     }
+#endif
     cout << "Done doing action. \n" ; 
 }
 // Currently at (x1, y1). Hold the ball which is at (x2, y2). 
@@ -215,6 +219,13 @@ std::vector<Action> attack(int id) {
     if (above.distance_to_point(Ball.x, Ball.y) < BALL_RADIUS || 
         below.distance_to_point(Ball.x, Ball.y) < BALL_RADIUS || 
         to_point.distance_to_point(Ball.x, Ball.y) < BALL_RADIUS) {
+        double a, b, c; 
+        a = above.distance_to_point(Ball.x, Ball.y);
+        b = below.distance_to_point(Ball.x, Ball.y);
+        c = to_point.distance_to_point(Ball.x, Ball.y);
+
+        cout << "Distances(a, b, c) " << a << ' ' << b << ' ' << c << endl; 
+
         cout << "OBSTACLE!\n"; 
         // Point P is the point of intersection of transverse tangents
         double px = BALL_RADIUS * x + BOT_RADIUS * Ball.x; 
@@ -233,8 +244,10 @@ std::vector<Action> attack(int id) {
         double mid; 
         while (high - low > 0.01) {
             mid = (high + low) / 2.0; 
+            cout << "Mid = " << mid * 180 / PI << endl; 
             Line temp(px, py, tan(angle + mid)); 
             double dist = temp.distance_to_point(Ball.x, Ball.y); 
+            cout << "Dist = " << dist << endl; 
             if (dist >= BALL_RADIUS) {
                 high = mid; 
             } else {
@@ -246,12 +259,12 @@ std::vector<Action> attack(int id) {
         if (fabs(angle + mid - angle_to_point) < 
                 fabs(angle - mid - angle_to_point)) {
             printf("Angle of tangent to X axis = %f\n", (angle + mid) * 180 / PI); 
-            final = Line(px, py, tan(angle + mid)); 
+            final = Line(x, y, tan(angle + mid)); 
         } else {
             printf("Angle of tangent to X axis = %f\n", (angle - mid) * 180 / PI); 
-            final = Line(px, py, tan(angle - mid)); 
+            final = Line(x, y, tan(angle - mid)); 
         }
-        Line perpendicular(Ball.x, Ball.y, final, true); 
+        Line perpendicular(Ball.x, Ball.y, final, false); 
         Coordinate ans = final.intersection_point(perpendicular); 
         goto_x = ans.x; 
         goto_x = ans.y; 

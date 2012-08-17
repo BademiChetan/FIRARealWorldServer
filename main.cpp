@@ -1,14 +1,8 @@
 #pragma once
-#define ELEC // Remove x corruption to add elec stuff
-#define IP_DEBUG
 #include <cv.h>
 #include <highgui.h>
 #include <ctime> 
 #include <boost/thread.hpp>
-
-using namespace cv;
-using namespace std;
-
 #include "SerialStream.h"
 #include "select_arena.h"
 #include"process_image.h"
@@ -24,6 +18,9 @@ using namespace std;
 #include "algo.h"
 #include "bot_actions.h"
 #include "kick_off_calibration.h"
+
+using namespace cv;
+using namespace std;
 
 CvCapture *capture = cvCreateCameraCapture(1);
 // CvCapture *capture = cvCreateFileCapture( "multibot.avi" );
@@ -84,8 +81,8 @@ void image_processing() {
         ++ FrameCount; 
         updateframe(); 
         update_locations(); 
-        cout << '!' ; 
 #ifdef IP_DEBUG
+        cout << '!' ; 
         cout << "Frame Count = " << FrameCount << endl;
 #endif 
     }
@@ -122,7 +119,9 @@ void listen_for_interrupt() {
         // interrupt all the bots
         interrupt = true; 
         for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+#ifdef ELEC
             e_sendenccmd(i, 's'); 
+#endif
         }
         interrupt = false; 
         reset = true; 

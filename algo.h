@@ -54,15 +54,18 @@ class Line {
             b = -1 ; 
             a = slope; 
             c = y - slope * x; 
+            printf("Slope: input => (%f, %f, %f) output => (%f %f %f)\n", x, y, slope, a, b, c); 
         }
 
         // Perpendicular distance of point from line
         double distance_to_point(double x, double y) {
-            return (a * x + b * y + c) / sqrt(a * a + b * b); 
+            return fabs(a * x + b * y + c) / sqrt(a * a + b * b); 
         }
 
         // Intersection of current line and given line
         Coordinate intersection_point(Line &line) {
+            printf("My line: %f %f %f\n", a, b, c); 
+            printf("Other line: %f %f %f\n", line.a, line.b, line.c); 
             Coordinate res; 
             res.x = (line.c * a - c * line.a) / (b * line.a - a * line.b); 
             res.y = (line.c * b - c * line.b) / (a * line.b - b * line.a); 

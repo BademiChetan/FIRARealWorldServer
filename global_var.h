@@ -2,6 +2,9 @@
 #include <cv.h>
 #include <highgui.h>
 
+#define ELEC       // Remove x corruption to add elec stuff
+#define xIP_DEBUG   // Remove x corruption to print IP debug statements
+
 //#define THRESH_AREA 5
 #define THRESH_AREA 5        //without boundaries
 
@@ -14,7 +17,7 @@
 
 #define LEFT_GOAL_COLOR 'y'
 
-#define NUM_OF_OUR_BOTS 3
+#define NUM_OF_OUR_BOTS 1
 
 #define NUM_OF_OPP_BOTS 0
 
@@ -52,7 +55,7 @@
 #define PI              3.14159265
 #define MAX_SPEED       140
 #define MIN_DIST        100
-#define EPSILON         1e-6
+#define EPSILON         2 
 #define BOT_RADIUS      6.0 
 #define BALL_RADIUS     2.5
 #define SIGN            1 
