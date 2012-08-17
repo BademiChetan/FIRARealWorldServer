@@ -64,7 +64,7 @@ inline bool check_green(uchar *ptr,int x)
 
 inline bool check_violet(uchar *ptr,int x)
 {
-    if((ptr[3*x]>130&&ptr[3*x]<160)&&(ptr[3*x+1]>40&&ptr[3*x+1]<180)&&(ptr[3*x+2]>40&&ptr[3*x+2]<=180))
+    if((ptr[3*x]>140&&ptr[3*x]<180)&&(ptr[3*x+1]>20&&ptr[3*x+1]<180)&&(ptr[3*x+2]>20&&ptr[3*x+2]<=180))
         return true;
     else
         return false;

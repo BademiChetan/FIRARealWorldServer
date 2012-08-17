@@ -203,8 +203,8 @@ std::vector<Action> attack(int id) {
     theta *= PI / 180; 
 
     // Get the point on the line from goal to ball 5cm behind it
-    double goto_x = bx - 5 * cos(theta); 
-    double goto_y = by - 5 * sin(theta); 
+    double goto_x = bx - 8 * cos(theta); 
+    double goto_y = by - 8 * sin(theta); 
 
 
     printf("Before reflecting (%f, %f)\n", goto_x, goto_y); 
