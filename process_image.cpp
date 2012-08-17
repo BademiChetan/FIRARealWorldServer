@@ -42,5 +42,7 @@ int angl( CvPoint dst, CvPoint cen, CvPoint front ){
         else
             printf( " < " );
     }
+    if (angle == 1000)
+        angle = -1; 
     return angle;
 }

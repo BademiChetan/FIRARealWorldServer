@@ -272,6 +272,5 @@ std::vector<Action> attack(int id) {
     printf("After obstacle stuff: (%f, %f)\n", goto_x, goto_y); 
 
     printf("Will hold (%f, %f). Ball is at (%f, %f).\n", goto_x, goto_y, bx, by); 
-    keyboard_interrupt(); 
     return hold(id, x, y, angle, goto_x, goto_y); 
 }
