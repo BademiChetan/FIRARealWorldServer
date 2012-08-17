@@ -6,10 +6,10 @@
 #define xIP_DEBUG   // Remove x corruption to print IP debug statements
 
 //#define THRESH_AREA 5
-#define THRESH_AREA 5        //without boundaries
+#define THRESH_AREA 10        //without boundaries
 
 //#define BASE_AREA_THRESH 30
-#define BASE_AREA_THRESH 160     //without boundaries
+#define BASE_AREA_THRESH 120     //without boundaries
 
 #define OUR_JERSEY_COLOR 'b'
 
