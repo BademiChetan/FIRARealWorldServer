@@ -20,6 +20,8 @@
 #define NUM_OF_OUR_BOTS 1
 
 #define NUM_OF_OPP_BOTS 0
+#define BALL_INDEX      NUM_OF_OUR_BOTS + NUM_OF_OPP_BOTS
+#define FRAME_BACKUP    100
 
 #define BOT0_BASECOLOR 'g'
 #define BOT0_LCOLOR OUR_JERSEY_COLOR
@@ -56,7 +58,7 @@
 #define MAX_SPEED       140
 #define MIN_DIST        100
 #define EPSILON         2 
-#define BOT_RADIUS      6.0 
+#define BOT_RADIUS      6.5 
 #define BALL_RADIUS     2.5
 #define SIGN            1 
 
@@ -78,3 +80,6 @@ extern int FrameCount;
 extern int still_count[5]; 
 extern bool interrupt; 
 extern bool reset; 
+extern double prev_x[NUM_OF_OUR_BOTS + NUM_OF_OPP_BOTS + 1][FRAME_BACKUP]; 
+extern double prev_y[NUM_OF_OUR_BOTS + NUM_OF_OPP_BOTS + 1][FRAME_BACKUP]; 
+extern double prev_angle[NUM_OF_OUR_BOTS + NUM_OF_OUR_BOTS + 1][FRAME_BACKUP]; 

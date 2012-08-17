@@ -35,16 +35,16 @@ CvPoint arena_center;
 bool interrupt; 
 bool reset; 
 
-double prev_x[5][10]; 
-double prev_y[5][10]; 
-double prev_angle[5][10]; 
+double prev_x[NUM_OF_OUR_BOTS + NUM_OF_OPP_BOTS + 1][FRAME_BACKUP]; 
+double prev_y[NUM_OF_OUR_BOTS + NUM_OF_OPP_BOTS + 1][FRAME_BACKUP]; 
+double prev_angle[NUM_OF_OUR_BOTS + NUM_OF_OUR_BOTS + 1][FRAME_BACKUP]; 
 Coordinate home_positions[5]; 
 
 void update_locations() {
     for(int i = 0; i < NUM_OF_OUR_BOTS; i++) {
-        prev_x[i][FrameCount % 10] = bot[i].x; 
-        prev_y[i][FrameCount % 10] = bot[i].y; 
-        prev_angle[i][FrameCount % 10] = bot[i].angle; 
+        prev_x[i][FrameCount % FRAME_BACKUP] = bot[i].x; 
+        prev_y[i][FrameCount % FRAME_BACKUP] = bot[i].y; 
+        prev_angle[i][FrameCount % FRAME_BACKUP] = bot[i].angle; 
     }
 }
 

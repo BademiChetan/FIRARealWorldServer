@@ -110,6 +110,8 @@ vector<Action> hold(int id, double x1, double y1, double angle, double x2, doubl
     Action turn(id, turn_by, direction ? 'l' : 'r'); 
     res.push_back(turn); 
     double distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); 
+    if (average_velocity() > 15.0)
+        distance = min(distance, 20.0); 
     Action run(id, min((int)(distance), MIN_DIST), 'F', MAX_SPEED, x2, y2); 
     res.push_back(run); 
     return res; 
@@ -154,8 +156,9 @@ vector<Action> defend(int id, double x1, double y1, double angle, double x2, dou
 
 bool have_the_ball(int id){
     // have the ball with me
-    if (distance_from_bot_to_ball(id) <= 10 &&
-            angle_from_bot_to_ball(id) <= 30 )
+    if ( (distance_from_bot_to_ball(id) <= 10 &&
+            angle_from_bot_to_ball(id) <= 30) || 
+            angle_from_bot_to_ball(id) <= 10)
         return true;
     return false; 
 }

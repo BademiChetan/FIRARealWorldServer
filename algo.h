@@ -19,6 +19,7 @@
 #include "bot_actions.h"
 void main_algo(); 
 void algo(int); 
+double average_velocity(int); 
 
 class Line {
     // ax + by + c = 0

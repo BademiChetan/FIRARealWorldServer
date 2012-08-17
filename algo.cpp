@@ -11,6 +11,20 @@ int still_count[5];
 //        sqrt(line.a * line.a + line.b * line.b); 
 //}
 
+double average_velocity(int id = -1) {
+    double ans = 0; 
+    // The ball 
+    int index = (id == -1) ? BALL_INDEX : id; 
+    for (int i = 0; i < 3; i ++) {
+        int curr = (FrameCount - i + FRAME_BACKUP) %FRAME_BACKUP; 
+        int curr = (FrameCount - i -1 + FRAME_BACKUP) %FRAME_BACKUP; 
+        double dx = prev_x[index][curr] - prev_x[index][prev]; 
+        double dy = prev_y[index][curr] - prev_y[index][prev]; 
+        ans += sqrt(dx * dx + dy * dy); 
+    }
+    return ans /= 3; 
+}
+
 void interrupt_near_arena() {
     for (int id = 0; id < NUM_OF_OUR_BOTS; id ++) {
         double x = bot[id].x; 
