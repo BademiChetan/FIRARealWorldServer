@@ -1,4 +1,5 @@
 #pragma once
+#include "global_var.h"
 #define FINAL                                                   // Remove the IP based commands by x corrupting it
 #define HIGHS                                                  // Remove the x corruption to get 115200 bps speed
 #define REMOVE_TIMEOUT                                          // Removes the elec sleep thing. 
@@ -10,7 +11,7 @@
  *              KNOWN ISSUES
  * 1. Lacks backward compatibility as now the is_enc_cmd in AP returns 5 not 1
  * *********************************************/
-#define PLAYERS 3
+#define PLAYERS NUM_OF_OUR_BOTS
 
 #define STR_DEBUG 1
 #define TIMER 0

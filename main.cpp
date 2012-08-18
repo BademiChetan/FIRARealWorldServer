@@ -218,14 +218,9 @@ int main( int argc, char** argv ){
     cout << "IP is done!\n"; 
     //boost::thread algo_thread(ai); 
 
-
-    struct timeval begin,end;
-    double diff=0;
-    gettimeofday(&begin,NULL);
-    home(); 
-    gettimeofday(&end,NULL);
-    diff=difftime(end.tv_sec,begin.tv_sec);
-    cout << "Home position took " << diff << " seconds. \n"; 
+    while (true) {
+        main_algo(); 
+    }
 
 
 #ifdef ELEC

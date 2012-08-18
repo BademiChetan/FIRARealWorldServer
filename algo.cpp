@@ -1,4 +1,5 @@
 #include "algo.h" 
+#include "bot_actions.h"
 using namespace cv;
 using namespace std;
 
@@ -120,17 +121,21 @@ void algo(int id) {
     // Goalie and defender end here }
 
     // Attacker stuff starts here {
-    else if (id == 2){
-        if ( y >= 0)
-            res = attack(id); 
-        else 
-            hold(55, 45); 
-    } else if (id == 3) {
-        if ( y <= 0)
-            res = attack(id); 
-        else 
-            hold(55, -45); 
+    else {
+        double dist1 = distance_from_bot_to_ball(2); 
+        double dist2 = distance_from_bot_to_ball(3); 
+        if (id == 2) {
+            if (dist1 <= dist2)
+                res = attack(2); 
+            else
+                res = hold(2, bot[2].x, bot[2].y, bot[2].angle, 55, +45, 100); 
 
+        } else if (id == 3) {
+            if (dist1 > dist2)
+                res = attack(3); 
+            else
+                res = hold(3, bot[3].x, bot[3].y, bot[3].angle, 55, -45, 100); 
+        }
     }
     // Attacker stuff ends here } 
 
@@ -149,16 +154,16 @@ void main_algo() {
     // If any bot is too close to the arena, interrupt. 
     interrupt_near_arena(); 
     cout << "Doing algo stuff here\n"; 
-   // for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-   //     if (!reset && bot_queue[i].empty()) {
-   //         if (still_count[i] <= 1) {
-   //             still_count[i] ++; 
-   //             continue; 
-   //         }
-   //         still_count[i] = 0; 
-   //         algo(i); 
-   //     }
-   // }
+    for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+        if (!reset && bot_queue[i].empty()) {
+            if (still_count[i] <= 1) {
+                still_count[i] ++; 
+                continue; 
+            }
+            still_count[i] = 0; 
+            algo(i); 
+        }
+    }
 
     for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
         printf("Size of queue for %d is %d\n", i, bot_queue[i].size()); 

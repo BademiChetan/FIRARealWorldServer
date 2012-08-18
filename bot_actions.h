@@ -33,3 +33,4 @@ double angle_from_bot_to_ball(int id);
 std::vector<Action> attack(int id); 
 Coordinate getPathWithoutObstacle(int id, double x, double y); 
 void reflect_from_arena(double &x,double &y); 
+double distance_from_bot_to_ball(int id); 
