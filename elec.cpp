@@ -1360,13 +1360,23 @@ void e_sendenccmd(int botID, char action, int value=0, unsigned char speed=0)
         i=0;
         if(STR_DEBUG)
             cout<<"Trying again as the ack failed in last attempt..."<<endl;
-
-        while(sendenccmd(botID, 's')) {
-            cout << "Stuck here!\n"; 
-            bot_status(); 
+        while(sendenccmd(botID, 's')&&(i<NO_TIMEOUT_2_KILL)) 
+        {
+            ++i;
+            if(STR_DEBUG)
+            {
+                cout << "Stuck here while interrupting "<<botID<<endl; 
+                bot_status(); 
+            }
         }
-        cout << "Interrupted successfully\n"; 
-        //The tally has not been added to success as it is known that eventually it has to succeed
+        if(i>=NO_TIMEOUT_2_KILL)
+        {
+            bot_code[botID][1]=='f';
+            bot_code[botID][2]++;                       
+            cout<<"Making the bot compulsorily free"<<endl;
+        }
+        else
+            cout << "Interrupted successfully\n"; 
     }
     else
     {
