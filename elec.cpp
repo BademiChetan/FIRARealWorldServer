@@ -1,6 +1,6 @@
 #pragma once
 #define FINAL                                                   // Remove the IP based commands by x corrupting it
-#define xHIGHS                                                  // Remove the x corruption to get 115200 bps speed
+#define HIGHS                                                  // Remove the x corruption to get 115200 bps speed
 #define REMOVE_TIMEOUT                                          // Removes the elec sleep thing. 
 /**************Left to do************************
  * 1. Remove the TXChar(' ',1); and quicken the process
@@ -319,7 +319,8 @@ void prelude()
  ************************************************/
 void Uinit()
 {
-    pu = new SerialPort("/dev/ttyACM0");
+    //pu = new SerialPort("/dev/ttyACM0");
+    pu = new SerialPort("/dev/ttyUSB0");
     while(usart_init());
     prelude();
 }

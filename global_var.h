@@ -62,7 +62,7 @@
 #define EPSILON         2 
 #define BOT_RADIUS      6.5 
 #define BALL_RADIUS     2.5
-#define SIGN            1 
+#define SIGN            -1 
 
 /**********************
   co-ordinates :

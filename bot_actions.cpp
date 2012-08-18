@@ -111,6 +111,7 @@ vector<Action> hold(int id, double x1, double y1, double angle, double x2,
     Action turn(id, turn_by, direction ? 'l' : 'r'); 
     res.push_back(turn); 
     double distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); 
+    distance = min(distance, step); 
     Action run(id, min((int)(distance), MIN_DIST), 'F', MAX_SPEED, x2, y2); 
     res.push_back(run); 
     return res; 

@@ -90,7 +90,7 @@ void image_processing() {
 
 void home() {
     cout << "Home.\n"; 
-    for (int j = 0; j < 10; j++){
+    for (int j = 0; j < 30; j++){
         for (int i = 0; i < 5; i ++) {
             if (get_distance_to_point(bot[i].x, bot[i].y, 
                         home_positions[i].x, home_positions[i].y) > 2) {
@@ -103,6 +103,16 @@ void home() {
             }
         }
     }
+    double required_angle = SIGN == -1 ? 0 : 180; 
+    for (int j = 0; j < 30; j++){
+        for (int i = 0; i < 5; i ++) {
+            if (fabs(bot[i].angle - required_angle)  > 5 ) {
+                double turn = bot[i].angle - required_angle; 
+                e_sendenccmd(i, fabs(turn), turn > 0 ? 'r' : 'l'); 
+            }
+        }
+    }
+    cout << "We're home!\n"; 
 }
 
 void free_kick() {
@@ -209,7 +219,13 @@ int main( int argc, char** argv ){
     //boost::thread algo_thread(ai); 
 
 
+    struct timeval begin,end;
+    double diff=0;
+    gettimeofday(&begin,NULL);
     home(); 
+    gettimeofday(&end,NULL);
+    diff=difftime(end.tv_sec,begin.tv_sec);
+    cout << "Home position took " << diff << " seconds. \n"; 
 
 
 #ifdef ELEC
