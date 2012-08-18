@@ -108,7 +108,7 @@ void home() {
         for (int i = 0; i < 5; i ++) {
             if (fabs(bot[i].angle - required_angle)  > 5 ) {
                 double turn = bot[i].angle - required_angle; 
-                e_sendenccmd(i, fabs(turn), turn > 0 ? 'r' : 'l'); 
+                e_sendenccmd(i, turn > 0 ? 'r' : 'l', fabs(turn)); 
             }
         }
     }
