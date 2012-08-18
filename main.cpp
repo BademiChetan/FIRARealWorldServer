@@ -95,7 +95,7 @@ void home() {
             if (get_distance_to_point(bot[i].x, bot[i].y, 
                         home_positions[i].x, home_positions[i].y) > 2) {
                 vector<Action> temp = hold(i, bot[i].x, bot[i].y, bot[i].angle, 
-                        home_positions[i].x, home_positions[i].y, 10); 
+                        home_positions[i].x, home_positions[i].y, 40); 
                 for (vector<Action>::iterator it = temp.begin(); it !=
                         temp.end(); it ++) {
                     it -> do_action(); 

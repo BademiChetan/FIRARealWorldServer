@@ -19,7 +19,7 @@
 
 #define LEFT_GOAL_COLOR 'y'
 
-#define NUM_OF_OUR_BOTS 5
+#define NUM_OF_OUR_BOTS 4
 
 #define NUM_OF_OPP_BOTS 0
 #define BALL_INDEX      NUM_OF_OUR_BOTS + NUM_OF_OPP_BOTS
@@ -62,7 +62,7 @@
 #define EPSILON         2 
 #define BOT_RADIUS      6.5 
 #define BALL_RADIUS     2.5
-#define SIGN            -1 
+#define SIGN            1 
 
 /**********************
   co-ordinates :
