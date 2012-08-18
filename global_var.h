@@ -1,4 +1,6 @@
 #pragma once
+#include <queue>
+#include "bot_actions.h"
 #include <cv.h>
 #include <highgui.h>
 
@@ -6,10 +8,10 @@
 #define xIP_DEBUG   // Remove x corruption to print IP debug statements
 
 //#define THRESH_AREA 5
-#define THRESH_AREA 10        //without boundaries
+#define THRESH_AREA 50        //without boundaries
 
 //#define BASE_AREA_THRESH 30
-#define BASE_AREA_THRESH 120     //without boundaries
+#define BASE_AREA_THRESH 150     //without boundaries
 
 #define OUR_JERSEY_COLOR 'b'
 
@@ -17,7 +19,7 @@
 
 #define LEFT_GOAL_COLOR 'y'
 
-#define NUM_OF_OUR_BOTS 1
+#define NUM_OF_OUR_BOTS 5
 
 #define NUM_OF_OPP_BOTS 0
 #define BALL_INDEX      NUM_OF_OUR_BOTS + NUM_OF_OPP_BOTS
@@ -40,8 +42,8 @@
 #define BOT3_RCOLOR OUR_JERSEY_COLOR
 
 #define BOT4_BASECOLOR 'v'
-#define BOT4_LCOLOR 'g'
-#define BOT4_RCOLOR OUR_JERSEY_COLOR
+#define BOT4_LCOLOR OUR_JERSEY_COLOR
+#define BOT4_RCOLOR 'g'
 
 
 
@@ -83,3 +85,4 @@ extern bool reset;
 extern double prev_x[NUM_OF_OUR_BOTS + NUM_OF_OPP_BOTS + 1][FRAME_BACKUP]; 
 extern double prev_y[NUM_OF_OUR_BOTS + NUM_OF_OPP_BOTS + 1][FRAME_BACKUP]; 
 extern double prev_angle[NUM_OF_OUR_BOTS + NUM_OF_OUR_BOTS + 1][FRAME_BACKUP]; 
+extern std::queue<Action> bot_queue[5]; 

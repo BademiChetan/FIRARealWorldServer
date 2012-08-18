@@ -89,32 +89,40 @@ void image_processing() {
 }
 
 void home() {
-    vector<bool> done(5, false); 
-    int done_count = 0; 
-    while (done_count < 5) {
+    cout << "Home.\n"; 
+    for (int j = 0; j < 10; j++){
         for (int i = 0; i < 5; i ++) {
             if (get_distance_to_point(bot[i].x, bot[i].y, 
                         home_positions[i].x, home_positions[i].y) > 2) {
-                hold(i, bot[i].x, bot[i].y, bot[i].angle, 
-                        home_positions[i].x, home_positions[i].y); 
+                vector<Action> temp = hold(i, bot[i].x, bot[i].y, bot[i].angle, 
+                        home_positions[i].x, home_positions[i].y, 10); 
+                for (vector<Action>::iterator it = temp.begin(); it !=
+                        temp.end(); it ++) {
+                    it -> do_action(); 
+                }
             }
         }
     }
 }
 
 void free_kick() {
-
+    cout << "Free kick.\n"; 
 }
 
 void penalty() {
-
+    cout << "Penalty.\n";
 }
 void listen_for_interrupt() {
     while (true) {
-        char ch; 
-        do {
+        cout << "Coming here?\n"; 
+        char ch = 'y';
+        while (true) {
+            cout << "And here?\n"; 
             ch = getchar(); 
-        } while(ch != 'g' || ch != 'f' || ch != 'p'); 
+            cout << "Got " << ch << endl; 
+            if (ch == 'g' || ch == 'f' || ch == 'p')
+                break;
+        }
 
         // interrupt all the bots
         interrupt = true; 
@@ -136,16 +144,20 @@ void listen_for_interrupt() {
         usleep(100000); 
     }
 }
-
+void ai() {
+    while(true) {
+        main_algo(); 
+    }
+}
 int main( int argc, char** argv ){
     interrupt = false; 
     reset = false; 
     ip_done = false; 
 
     // Calculate the home positions
-    home_positions[0] = Coordinate(SIGN * 94, 0); 
-    home_positions[1] = Coordinate(SIGN * 70,   SIGN * 60) ; 
-    home_positions[2] = Coordinate(SIGN * 70,   SIGN * - 60); 
+    home_positions[0] = Coordinate(SIGN * 104, 0); 
+    home_positions[1] = Coordinate(SIGN * 80,   SIGN * 60) ; 
+    home_positions[2] = Coordinate(SIGN * 80,   SIGN * - 60); 
     home_positions[3] = Coordinate(SIGN * 30,   SIGN * 60); 
     home_positions[4] = Coordinate(SIGN * 30,   SIGN * - 60); 
 
@@ -186,7 +198,7 @@ int main( int argc, char** argv ){
 
 
     // Thread which keeps listening for interrupt
-    boost::thread interrupt_thread(listen_for_interrupt); 
+    // boost::thread interrupt_thread(listen_for_interrupt); 
 
 
     // Fork off thread for IP. 
@@ -194,21 +206,19 @@ int main( int argc, char** argv ){
     // Wait for IP to finish
     while(!ip_done); 
     cout << "IP is done!\n"; 
+    //boost::thread algo_thread(ai); 
 
-    // Algo stuff starts here {
 
-    while (true) {
-        main_algo(); 
-    }
+    home(); 
 
 
 #ifdef ELEC
     Uend();
 #endif
 
-    // Algo stuff ends here } 
 
     ip_thread.join(); 
     // opengl_thread.join();
-    interrupt_thread.join(); 
+    // interrupt_thread.join(); 
+    //algo_thread.join(); 
 }

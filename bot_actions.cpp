@@ -94,7 +94,8 @@ void Action::do_action() {
     cout << "Done doing action. \n" ; 
 }
 // Currently at (x1, y1). Hold the ball which is at (x2, y2). 
-vector<Action> hold(int id, double x1, double y1, double angle, double x2, double y2) {
+vector<Action> hold(int id, double x1, double y1, double angle, double x2,
+        double y2, double step = MIN_DIST) {
     printf("HOLD: id = %d, (%f, %f) < %f, (%f, %f)\n", id, x1, y1, angle, x2, y2); 
     vector<Action> res; 
     double orient = get_angle_to_point(x1, y1, x2, y2); 
@@ -110,8 +111,6 @@ vector<Action> hold(int id, double x1, double y1, double angle, double x2, doubl
     Action turn(id, turn_by, direction ? 'l' : 'r'); 
     res.push_back(turn); 
     double distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); 
-    if (average_velocity() > 15.0)
-        distance = min(distance, 20.0); 
     Action run(id, min((int)(distance), MIN_DIST), 'F', MAX_SPEED, x2, y2); 
     res.push_back(run); 
     return res; 
@@ -156,8 +155,7 @@ vector<Action> defend(int id, double x1, double y1, double angle, double x2, dou
 
 bool have_the_ball(int id){
     // have the ball with me
-    if ( (distance_from_bot_to_ball(id) <= 10 &&
-            angle_from_bot_to_ball(id) <= 30) || 
+    if ( distance_from_bot_to_ball(id) <= 10 &&
             angle_from_bot_to_ball(id) <= 10)
         return true;
     return false; 
@@ -206,8 +204,8 @@ std::vector<Action> attack(int id) {
     theta *= PI / 180; 
 
     // Get the point on the line from goal to ball 5cm behind it
-    double goto_x = bx - 8 * cos(theta); 
-    double goto_y = by - 8 * sin(theta); 
+    double goto_x = bx - 9 * cos(theta); 
+    double goto_y = by - 9 * sin(theta); 
 
 
     printf("Before reflecting (%f, %f)\n", goto_x, goto_y); 

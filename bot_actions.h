@@ -24,7 +24,8 @@ class Coordinate {
 }; 
 
 typedef std::queue<Action> action_queue; 
-std::vector<Action> hold(int id, double x1, double y1, double angle, double x2, double y2); 
+std::vector<Action> hold(int id, double x1, double y1, double angle, double x2,
+        double y2, double step); 
 std::vector<Action> defend(int id, double x1, double y1, double angle, double x2, double y2); 
 double get_angle_to_point(double x1, double y1, double x2, double y2, bool radian); 
 double get_distance_to_point(double x1, double y1, double x2, double y2); 

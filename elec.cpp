@@ -10,7 +10,7 @@
  *              KNOWN ISSUES
  * 1. Lacks backward compatibility as now the is_enc_cmd in AP returns 5 not 1
  * *********************************************/
-#define PLAYERS 1
+#define PLAYERS 5
 
 #define STR_DEBUG 1
 #define TIMER 0

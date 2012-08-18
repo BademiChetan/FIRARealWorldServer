@@ -16,8 +16,8 @@ double average_velocity(int id = -1) {
     // The ball 
     int index = (id == -1) ? BALL_INDEX : id; 
     for (int i = 0; i < 3; i ++) {
-        int curr = (FrameCount - i + FRAME_BACKUP) %FRAME_BACKUP; 
-        int curr = (FrameCount - i -1 + FRAME_BACKUP) %FRAME_BACKUP; 
+        int curr = (FrameCount - i + FRAME_BACKUP) % FRAME_BACKUP; 
+        int prev = (FrameCount - i - 1 + FRAME_BACKUP) % FRAME_BACKUP; 
         double dx = prev_x[index][curr] - prev_x[index][prev]; 
         double dy = prev_y[index][curr] - prev_y[index][prev]; 
         ans += sqrt(dx * dx + dy * dy); 
@@ -145,16 +145,16 @@ void main_algo() {
     // If any bot is too close to the arena, interrupt. 
     interrupt_near_arena(); 
     cout << "Doing algo stuff here\n"; 
-    for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
-        if (!reset && bot_queue[i].empty()) {
-            if (still_count[i] <= 1) {
-                still_count[i] ++; 
-                continue; 
-            }
-            still_count[i] = 0; 
-            algo(i); 
-        }
-    }
+   // for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
+   //     if (!reset && bot_queue[i].empty()) {
+   //         if (still_count[i] <= 1) {
+   //             still_count[i] ++; 
+   //             continue; 
+   //         }
+   //         still_count[i] = 0; 
+   //         algo(i); 
+   //     }
+   // }
 
     for (int i = 0; i < NUM_OF_OUR_BOTS; i ++) {
         printf("Size of queue for %d is %d\n", i, bot_queue[i].size()); 
@@ -164,28 +164,19 @@ void main_algo() {
             Action curr = bot_queue[i].front(); 
             // Required for the "cool" hold
             if (curr.speed == 0) {
-                cout << "Turn " << curr.magnitude << ' ' ; 
                 curr.do_action(); 
-                bot_status(); 
-                cout << "Turn " << curr.magnitude << ' ' ; 
             } else if (curr.speed == -1) {
                 double dist = get_distance_to_point(bot[i].x, bot[i].y, 
                         curr.x, curr.y); 
-                cout << "Orient " << dist << ' ' ; 
                 if ( dist < 2) {
                     curr.do_action(); 
                 }
-                bot_status(); 
-                cout << "Orient " << dist << ' ' ; 
             } else {
                 double diff = get_angle_to_point(bot[i].x, bot[i].y, 
                         curr.x, curr.y, false) - bot[i].angle; 
-                cout << "Forward "  << fabs(diff) << ' ' ; 
                 if (fabs(diff) < 15) {
                     curr.do_action();
                 }
-                bot_status(); 
-                cout << "Forward "  << fabs(diff) << ' ' ; 
             }
             bot_queue[i].pop(); 
         }
